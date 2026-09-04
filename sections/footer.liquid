@@ -48,6 +48,11 @@
       --grid-columns: {{ grid_columns }};
       --last-row-count: {{ last_row_count }};
       --tablet-last-row-count: {{ tablet_last_row_count }};
+      --footer-text-color: {{ section.settings.text_color }};
+      --footer-heading-color: {{ section.settings.heading_color }};
+      --footer-link-color: {{ section.settings.link_color }};
+      --footer-link-hover-color: {{ section.settings.link_hover_color }};
+      --footer-divider-color: {{ section.settings.divider_color }};
     "
   >
     {% content_for 'blocks' %}
@@ -62,10 +67,26 @@
     grid-template-columns: 1fr;
     gap: var(--footer-gap);
     align-items: start;
+    color: var(--footer-text-color);
   }
 
   .footer-content .menu__heading__default {
     font-weight: var(--font-heading--weight);
+    color: var(--footer-heading-color);
+  }
+
+  .footer-content a {
+    color: var(--footer-link-color);
+  }
+
+  .footer-content a:hover {
+    color: var(--footer-link-hover-color);
+  }
+
+  .footer-content hr,
+  .footer-content [class*="divider"],
+  .footer-content [class*="separator"] {
+    border-color: var(--footer-divider-color);
   }
 
   @media screen and (min-width: 750px) and (max-width: 989px) {
@@ -182,6 +203,40 @@
       "id": "background_color",
       "label": "t:settings.background_color",
       "default": "{{ settings.color_palette.foreground }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text_color",
+      "default": "{{ settings.color_palette.background }}"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:settings.heading_color",
+      "default": "{{ settings.color_palette.background }}"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "t:settings.link_color",
+      "default": "{{ settings.color_palette.background }}"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "t:settings.link_hover_color",
+      "default": "{{ settings.color_palette.accent }}"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "t:settings.divider_color",
+      "default": "{{ settings.color_palette.stroke }}"
     },
     {
       "type": "header",
