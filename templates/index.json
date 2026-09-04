@@ -30,7 +30,7 @@
         "tile_1": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "denim-duster-jackets",
             "title": "Wool Cowls",
             "subtitle": "24 pieces · from $59",
             "link": ""
@@ -39,7 +39,7 @@
         "tile_2": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "patched-denim-jackets",
             "title": "Sling Bags",
             "subtitle": "Pairs with the cowls",
             "link": ""
@@ -48,7 +48,7 @@
         "tile_3": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "denim-jeans",
             "title": "Denim & Dusters",
             "subtitle": "4 collections",
             "link": ""
@@ -57,7 +57,7 @@
         "tile_4": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "denim-vests",
             "title": "Sweatshirts",
             "subtitle": "Buttery soft",
             "link": ""
@@ -75,7 +75,7 @@
         "eyebrow": "SHOP COLLECTIONS",
         "heading": "Pick your armor",
         "link_label": "Everything in the shop",
-        "link": "shopify://collections",
+        "link": "shopify://collections/all",
         "background_color": "#ffffff"
       }
     },
