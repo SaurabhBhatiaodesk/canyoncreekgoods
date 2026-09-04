@@ -1,3 +1,9 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+{% endstyle %}
+
 <div class="ccg-sellers section section--page-width">
   <div class="ccg-sellers__head">
     {%- if section.settings.eyebrow != blank -%}
@@ -193,6 +199,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "Ready to ride out"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
     },
     {
       "type": "header",

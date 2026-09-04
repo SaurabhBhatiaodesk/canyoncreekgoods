@@ -1,3 +1,9 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+{% endstyle %}
+
 <div class="ccg-shows section section--page-width">
   <div class="ccg-shows__head">
     {%- if section.settings.eyebrow != blank -%}
@@ -153,6 +159,12 @@
       "id": "description",
       "label": "Description",
       "default": "<p>Most pieces sell at shows before they ever reach the site. If you are close to one of these, come try things on.</p>"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
     }
   ],
   "blocks": [

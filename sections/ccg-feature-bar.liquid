@@ -1,3 +1,9 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+{% endstyle %}
+
 <div class="ccg-features section section--page-width">
   <div class="ccg-features__row">
     {%- for block in section.blocks -%}
@@ -87,7 +93,14 @@
   "name": "CCG Feature Bar",
   "tag": "section",
   "class": "section-wrapper",
-  "settings": [],
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
   "blocks": [
     {
       "type": "feature",

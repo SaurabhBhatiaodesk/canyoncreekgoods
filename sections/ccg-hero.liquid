@@ -4,6 +4,12 @@
   assign description = section.settings.description
 %}
 
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+{% endstyle %}
+
 <div class="ccg-hero" style="--ccg-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
   <div class="ccg-hero__media">
     {%- if section.settings.image != blank -%}
@@ -303,6 +309,12 @@
       "step": 5,
       "unit": "%",
       "default": 45
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#211c17"
     }
   ],
   "presets": [

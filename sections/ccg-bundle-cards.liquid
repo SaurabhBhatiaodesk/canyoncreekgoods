@@ -1,3 +1,9 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+{% endstyle %}
+
 <div class="ccg-bundles section section--page-width">
   <div class="ccg-bundles__head">
     {%- if section.settings.eyebrow != blank -%}
@@ -270,6 +276,12 @@
       "id": "quote",
       "label": "Quote line",
       "default": "I pair these myself, from the same blanket run. — Melissa"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
     }
   ],
   "blocks": [

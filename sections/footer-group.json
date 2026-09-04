@@ -40,11 +40,20 @@
       "block_order": ["column_shop", "column_help", "column_canyon_creek"],
       "settings": {
         "logo_text": "Canyon Creek Goods",
+        "logo_width": 120,
         "tagline": "Handmade modern western outerwear and accessories. One pair of hands, Snowflake, Arizona, since 2020.",
         "instagram_url": "https://www.instagram.com/",
         "facebook_url": "https://www.facebook.com/",
         "tiktok_url": "https://www.tiktok.com/",
         "pinterest_url": "https://www.pinterest.com/",
+        "ink_color": "#c08a50",
+        "tan_color": "#a88963",
+        "heading_color": "#c89457",
+        "logo_color": "#ffffff",
+        "link_color": "#ddd3c4",
+        "background_color": "#211c17",
+        "divider_color": "#4a3d31",
+        "bottom_text_color": "#a88963",
         "copyright_text": "© 2026 Canyon Creek Goods",
         "payment_text": "Amex · Apple Pay · Google Pay · Mastercard · Shop Pay · Visa"
       }

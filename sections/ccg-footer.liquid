@@ -1,7 +1,25 @@
-<div class="ccg-footer section section--page-width" style="--ccg-ink: {{ section.settings.ink_color }}; --ccg-tan: {{ section.settings.tan_color }};">
+{% style %}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+{% endstyle %}
+
+{%- assign footer_logo_text = section.settings.logo_text | default: shop.name -%}
+
+<div class="ccg-footer section section--page-width" style="--ccg-ink: {{ section.settings.ink_color }}; --ccg-tan: {{ section.settings.tan_color }}; --ccg-heading: {{ section.settings.heading_color }}; --ccg-link: {{ section.settings.link_color }}; --ccg-logo: {{ section.settings.logo_color }}; --ccg-divider: {{ section.settings.divider_color }}; --ccg-bottom: {{ section.settings.bottom_text_color }}; --ccg-logo-width: {{ section.settings.logo_width }}px;">
   <div class="ccg-footer__top">
     <div class="ccg-footer__brand">
-      <a href="{{ routes.root_url }}" class="ccg-footer__logo">{{ section.settings.logo_text }}</a>
+      <a href="{{ routes.root_url }}" class="ccg-footer__logo" aria-label="{{ footer_logo_text }}">
+        {%- if section.settings.logo_image != blank -%}
+          {{
+            section.settings.logo_image
+            | image_url: width: 320
+            | image_tag: widths: '120, 180, 240, 320', alt: footer_logo_text, class: 'ccg-footer__logo-image'
+          }}
+        {%- else -%}
+          {{ footer_logo_text }}
+        {%- endif -%}
+      </a>
       {%- if section.settings.tagline != blank -%}
         <p class="ccg-footer__tagline">{{ section.settings.tagline }}</p>
       {%- endif -%}
@@ -63,15 +81,15 @@
 {% stylesheet %}
   .ccg-footer {
     font-family: 'Karla', system-ui, sans-serif;
-    padding-block: 56px 28px;
-    border-top: 1px solid var(--ccg-ink);
+    padding-block: 88px 34px;
+    border-top: 1px solid var(--ccg-divider);
   }
 
   .ccg-footer__top {
     display: grid;
-    grid-template-columns: 1.4fr repeat(3, 1fr);
-    gap: 40px;
-    padding-bottom: 40px;
+    grid-template-columns: minmax(260px, 1.4fr) repeat(3, minmax(150px, 0.8fr));
+    gap: clamp(40px, 7vw, 104px);
+    padding-bottom: 78px;
   }
 
   .ccg-footer__brand {
@@ -83,31 +101,48 @@
   .ccg-footer__logo {
     font-family: 'Rye', serif;
     font-size: 20px;
-    color: var(--ccg-ink);
+    color: var(--ccg-logo);
     text-decoration: none;
+    width: fit-content;
+    line-height: 1.1;
+  }
+
+  .ccg-footer__logo-image {
+    width: min(var(--ccg-logo-width), 100%);
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
 
   .ccg-footer__tagline {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.6;
+    margin: 12px 0 0;
+    font-size: 16px;
+    line-height: 1.9;
     color: var(--ccg-tan);
-    max-width: 32ch;
+    max-width: 38ch;
   }
 
   .ccg-footer__social {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 14px;
+    gap: 6px 0;
+    margin-top: 10px;
   }
 
   .ccg-footer__social a {
-    font-size: 11px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--ccg-ink);
+    color: var(--ccg-heading);
     text-decoration: none;
+  }
+
+  .ccg-footer__social a:not(:last-child)::after {
+    content: '·';
+    margin-inline: 8px;
+    color: var(--ccg-tan);
   }
 
   .ccg-footer__social a:hover {
@@ -121,16 +156,15 @@
   .ccg-footer__column {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
   }
 
   .ccg-footer__column-heading {
     margin: 0;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--ccg-heading);
   }
 
   .ccg-footer__links {
@@ -139,17 +173,17 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 
   .ccg-footer__links a {
-    font-size: 13px;
-    color: var(--ccg-tan);
+    font-size: 16px;
+    color: var(--ccg-link);
     text-decoration: none;
   }
 
   .ccg-footer__links a:hover {
-    color: var(--ccg-ink);
+    color: var(--ccg-heading);
     text-decoration: underline;
   }
 
@@ -158,23 +192,28 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding-top: 24px;
-    border-top: 1px solid var(--ccg-ink);
+    padding-top: 30px;
+    border-top: 1px solid var(--ccg-divider);
   }
 
   .ccg-footer__copyright,
   .ccg-footer__payment {
     margin: 0;
-    font-size: 11px;
-    letter-spacing: 0.04em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--ccg-tan);
+    color: var(--ccg-bottom);
+  }
+
+  .ccg-footer__payment {
+    text-align: right;
   }
 
   @media screen and (max-width: 989px) {
     .ccg-footer__top {
-      grid-template-columns: 1fr 1fr;
-      row-gap: 32px;
+      grid-template-columns: 1.2fr repeat(3, 1fr);
+      gap: 28px;
     }
 
     .ccg-footer__brand {
@@ -184,12 +223,13 @@
 
   @media screen and (max-width: 599px) {
     .ccg-footer {
-      padding-block: 40px 24px;
+      padding-block: 48px 28px;
     }
 
     .ccg-footer__top {
       grid-template-columns: 1fr;
       gap: 28px;
+      padding-bottom: 40px;
     }
 
     .ccg-footer__bottom {
@@ -197,20 +237,39 @@
       align-items: flex-start;
       gap: 8px;
     }
+
+    .ccg-footer__payment {
+      text-align: left;
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "CCG Footer",
-  "tag": "section",
+  "tag": "footer",
   "class": "section-wrapper",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
     {
       "type": "text",
       "id": "logo_text",
       "label": "Logo text",
       "default": "Canyon Creek Goods"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 80,
+      "max": 220,
+      "step": 10,
+      "unit": "px",
+      "default": 120
     },
     {
       "type": "text",
@@ -250,13 +309,49 @@
       "type": "color",
       "id": "ink_color",
       "label": "Primary color (ink)",
-      "default": "#211c17"
+      "default": "#c08a50"
     },
     {
       "type": "color",
       "id": "tan_color",
       "label": "Secondary color (tan)",
-      "default": "#7a6d5d"
+      "default": "#a88963"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#c89457"
+    },
+    {
+      "type": "color",
+      "id": "logo_color",
+      "label": "Logo color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#ddd3c4"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#211c17"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#4a3d31"
+    },
+    {
+      "type": "color",
+      "id": "bottom_text_color",
+      "label": "Bottom text color",
+      "default": "#a88963"
     },
     {
       "type": "header",
