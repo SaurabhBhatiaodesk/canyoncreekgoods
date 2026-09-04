@@ -1,0 +1,195 @@
+<div class="ccg-dtm page-width ccg-dtm--{{ section.settings.media_position }}">
+  <div class="ccg-dtm__media">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 1600
+        | image_tag: widths: '480, 750, 1000, 1600', sizes: '(min-width: 750px) 50vw, 100vw', alt: section.settings.image.alt
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="ccg-dtm__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ccg-dtm__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="ccg-dtm__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.description != blank -%}
+      <div class="ccg-dtm__description">{{ section.settings.description }}</div>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link | default: '#' }}" class="ccg-btn">{{ section.settings.button_label }}</a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ccg-dtm {
+    --ccg-ink: #211c17;
+    --ccg-tan: #7a6d5d;
+
+    font-family: 'Karla', system-ui, sans-serif;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 64px;
+    padding-block: 72px;
+  }
+
+  .ccg-dtm--right {
+    grid-template-areas: 'content media';
+  }
+
+  .ccg-dtm--right .ccg-dtm__media {
+    grid-area: media;
+  }
+
+  .ccg-dtm--right .ccg-dtm__content {
+    grid-area: content;
+  }
+
+  .ccg-dtm__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+
+  .ccg-dtm__media img,
+  .ccg-dtm__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ccg-dtm__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    max-width: 42ch;
+  }
+
+  .ccg-dtm__eyebrow {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ccg-tan);
+  }
+
+  .ccg-dtm__heading {
+    margin: 0;
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: clamp(26px, 3vw, 34px);
+    line-height: 1.25;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-dtm__description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--ccg-ink);
+    color: var(--ccg-ink);
+    background: transparent;
+    transition: opacity 0.2s ease;
+  }
+
+  .ccg-btn:hover {
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-dtm {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'media' 'content' !important;
+      gap: 28px;
+      padding-block: 44px;
+    }
+
+    .ccg-dtm__media {
+      aspect-ratio: 4 / 3;
+    }
+
+    .ccg-dtm__content {
+      max-width: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Direct to Maker",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "DIRECT TO MAKER"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every piece leaves my hands before it reaches yours."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>No production line, no overseas factory. I hand cut, stitch and finish each cowl and jacket in a small-batch home studio in Arizona, using premium wool milled in the US. You are buying from the woman who made it, and she answers her own email.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Read the whole story"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Direct to Maker"
+    }
+  ]
+}
+{% endschema %}

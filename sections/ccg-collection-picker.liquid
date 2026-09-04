@@ -1,0 +1,257 @@
+<div class="ccg-picker page-width">
+  <div class="ccg-picker__head">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="ccg-picker__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.link_label != blank -%}
+      <a href="{{ section.settings.link | default: '#' }}" class="ccg-picker__link">{{ section.settings.link_label }} →</a>
+    {%- endif -%}
+  </div>
+
+  <div class="ccg-picker__grid">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign tile_image = block.settings.image
+        assign tile_title = block.settings.title
+        assign tile_subtitle = block.settings.subtitle
+        assign tile_link = block.settings.link
+        if block.settings.collection != blank
+          assign coll = block.settings.collection
+          if tile_image == blank
+            assign tile_image = coll.featured_image
+          endif
+          if tile_title == blank
+            assign tile_title = coll.title
+          endif
+          if tile_link == blank
+            assign tile_link = coll.url
+          endif
+        endif
+      -%}
+      <a
+        href="{{ tile_link | default: '#' }}"
+        class="ccg-picker__tile"
+        {{ block.shopify_attributes }}
+      >
+        <span class="ccg-picker__tile-media">
+          {%- if tile_image != blank -%}
+            {{
+              tile_image
+              | image_url: width: 1200
+              | image_tag: widths: '400, 600, 900, 1200', sizes: '(min-width: 990px) 25vw, 50vw', alt: tile_title
+            }}
+          {%- else -%}
+            {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+          {%- endif -%}
+        </span>
+        <span class="ccg-picker__tile-caption">
+          <span class="ccg-picker__tile-title">{{ tile_title }}</span>
+          {%- if tile_subtitle != blank -%}
+            <span class="ccg-picker__tile-subtitle">{{ tile_subtitle }}</span>
+          {%- endif -%}
+        </span>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ccg-picker {
+    --ccg-ink: #211c17;
+    --ccg-cream: #fbf8f2;
+
+    font-family: 'Karla', system-ui, sans-serif;
+    padding-block: 64px;
+  }
+
+  .ccg-picker__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--ccg-ink);
+    padding-bottom: 16px;
+  }
+
+  .ccg-picker__heading {
+    margin: 0;
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: clamp(26px, 3vw, 34px);
+    color: var(--ccg-ink);
+  }
+
+  .ccg-picker__link {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .ccg-picker__link:hover {
+    text-decoration: underline;
+  }
+
+  .ccg-picker__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .ccg-picker__tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    text-decoration: none;
+    background: var(--ccg-ink);
+  }
+
+  .ccg-picker__tile-media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ccg-picker__tile-media img,
+  .ccg-picker__tile-media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .ccg-picker__tile:hover .ccg-picker__tile-media img {
+    transform: scale(1.05);
+  }
+
+  .ccg-picker__tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0) 55%);
+  }
+
+  .ccg-picker__tile-caption {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+    padding: 18px;
+    color: var(--ccg-cream);
+  }
+
+  .ccg-picker__tile-title {
+    font-family: 'Rye', serif;
+    font-size: 19px;
+  }
+
+  .ccg-picker__tile-subtitle {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ccg-picker__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 599px) {
+    .ccg-picker {
+      padding-block: 40px;
+    }
+
+    .ccg-picker__head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .ccg-picker__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Collection Picker",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Pick your armor"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Everything in the shop"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image override"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title override"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "24 pieces · from $59"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link override"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Collection Picker",
+      "blocks": [
+        { "type": "tile", "settings": { "title": "Wool Cowls", "subtitle": "24 pieces · from $59" } },
+        { "type": "tile", "settings": { "title": "Sling Bags", "subtitle": "Pairs with the cowls" } },
+        { "type": "tile", "settings": { "title": "Denim & Dusters", "subtitle": "4 collections" } },
+        { "type": "tile", "settings": { "title": "Sweatshirts", "subtitle": "Buttery soft" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,272 @@
+{% liquid
+  assign heading = section.settings.heading
+  assign eyebrow = section.settings.eyebrow
+  assign description = section.settings.description
+%}
+
+<div class="ccg-hero" style="--ccg-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
+  <div class="ccg-hero__media">
+    {%- if section.settings.image != blank -%}
+      <picture>
+        {%- if section.settings.image_mobile != blank -%}
+          <source media="(max-width: 749px)" srcset="{{ section.settings.image_mobile | image_url: width: 1200 }}">
+        {%- endif -%}
+        {{
+          section.settings.image
+          | image_url: width: 2600
+          | image_tag: widths: '750, 1100, 1500, 2000, 2600', sizes: '100vw', class: 'ccg-hero__img', alt: section.settings.image.alt | default: heading, fetchpriority: 'high'
+        }}
+      </picture>
+    {%- else -%}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'ccg-hero__img placeholder' }}
+    {%- endif -%}
+    <div class="ccg-hero__overlay"></div>
+  </div>
+
+  <div class="ccg-hero__content page-width">
+    {%- if eyebrow != blank -%}
+      <p class="ccg-hero__eyebrow">{{ eyebrow }}</p>
+    {%- endif -%}
+    {%- if heading != blank -%}
+      <h1 class="ccg-hero__heading">{{ heading }}</h1>
+    {%- endif -%}
+    {%- if description != blank -%}
+      <div class="ccg-hero__description">{{ description }}</div>
+    {%- endif -%}
+    {%- if section.settings.button_1_label != blank or section.settings.button_2_label != blank -%}
+      <div class="ccg-hero__actions">
+        {%- if section.settings.button_1_label != blank -%}
+          <a
+            href="{{ section.settings.button_1_link | default: '#' }}"
+            class="ccg-btn ccg-btn--solid"
+          >{{ section.settings.button_1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.button_2_label != blank -%}
+          <a
+            href="{{ section.settings.button_2_link | default: '#' }}"
+            class="ccg-btn ccg-btn--outline ccg-btn--on-media"
+          >{{ section.settings.button_2_label }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ccg-hero {
+    --ccg-ink: #211c17;
+    --ccg-cream: #fbf8f2;
+    --ccg-tan: #8a5a32;
+
+    position: relative;
+    display: grid;
+    min-height: 92svh;
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-hero__media,
+  .ccg-hero__content {
+    grid-area: 1 / 1;
+  }
+
+  .ccg-hero__media {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ccg-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+  }
+
+  .ccg-hero__img.placeholder {
+    height: 92svh;
+  }
+
+  .ccg-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.05) 45%, rgb(0 0 0 / 0.25));
+    opacity: var(--ccg-hero-overlay, 0.5);
+  }
+
+  .ccg-hero__content {
+    position: relative;
+    z-index: 2;
+    align-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding-block: 48px 64px;
+    color: var(--ccg-cream);
+  }
+
+  .ccg-hero__eyebrow {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ccg-hero__heading {
+    margin: 0;
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 68px);
+    line-height: 1.08;
+    max-width: 14ch;
+  }
+
+  .ccg-hero__description {
+    max-width: 46ch;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .ccg-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .ccg-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--ccg-ink);
+    border-radius: 0;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+  }
+
+  .ccg-btn:hover {
+    opacity: 0.8;
+  }
+
+  .ccg-btn--solid {
+    background: var(--ccg-ink);
+    color: var(--ccg-cream);
+    border-color: var(--ccg-ink);
+  }
+
+  .ccg-btn--outline {
+    background: transparent;
+    color: var(--ccg-ink);
+    border-color: var(--ccg-ink);
+  }
+
+  .ccg-btn--on-media {
+    color: var(--ccg-cream);
+    border-color: var(--ccg-cream);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-hero {
+      min-height: 82svh;
+    }
+
+    .ccg-hero__content {
+      padding-block: 32px 40px;
+      gap: 14px;
+    }
+
+    .ccg-btn {
+      flex: 1 1 auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Hero",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "HAND CUT IN A HOME STUDIO · SNOWFLAKE, AZ"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Forged for the untamed."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Heirloom-quality wool cowls, sling bags and denim, hand cut one at a time from premium American wool. No two pieces alike.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "First button label",
+      "default": "Shop the cowls"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "First button link"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Second button label",
+      "default": "Meet the maker"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Second button link"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Background image (mobile)"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay darkness",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 45
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Hero"
+    }
+  ]
+}
+{% endschema %}
