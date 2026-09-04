@@ -1,4 +1,4 @@
-/* Canyon Creek Goods — homepage container matching client mockup (1440px / 48px gutters) */
+/* Canyon Creek Goods — client mockup type scale */
 :root {
   --ccg-ink: #211c17;
   --ccg-cream: #f8f5ee;
@@ -12,6 +12,10 @@
   --ccg-container-pad: 48px;
 }
 
+body {
+  background: var(--ccg-cream);
+}
+
 .shopify-section.container {
   width: 100%;
   box-sizing: border-box;
@@ -22,8 +26,103 @@
   padding-inline: 0;
 }
 
+/* Header type: ticker 14px, nav 19px, logo 24px — mockup */
+.header-section {
+  --menu-top-level-font-family: 'Barlow Condensed', sans-serif;
+  --menu-top-level-font-style: normal;
+  --menu-top-level-font-weight: 400;
+  --menu-top-level-font-size: 19px;
+  --menu-top-level-font-size-desktop: 19px;
+  --menu-top-level-font-line-height: 1.2;
+  --menu-top-level-font-case: uppercase;
+  --menu-top-level-font-color: #211c17;
+  --menu-horizontal-gap: 34px;
+}
+
+.header-section .header__row--top.section,
+.header-section .header__row--top .header__columns {
+  padding-inline: var(--ccg-container-pad);
+  padding-block: 22px;
+}
+
+.header-section .header-logo {
+  font-family: 'Karla', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  color: #211c17;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header-section .header-logo img,
+.header-section .header-logo__image {
+  height: 52px;
+  width: auto;
+  display: block;
+}
+
+.header-section .menu-list__list {
+  gap: 34px;
+}
+
+.header-section .menu-list__link,
+.header-section .menu-list__item {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #211c17;
+}
+
+.header-section .menu-list__link[aria-current='page'],
+.header-section .menu-list__item[aria-current='page'] {
+  border-bottom: 1px solid #211c17;
+  padding-bottom: 3px;
+}
+
+.header-section header-actions,
+.header-section .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  color: #211c17;
+}
+
+.header-section .header-actions svg,
+.header-section .account-button__icon,
+.header-section .header-actions__cart-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
 @media screen and (max-width: 749px) {
   :root {
     --ccg-container-pad: 20px;
+  }
+
+  .header-section {
+    --menu-top-level-font-size: 16px;
+    --menu-top-level-font-size-desktop: 16px;
+  }
+
+  .header-section .header-logo {
+    font-size: 18px;
+  }
+
+  .header-section .header-logo img,
+  .header-section .header-logo__image {
+    height: 40px;
+  }
+
+  .header-section .header__row--top.section,
+  .header-section .header__row--top .header__columns {
+    padding-block: 14px;
+  }
+
+  .header-section .menu-list__link,
+  .header-section .menu-list__item {
+    font-size: 16px;
   }
 }

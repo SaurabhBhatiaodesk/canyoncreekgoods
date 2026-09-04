@@ -60,7 +60,11 @@
         "divider_color": "#4a3d31",
         "bottom_text_color": "#a88963",
         "copyright_text": "© 2026 Canyon Creek Goods",
-        "payment_text": "Amex · Apple Pay · Google Pay · Mastercard · Shop Pay · Visa"
+        "payment_text": "Amex · Apple Pay · Google Pay · Mastercard · Shop Pay · Visa",
+        "desktop_padding_top": 72,
+        "desktop_padding_bottom": 32,
+        "mobile_padding_top": 48,
+        "mobile_padding_bottom": 28
       }
     },
     "footer_m9NzUG": {

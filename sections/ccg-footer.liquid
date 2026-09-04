@@ -1,80 +1,212 @@
-{% comment %}
-  Updated CCG Footer section placeholder.
-  Features:
-  - Desktop padding controls
-  - Mobile padding controls
-  - Mobile accordion toggle setting
+{% render 'ccg-section-spacing' %}
 
-  Please replace this file content with the full updated Shopify Liquid section.
-{% endcomment %}
-
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
-
-<div
-  class="ccg-footer section section--page-width"
-  style="
-    --desktop-top: {{ section.settings.desktop_padding_top }}px;
-    --desktop-bottom: {{ section.settings.desktop_padding_bottom }}px;
-    --mobile-top: {{ section.settings.mobile_padding_top }}px;
-    --mobile-bottom: {{ section.settings.mobile_padding_bottom }}px;
-  "
->
-  <div class="ccg-footer__top">
+<div class="ccg-footer">
+  <div class="ccg-footer__grid">
     <div class="ccg-footer__brand">
       <a href="{{ routes.root_url }}" class="ccg-footer__logo">
-        {{ section.settings.logo_text }}
+        {%- if section.settings.logo_image != blank -%}
+          {{
+            section.settings.logo_image
+            | image_url: width: 400
+            | image_tag: widths: '180, 280, 400', alt: shop.name, class: 'ccg-footer__logo-img'
+          }}
+        {%- else -%}
+          <span class="ccg-footer__logo-text">{{ section.settings.logo_text | default: shop.name }}</span>
+        {%- endif -%}
       </a>
-      <p class="ccg-footer__tagline">{{ section.settings.tagline }}</p>
+      {%- if section.settings.tagline != blank -%}
+        <p class="ccg-footer__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+      <div class="ccg-footer__social">
+        {%- if section.settings.instagram_url != blank -%}
+          <a href="{{ section.settings.instagram_url }}">Instagram</a>
+        {%- endif -%}
+        {%- if section.settings.facebook_url != blank -%}
+          <a href="{{ section.settings.facebook_url }}">Facebook</a>
+        {%- endif -%}
+        {%- if section.settings.tiktok_url != blank -%}
+          <a href="{{ section.settings.tiktok_url }}">TikTok</a>
+        {%- endif -%}
+        {%- if section.settings.pinterest_url != blank -%}
+          <a href="{{ section.settings.pinterest_url }}">Pinterest</a>
+        {%- endif -%}
+      </div>
     </div>
 
-    <div class="ccg-footer__columns">
-      {% for block in section.blocks %}
-        <details
-          class="ccg-footer__column mobile-accordion"
-          {% unless section.settings.mobile_accordion %}
-            open
-          {% endunless %}
-        >
-          <summary>{{ block.settings.heading }}</summary>
-          <ul class="ccg-footer__links">
-            {% assign links = block.settings.links | newline_to_br | split: '<br />' %}
-            {% for link in links %}
-              <li>{{ link }}</li>
-            {% endfor %}
-          </ul>
-        </details>
-      {% endfor %}
-    </div>
+    {%- for block in section.blocks -%}
+      <div class="ccg-footer__column" {{ block.shopify_attributes }}>
+        {%- if block.settings.heading != blank -%}
+          <p class="ccg-footer__heading">{{ block.settings.heading }}</p>
+        {%- endif -%}
+        <ul class="ccg-footer__links">
+          {%- assign rows = block.settings.links | newline_to_br | split: '<br />' -%}
+          {%- for row in rows -%}
+            {%- assign line = row | strip -%}
+            {%- if line != blank -%}
+              {%- assign parts = line | split: ' | ' -%}
+              <li>
+                {%- if parts.size > 1 -%}
+                  <a href="{{ parts.last | strip }}">{{ parts.first | strip }}</a>
+                {%- else -%}
+                  <span>{{ line }}</span>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="ccg-footer__bottom">
+    <span>{{ section.settings.copyright_text }}</span>
+    <span>{{ section.settings.payment_text }}</span>
   </div>
 </div>
 
-<style>
+{% stylesheet %}
   .ccg-footer {
-    padding-top: var(--desktop-top);
-    padding-bottom: var(--desktop-bottom);
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    color: #ede7dc;
+    font-family: 'Karla', system-ui, sans-serif;
   }
 
-  @media (max-width: 599px) {
+  .ccg-footer__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 44px;
+  }
+
+  .ccg-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ccg-footer__logo {
+    align-self: flex-start;
+    text-decoration: none;
+  }
+
+  .ccg-footer__logo-img {
+    height: 58px;
+    width: auto;
+    display: block;
+  }
+
+  .ccg-footer__logo-text {
+    font-family: 'Rye', serif;
+    font-size: 22px;
+    color: #c4a177;
+  }
+
+  .ccg-footer__tagline {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #a2957f;
+    max-width: 320px;
+  }
+
+  .ccg-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .ccg-footer__social a {
+    color: #c4a177;
+    text-decoration: none;
+  }
+
+  .ccg-footer__column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ccg-footer__heading {
+    margin: 0;
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #c4a177;
+  }
+
+  .ccg-footer__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ccg-footer__links a,
+  .ccg-footer__links span {
+    font-size: 15px;
+    color: #bcb0a0;
+    text-decoration: none;
+  }
+
+  .ccg-footer__links a:hover {
+    color: #ede7dc;
+  }
+
+  .ccg-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    border-top: 1px solid rgba(237, 231, 220, 0.18);
+    padding-top: 24px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    color: #8c8073;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ccg-footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
     .ccg-footer {
-      padding-top: var(--mobile-top);
-      padding-bottom: var(--mobile-bottom);
+      gap: 36px;
     }
 
-    .mobile-accordion summary {
-      cursor: pointer;
-      font-weight: 600;
+    .ccg-footer__grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .ccg-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
-</style>
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "CCG Footer",
+  "tag": "section",
+  "class": "container",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo"
+    },
     {
       "type": "text",
       "id": "logo_text",
@@ -82,35 +214,89 @@
       "default": "Canyon Creek Goods"
     },
     {
-      "type": "text",
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 40,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "textarea",
       "id": "tagline",
-      "label": "Tagline"
+      "label": "Tagline",
+      "default": "Handmade modern western outerwear and accessories. One pair of hands, Snowflake, Arizona, since 2020."
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    { "type": "url", "id": "instagram_url", "label": "Instagram" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok" },
+    { "type": "url", "id": "pinterest_url", "label": "Pinterest" },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#211c17" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#c4a177" },
+    { "type": "color", "id": "link_color", "label": "Link color", "default": "#bcb0a0" },
+    { "type": "color", "id": "bottom_text_color", "label": "Bottom text color", "default": "#8c8073" },
+    { "type": "color", "id": "ink_color", "label": "Accent color", "default": "#c08a50" },
+    { "type": "color", "id": "tan_color", "label": "Tan color", "default": "#a88963" },
+    { "type": "color", "id": "logo_color", "label": "Logo text color", "default": "#ffffff" },
+    { "type": "color", "id": "divider_color", "label": "Divider color", "default": "#4a3d31" },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright",
+      "default": "© 2026 Canyon Creek Goods"
+    },
+    {
+      "type": "text",
+      "id": "payment_text",
+      "label": "Payment line",
+      "default": "Amex · Apple Pay · Google Pay · Mastercard · Shop Pay · Visa"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
     },
     {
       "type": "range",
       "id": "desktop_padding_top",
       "label": "Desktop padding top",
       "min": 0,
-      "max": 150,
-      "step": 5,
-      "default": 88
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
     },
     {
       "type": "range",
       "id": "desktop_padding_bottom",
       "label": "Desktop padding bottom",
       "min": 0,
-      "max": 150,
-      "step": 5,
-      "default": 34
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
     },
     {
       "type": "range",
       "id": "mobile_padding_top",
       "label": "Mobile padding top",
       "min": 0,
-      "max": 100,
-      "step": 5,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
       "default": 48
     },
     {
@@ -118,21 +304,10 @@
       "id": "mobile_padding_bottom",
       "label": "Mobile padding bottom",
       "min": 0,
-      "max": 100,
-      "step": 5,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
       "default": 28
-    },
-    {
-      "type": "checkbox",
-      "id": "mobile_accordion",
-      "label": "Enable mobile accordion",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background color",
-      "default": "#211c17"
     }
   ],
   "blocks": [
@@ -140,15 +315,12 @@
       "type": "column",
       "name": "Link column",
       "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading"
-        },
+        { "type": "text", "id": "heading", "label": "Heading" },
         {
           "type": "textarea",
           "id": "links",
-          "label": "Links"
+          "label": "Links",
+          "info": "One per line. Use Label | /url"
         }
       ]
     }

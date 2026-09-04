@@ -1,6 +1,5 @@
 {%- doc -%}
-  Continuously scrolling announcement ticker, rendered globally above the header on every page.
-  Content is hardcoded to match the client-supplied mockup; edit the `items` array below to change it.
+  Continuously scrolling announcement ticker. Type matches client mockup: Barlow Condensed 14px.
 {%- enddoc -%}
 
 {% liquid
@@ -58,6 +57,7 @@
   .ccg-marquee__text {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 14px;
+    font-weight: 400;
     letter-spacing: 0.2em;
     color: #5c5145;
     text-transform: uppercase;
