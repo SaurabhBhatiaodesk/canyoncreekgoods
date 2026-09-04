@@ -21,7 +21,11 @@
         "button_2_label": "Meet the maker",
         "button_2_link": "shopify://pages/our-story",
         "image": "shopify://shop_images/hero-duster-desert.jpg",
-        "background_color": "#211c17"
+        "background_color": "#211c17",
+        "desktop_padding_top": 0,
+        "desktop_padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
       }
     },
     "collection_picker_ccg": {
@@ -76,7 +80,11 @@
         "heading": "Pick your armor",
         "link_label": "Everything in the shop",
         "link": "shopify://collections/all",
-        "background_color": "#ffffff"
+        "background_color": "#F8F5EE",
+        "desktop_padding_top": 96,
+        "desktop_padding_bottom": 72,
+        "mobile_padding_top": 56,
+        "mobile_padding_bottom": 48
       }
     },
     "direct_to_maker_ccg": {
@@ -90,7 +98,11 @@
         "description": "<p>No production line, no overseas factory. I hand cut, stitch and finish each cowl and jacket in a small-batch home studio in Arizona, using premium wool milled in the US. You are buying from the woman who made it, and she answers her own email.</p>",
         "button_label": "Read the whole story",
         "button_link": "shopify://pages/our-story",
-        "background_color": "#F8F5EE"
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 0,
+        "desktop_padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
       }
     },
     "bundle_cards_ccg": {
@@ -130,7 +142,11 @@
         "eyebrow": "COMPLETE THE LOOK",
         "heading": "Matched sets, save 10%",
         "quote": "I pair these myself, from the same blanket run. — Melissa",
-        "background_color": "#F8F5EE"
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 96,
+        "desktop_padding_bottom": 96,
+        "mobile_padding_top": 56,
+        "mobile_padding_bottom": 56
       }
     },
     "best_sellers_ccg": {
@@ -188,6 +204,10 @@
         "eyebrow": "OUT THE DOOR IN 1–2 DAYS",
         "heading": "Ready to ride out",
         "background_color": "#ffffff",
+        "desktop_padding_top": 0,
+        "desktop_padding_bottom": 96,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 56,
         "collection": "all",
         "product_limit": 4
       }
@@ -253,7 +273,11 @@
         "eyebrow": "ON THE ROAD",
         "heading": "Come find the booth",
         "description": "<p>Most pieces sell at shows before they ever reach the site. If you are close to one of these, come try things on.</p>",
-        "background_color": "#F8F5EE"
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 88,
+        "desktop_padding_bottom": 88,
+        "mobile_padding_top": 48,
+        "mobile_padding_bottom": 48
       }
     },
     "feature_bar_ccg": {
@@ -296,7 +320,11 @@
       ],
       "name": "Feature Bar",
       "settings": {
-        "background_color": "#F8F5EE"
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 0,
+        "desktop_padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
       }
     }
   },
