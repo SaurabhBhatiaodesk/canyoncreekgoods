@@ -1,4 +1,4 @@
-<div class="ccg-footer section section--page-width">
+<div class="ccg-footer section section--page-width" style="--ccg-ink: {{ section.settings.ink_color }}; --ccg-tan: {{ section.settings.tan_color }};">
   <div class="ccg-footer__top">
     <div class="ccg-footer__brand">
       <a href="{{ routes.root_url }}" class="ccg-footer__logo">{{ section.settings.logo_text }}</a>
@@ -62,9 +62,6 @@
 
 {% stylesheet %}
   .ccg-footer {
-    --ccg-ink: #211c17;
-    --ccg-tan: #7a6d5d;
-
     font-family: 'Karla', system-ui, sans-serif;
     padding-block: 56px 28px;
     border-top: 1px solid var(--ccg-ink);
@@ -244,6 +241,22 @@
       "type": "url",
       "id": "pinterest_url",
       "label": "Pinterest"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "ink_color",
+      "label": "Primary color (ink)",
+      "default": "#211c17"
+    },
+    {
+      "type": "color",
+      "id": "tan_color",
+      "label": "Secondary color (tan)",
+      "default": "#7a6d5d"
     },
     {
       "type": "header",
