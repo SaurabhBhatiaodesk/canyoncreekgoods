@@ -1,35 +1,5 @@
 {
   "sections": {
-    "marquee_ccg": {
-      "type": "marquee",
-      "blocks": {
-        "text_ccg_1": {
-          "type": "text",
-          "settings": {
-            "text": "<p>FREE SHIPPING, NO MINIMUM &nbsp;•&nbsp; HAND CUT IN SNOWFLAKE, ARIZONA &nbsp;•&nbsp; ONE OF ONE — NEVER MADE TWICE &nbsp;•&nbsp; PREMIUM US-MILLED WOOL &nbsp;•&nbsp; MELISSA ANSWERS HER OWN EMAIL</p>",
-            "width": "fit-content",
-            "max_width": "none",
-            "alignment": "left",
-            "type_preset": "custom",
-            "font": "var(--font-body--family)",
-            "font_size": "12px",
-            "line_height": "normal",
-            "letter_spacing": "0.08em",
-            "case": "uppercase",
-            "wrap": "nowrap"
-          }
-        }
-      },
-      "block_order": ["text_ccg_1"],
-      "name": "Announcement Marquee",
-      "settings": {
-        "movement_direction": "normal",
-        "background_color": "#ded6c6",
-        "padding-block-start": 10,
-        "padding-block-end": 10,
-        "gap_between_elements": 40
-      }
-    },
     "hero_ccg": {
       "type": "ccg-hero",
       "name": "Hero",
@@ -67,6 +37,7 @@
       },
       "block_order": ["tile_1", "tile_2", "tile_3", "tile_4"],
       "settings": {
+        "eyebrow": "SHOP COLLECTIONS",
         "heading": "Pick your armor",
         "link_label": "Everything in the shop",
         "link": "shopify://collections/all"
@@ -203,7 +174,6 @@
     }
   },
   "order": [
-    "marquee_ccg",
     "hero_ccg",
     "collection_picker_ccg",
     "direct_to_maker_ccg",

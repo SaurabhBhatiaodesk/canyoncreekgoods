@@ -23,32 +23,38 @@
     <div class="ccg-hero__overlay"></div>
   </div>
 
-  <div class="ccg-hero__content page-width">
-    {%- if eyebrow != blank -%}
-      <p class="ccg-hero__eyebrow">{{ eyebrow }}</p>
-    {%- endif -%}
-    {%- if heading != blank -%}
-      <h1 class="ccg-hero__heading">{{ heading }}</h1>
-    {%- endif -%}
-    {%- if description != blank -%}
-      <div class="ccg-hero__description">{{ description }}</div>
-    {%- endif -%}
-    {%- if section.settings.button_1_label != blank or section.settings.button_2_label != blank -%}
-      <div class="ccg-hero__actions">
-        {%- if section.settings.button_1_label != blank -%}
-          <a
-            href="{{ section.settings.button_1_link | default: '#' }}"
-            class="ccg-btn ccg-btn--solid"
-          >{{ section.settings.button_1_label }}</a>
+  <div class="ccg-hero__content section section--page-width">
+    <div class="ccg-hero__row">
+      <div class="ccg-hero__heading-col">
+        {%- if eyebrow != blank -%}
+          <p class="ccg-hero__eyebrow">{{ eyebrow }}</p>
         {%- endif -%}
-        {%- if section.settings.button_2_label != blank -%}
-          <a
-            href="{{ section.settings.button_2_link | default: '#' }}"
-            class="ccg-btn ccg-btn--outline ccg-btn--on-media"
-          >{{ section.settings.button_2_label }}</a>
+        {%- if heading != blank -%}
+          <h1 class="ccg-hero__heading">{{ heading }}</h1>
         {%- endif -%}
       </div>
-    {%- endif -%}
+      <div class="ccg-hero__text-col">
+        {%- if description != blank -%}
+          <div class="ccg-hero__description">{{ description }}</div>
+        {%- endif -%}
+        {%- if section.settings.button_1_label != blank or section.settings.button_2_label != blank -%}
+          <div class="ccg-hero__actions">
+            {%- if section.settings.button_1_label != blank -%}
+              <a
+                href="{{ section.settings.button_1_link | default: '#' }}"
+                class="ccg-btn ccg-btn--solid"
+              >{{ section.settings.button_1_label }}</a>
+            {%- endif -%}
+            {%- if section.settings.button_2_label != blank -%}
+              <a
+                href="{{ section.settings.button_2_link | default: '#' }}"
+                class="ccg-btn ccg-btn--outline ccg-btn--on-media"
+              >{{ section.settings.button_2_label }}</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
   </div>
 </div>
 
@@ -97,12 +103,31 @@
     position: relative;
     z-index: 2;
     align-self: end;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
     padding-block: 48px 64px;
     color: var(--ccg-cream);
+  }
+
+  .ccg-hero__row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .ccg-hero__heading-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 46%;
+  }
+
+  .ccg-hero__text-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+    max-width: 40%;
+    text-align: right;
   }
 
   .ccg-hero__eyebrow {
@@ -119,11 +144,9 @@
     font-weight: 400;
     font-size: clamp(40px, 6vw, 68px);
     line-height: 1.08;
-    max-width: 14ch;
   }
 
   .ccg-hero__description {
-    max-width: 46ch;
     font-size: 16px;
     line-height: 1.6;
   }
@@ -131,8 +154,8 @@
   .ccg-hero__actions {
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 12px;
-    margin-top: 8px;
   }
 
   .ccg-btn {
@@ -179,7 +202,26 @@
 
     .ccg-hero__content {
       padding-block: 32px 40px;
-      gap: 14px;
+    }
+
+    .ccg-hero__row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .ccg-hero__heading-col,
+    .ccg-hero__text-col {
+      max-width: none;
+    }
+
+    .ccg-hero__text-col {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .ccg-hero__actions {
+      justify-content: flex-start;
     }
 
     .ccg-btn {

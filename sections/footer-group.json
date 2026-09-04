@@ -11,7 +11,46 @@
   "type": "footer",
   "name": "t:names.footer",
   "sections": {
+    "footer_ccg": {
+      "type": "ccg-footer",
+      "name": "Footer",
+      "blocks": {
+        "column_shop": {
+          "type": "column",
+          "settings": {
+            "heading": "Shop",
+            "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim\nSweatshirts | /collections/sweatshirts\nMatched Sets | /collections/matched-sets"
+          }
+        },
+        "column_help": {
+          "type": "column",
+          "settings": {
+            "heading": "Help",
+            "links": "Shipping Policy | /policies/shipping-policy\nReturns & Exchanges | /policies/refund-policy\nCare Instructions | /pages/care-instructions\nFAQs | /pages/faqs\nTerms & Privacy | /policies/terms-of-service"
+          }
+        },
+        "column_canyon_creek": {
+          "type": "column",
+          "settings": {
+            "heading": "Canyon Creek",
+            "links": "About Melissa | /pages/about-melissa\nUpcoming Shows | /pages/shows\nHow To Wear Your Cowl | /pages/how-to-wear-it\nContact | /pages/contact"
+          }
+        }
+      },
+      "block_order": ["column_shop", "column_help", "column_canyon_creek"],
+      "settings": {
+        "logo_text": "Canyon Creek Goods",
+        "tagline": "Handmade modern western outerwear and accessories. One pair of hands, Snowflake, Arizona, since 2020.",
+        "instagram_url": "https://www.instagram.com/",
+        "facebook_url": "https://www.facebook.com/",
+        "tiktok_url": "https://www.tiktok.com/",
+        "pinterest_url": "https://www.pinterest.com/",
+        "copyright_text": "© 2026 Canyon Creek Goods",
+        "payment_text": "Amex · Apple Pay · Google Pay · Mastercard · Shop Pay · Visa"
+      }
+    },
     "footer_m9NzUG": {
+      "disabled": true,
       "type": "footer",
       "blocks": {
         "group_H6VpwJ": {
@@ -144,6 +183,7 @@
       }
     },
     "footer_utilities_jLGE8U": {
+      "disabled": true,
       "type": "footer-utilities",
       "blocks": {
         "footer_copyright_jweRK8": {
@@ -193,6 +233,7 @@
     }
   },
   "order": [
+    "footer_ccg",
     "footer_m9NzUG",
     "footer_utilities_jLGE8U"
   ]

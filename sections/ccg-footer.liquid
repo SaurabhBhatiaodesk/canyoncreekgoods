@@ -1,0 +1,315 @@
+<div class="ccg-footer section section--page-width">
+  <div class="ccg-footer__top">
+    <div class="ccg-footer__brand">
+      <a href="{{ routes.root_url }}" class="ccg-footer__logo">{{ section.settings.logo_text }}</a>
+      {%- if section.settings.tagline != blank -%}
+        <p class="ccg-footer__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+      {%- if section.settings.instagram_url != blank or section.settings.facebook_url != blank or section.settings.tiktok_url != blank or section.settings.pinterest_url != blank -%}
+        <div class="ccg-footer__social">
+          {%- if section.settings.instagram_url != blank -%}
+            <a href="{{ section.settings.instagram_url }}">Instagram</a>
+          {%- endif -%}
+          {%- if section.settings.facebook_url != blank -%}
+            <a href="{{ section.settings.facebook_url }}">Facebook</a>
+          {%- endif -%}
+          {%- if section.settings.tiktok_url != blank -%}
+            <a href="{{ section.settings.tiktok_url }}">TikTok</a>
+          {%- endif -%}
+          {%- if section.settings.pinterest_url != blank -%}
+            <a href="{{ section.settings.pinterest_url }}">Pinterest</a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="ccg-footer__columns">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'column' -%}
+          <div class="ccg-footer__column" {{ block.shopify_attributes }}>
+            {%- if block.settings.heading != blank -%}
+              <p class="ccg-footer__column-heading">{{ block.settings.heading }}</p>
+            {%- endif -%}
+            <ul class="ccg-footer__links">
+              {%- assign lines = block.settings.links | newline_to_br | split: '<br />' -%}
+              {%- for line in lines -%}
+                {%- assign line = line | strip -%}
+                {%- if line != blank -%}
+                  {%- assign parts = line | split: '|' -%}
+                  <li>
+                    <a href="{{ parts[1] | strip | default: '#' }}">{{ parts[0] | strip }}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="ccg-footer__bottom">
+    {%- if section.settings.copyright_text != blank -%}
+      <p class="ccg-footer__copyright">{{ section.settings.copyright_text }}</p>
+    {%- else -%}
+      <p class="ccg-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name }}</p>
+    {%- endif -%}
+    {%- if section.settings.payment_text != blank -%}
+      <p class="ccg-footer__payment">{{ section.settings.payment_text }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .ccg-footer {
+    --ccg-ink: #211c17;
+    --ccg-tan: #7a6d5d;
+
+    font-family: 'Karla', system-ui, sans-serif;
+    padding-block: 56px 28px;
+    border-top: 1px solid var(--ccg-ink);
+  }
+
+  .ccg-footer__top {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 40px;
+    padding-bottom: 40px;
+  }
+
+  .ccg-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ccg-footer__logo {
+    font-family: 'Rye', serif;
+    font-size: 20px;
+    color: var(--ccg-ink);
+    text-decoration: none;
+  }
+
+  .ccg-footer__tagline {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ccg-tan);
+    max-width: 32ch;
+  }
+
+  .ccg-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+
+  .ccg-footer__social a {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    text-decoration: none;
+  }
+
+  .ccg-footer__social a:hover {
+    text-decoration: underline;
+  }
+
+  .ccg-footer__columns {
+    display: contents;
+  }
+
+  .ccg-footer__column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ccg-footer__column-heading {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-footer__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ccg-footer__links a {
+    font-size: 13px;
+    color: var(--ccg-tan);
+    text-decoration: none;
+  }
+
+  .ccg-footer__links a:hover {
+    color: var(--ccg-ink);
+    text-decoration: underline;
+  }
+
+  .ccg-footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ccg-ink);
+  }
+
+  .ccg-footer__copyright,
+  .ccg-footer__payment {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ccg-tan);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ccg-footer__top {
+      grid-template-columns: 1fr 1fr;
+      row-gap: 32px;
+    }
+
+    .ccg-footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media screen and (max-width: 599px) {
+    .ccg-footer {
+      padding-block: 40px 24px;
+    }
+
+    .ccg-footer__top {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .ccg-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Footer",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "Canyon Creek Goods"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Handmade modern western outerwear and accessories. One pair of hands, Snowflake, Arizona, since 2020."
+    },
+    {
+      "type": "header",
+      "content": "Social links"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "© 2026 Canyon Creek Goods"
+    },
+    {
+      "type": "text",
+      "id": "payment_text",
+      "label": "Payment icons text",
+      "default": "Amex · Apple Pay · Google Pay · Mastercard · Shop Pay · Visa"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Link column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "textarea",
+          "id": "links",
+          "label": "Links",
+          "info": "One per line, format: Label | /url",
+          "default": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim\nSweatshirts | /collections/sweatshirts\nMatched Sets | /collections/matched-sets"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Footer",
+      "blocks": [
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Shop",
+            "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim\nSweatshirts | /collections/sweatshirts\nMatched Sets | /collections/matched-sets"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Help",
+            "links": "Shipping Policy | /policies/shipping-policy\nReturns & Exchanges | /policies/refund-policy\nCare Instructions | /pages/care-instructions\nFAQs | /pages/faqs\nTerms & Privacy | /policies/terms-of-service"
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Canyon Creek",
+            "links": "About Melissa | /pages/about-melissa\nUpcoming Shows | /pages/shows\nHow To Wear Your Cowl | /pages/how-to-wear-it\nContact | /pages/contact"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

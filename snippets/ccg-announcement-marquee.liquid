@@ -1,0 +1,77 @@
+{%- doc -%}
+  Continuously scrolling announcement ticker, rendered globally above the header on every page.
+  Content is hardcoded to match the client-supplied mockup; edit the `items` array below to change it.
+{%- enddoc -%}
+
+{% liquid
+  assign items = 'FREE SHIPPING, NO MINIMUM|HAND CUT IN SNOWFLAKE, ARIZONA|ONE OF ONE — NEVER MADE TWICE|PREMIUM US-MILLED WOOL|MELISSA ANSWERS HER OWN EMAIL' | split: '|'
+%}
+
+<div class="ccg-marquee">
+  <div class="ccg-marquee__track">
+    <div class="ccg-marquee__group">
+      {%- for item in items -%}
+        <span class="ccg-marquee__item">{{ item }}</span>
+        <span class="ccg-marquee__dot">•</span>
+      {%- endfor -%}
+    </div>
+    <div class="ccg-marquee__group" aria-hidden="true">
+      {%- for item in items -%}
+        <span class="ccg-marquee__item">{{ item }}</span>
+        <span class="ccg-marquee__dot">•</span>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ccg-marquee {
+    background: #ded6c6;
+    color: #211c17;
+    border-bottom: 1px solid #211c17;
+    overflow: hidden;
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: ccg-marquee-scroll 32s linear infinite;
+    padding-block: 10px;
+  }
+
+  .ccg-marquee__group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .ccg-marquee__item {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-inline: 20px;
+  }
+
+  .ccg-marquee__dot {
+    color: #8a5a32;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ccg-marquee__track {
+      animation: none;
+    }
+  }
+
+  @keyframes ccg-marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+{% endstylesheet %}
