@@ -13,7 +13,6 @@
   "sections": {
     "footer_ccg": {
       "type": "ccg-footer",
-      "name": "Footer",
       "blocks": {
         "column_shop": {
           "type": "column",
@@ -37,10 +36,16 @@
           }
         }
       },
-      "block_order": ["column_shop", "column_help", "column_canyon_creek"],
+      "block_order": [
+        "column_shop",
+        "column_help",
+        "column_canyon_creek"
+      ],
+      "name": "Footer",
       "settings": {
+        "logo_image": "shopify://shop_images/d32f2025-8239-4f48-b151-bd8097b91d6c.png",
         "logo_text": "Canyon Creek Goods",
-        "logo_width": 120,
+        "logo_width": 90,
         "tagline": "Handmade modern western outerwear and accessories. One pair of hands, Snowflake, Arizona, since 2020.",
         "instagram_url": "https://www.instagram.com/",
         "facebook_url": "https://www.facebook.com/",
@@ -51,7 +56,7 @@
         "heading_color": "#c89457",
         "logo_color": "#ffffff",
         "link_color": "#ddd3c4",
-        "background_color": "#211c17",
+        "background_color": "#211C17",
         "divider_color": "#4a3d31",
         "bottom_text_color": "#a88963",
         "copyright_text": "© 2026 Canyon Creek Goods",
@@ -59,7 +64,6 @@
       }
     },
     "footer_m9NzUG": {
-      "disabled": true,
       "type": "footer",
       "blocks": {
         "group_H6VpwJ": {
@@ -80,17 +84,21 @@
             "height": "fit",
             "custom_height": 100,
             "background_media": "none",
+            "background_color": "",
             "video_position": "cover",
             "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
             "toggle_overlay": false,
             "overlay_color": "#00000026",
             "overlay_style": "solid",
             "gradient_direction": "to top",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_color": "",
+            "border_radius": 0,
+            "link": "",
             "open_in_new_tab": false,
+            "placeholder": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
@@ -111,6 +119,7 @@
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
+                "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -135,6 +144,7 @@
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
+                "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -156,6 +166,8 @@
           "settings": {
             "width": "fill",
             "custom_width": 100,
+            "heading": "",
+            "heading_text_color": "",
             "heading_preset": "h3",
             "border_style": "all",
             "input_style": "custom",
@@ -166,6 +178,10 @@
             "input_border_color": "{{ settings.color_palette.color2 }}",
             "input_type_preset": "paragraph",
             "style_class": "button-unstyled",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
             "display_type": "arrow",
             "label": "Sign up",
             "integrated_button": true,
@@ -182,23 +198,29 @@
         "group_H6VpwJ",
         "email_signup_crihX7"
       ],
+      "disabled": true,
       "name": "t:names.footer",
       "settings": {
         "section_width": "page-width",
         "gap": 20,
         "background_color": "{{ settings.color_palette.background }}",
+        "text_color": "{{ settings.color_palette.background }}",
+        "heading_color": "{{ settings.color_palette.background }}",
+        "link_color": "{{ settings.color_palette.background }}",
+        "link_hover_color": "{{ settings.color_palette.accent }}",
+        "divider_color": "{{ settings.color_palette.stroke }}",
         "padding-block-start": 30,
         "padding-block-end": 30
       }
     },
     "footer_utilities_jLGE8U": {
-      "disabled": true,
       "type": "footer-utilities",
       "blocks": {
         "footer_copyright_jweRK8": {
           "type": "footer-copyright",
           "settings": {
             "show_powered_by": true,
+            "text_color": "",
             "font_size": "0.75rem",
             "case": "none"
           },
@@ -207,6 +229,7 @@
         "footer_policy_list_VCdnpa": {
           "type": "footer-policy-list",
           "settings": {
+            "text_color": "",
             "font_size": "0.75rem",
             "case": "none"
           },
@@ -215,11 +238,20 @@
         "social_links_Ew63Kq": {
           "type": "social-links",
           "settings": {
+            "icon_color": "",
             "facebook_url": "https://www.facebook.com/",
             "instagram_url": "https://www.instagram.com/",
             "youtube_url": "https://www.youtube.com/",
             "tiktok_url": "https://www.tiktok.com/",
-            "twitter_url": "https://x.com/"
+            "twitter_url": "https://x.com/",
+            "threads_url": "",
+            "linkedin_url": "",
+            "bluesky_url": "",
+            "snapchat_url": "",
+            "pinterest_url": "",
+            "tumblr_url": "",
+            "vimeo_url": "",
+            "custom_url": ""
           },
           "blocks": {}
         }
@@ -229,13 +261,14 @@
         "footer_policy_list_VCdnpa",
         "social_links_Ew63Kq"
       ],
+      "disabled": true,
       "name": "t:names.utilities",
       "settings": {
         "section_width": "page-width",
         "gap": 24,
+        "background_color": "{{ settings.color_palette.background }}",
         "divider_thickness": 1,
         "divider_color": "{{ settings.color_palette.color2 }}",
-        "background_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 20,
         "padding-block-end": 48
       }
