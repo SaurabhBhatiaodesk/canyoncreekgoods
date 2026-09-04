@@ -182,7 +182,9 @@
       "name": "Ready to Ride Out",
       "settings": {
         "eyebrow": "OUT THE DOOR IN 1–2 DAYS",
-        "heading": "Ready to ride out"
+        "heading": "Ready to ride out",
+        "collection": "all",
+        "product_limit": 4
       }
     },
     "shows_list_ccg": {
