@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero_ccg": {
@@ -11,31 +20,57 @@
         "button_1_link": "shopify://collections/all",
         "button_2_label": "Meet the maker",
         "button_2_link": "shopify://pages/our-story",
-        "overlay_opacity": 45
+        "image": "shopify://shop_images/hero-duster-desert.jpg",
+        "overlay_opacity": 0
       }
     },
     "collection_picker_ccg": {
       "type": "ccg-collection-picker",
-      "name": "Pick Your Armor",
       "blocks": {
         "tile_1": {
           "type": "tile",
-          "settings": { "title": "Wool Cowls", "subtitle": "24 pieces · from $59" }
+          "settings": {
+            "collection": "",
+            "title": "Wool Cowls",
+            "subtitle": "24 pieces · from $59",
+            "link": ""
+          }
         },
         "tile_2": {
           "type": "tile",
-          "settings": { "title": "Sling Bags", "subtitle": "Pairs with the cowls" }
+          "settings": {
+            "collection": "",
+            "title": "Sling Bags",
+            "subtitle": "Pairs with the cowls",
+            "link": ""
+          }
         },
         "tile_3": {
           "type": "tile",
-          "settings": { "title": "Denim & Dusters", "subtitle": "4 collections" }
+          "settings": {
+            "collection": "",
+            "title": "Denim & Dusters",
+            "subtitle": "4 collections",
+            "link": ""
+          }
         },
         "tile_4": {
           "type": "tile",
-          "settings": { "title": "Sweatshirts", "subtitle": "Buttery soft" }
+          "settings": {
+            "collection": "",
+            "title": "Sweatshirts",
+            "subtitle": "Buttery soft",
+            "link": ""
+          }
         }
       },
-      "block_order": ["tile_1", "tile_2", "tile_3", "tile_4"],
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4"
+      ],
+      "name": "Pick Your Armor",
       "settings": {
         "eyebrow": "SHOP COLLECTIONS",
         "heading": "Pick your armor",
@@ -57,7 +92,6 @@
     },
     "bundle_cards_ccg": {
       "type": "ccg-bundle-cards",
-      "name": "Complete the Look",
       "blocks": {
         "bundle_1": {
           "type": "bundle",
@@ -67,7 +101,8 @@
             "price": "$159",
             "compare_at_price": "$177",
             "save_text": "SAVE $18",
-            "button_label": "Add both"
+            "button_label": "Add both",
+            "button_link": ""
           }
         },
         "bundle_2": {
@@ -78,11 +113,16 @@
             "price": "$289",
             "compare_at_price": "$318",
             "save_text": "SAVE $29",
-            "button_label": "Add both"
+            "button_label": "Add both",
+            "button_link": ""
           }
         }
       },
-      "block_order": ["bundle_1", "bundle_2"],
+      "block_order": [
+        "bundle_1",
+        "bundle_2"
+      ],
+      "name": "Complete the Look",
       "settings": {
         "eyebrow": "COMPLETE THE LOOK",
         "heading": "Matched sets, save 10%",
@@ -91,26 +131,55 @@
     },
     "best_sellers_ccg": {
       "type": "ccg-best-sellers",
-      "name": "Ready to Ride Out",
       "blocks": {
         "product_1": {
           "type": "product",
-          "settings": { "title": "Wool Cowl Scarf — Nehalem", "price": "$79.00", "badge_text": "BEST SELLER" }
+          "settings": {
+            "product": "",
+            "title": "Wool Cowl Scarf — Nehalem",
+            "price": "$79.00",
+            "link": "",
+            "badge_text": "BEST SELLER"
+          }
         },
         "product_2": {
           "type": "product",
-          "settings": { "title": "Wool Cowl Scarf — Turquoise Chief", "price": "$79.00", "badge_text": "LAST ONE" }
+          "settings": {
+            "product": "",
+            "title": "Wool Cowl Scarf — Turquoise Chief",
+            "price": "$79.00",
+            "link": "",
+            "badge_text": "LAST ONE"
+          }
         },
         "product_3": {
           "type": "product",
-          "settings": { "title": "Western Cowl — Grey Aztec", "price": "$59.00", "badge_text": "ONE OF ONE" }
+          "settings": {
+            "product": "",
+            "title": "Western Cowl — Grey Aztec",
+            "price": "$59.00",
+            "link": "",
+            "badge_text": "ONE OF ONE"
+          }
         },
         "product_4": {
           "type": "product",
-          "settings": { "title": "Wool Cowl Scarf — Journey West", "price": "$79.00", "badge_text": "NEW" }
+          "settings": {
+            "product": "",
+            "title": "Wool Cowl Scarf — Journey West",
+            "price": "$79.00",
+            "link": "",
+            "badge_text": "NEW"
+          }
         }
       },
-      "block_order": ["product_1", "product_2", "product_3", "product_4"],
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
+      "name": "Ready to Ride Out",
       "settings": {
         "eyebrow": "OUT THE DOOR IN 1–2 DAYS",
         "heading": "Ready to ride out"
@@ -118,30 +187,61 @@
     },
     "shows_list_ccg": {
       "type": "ccg-shows-list",
-      "name": "Come Find the Booth",
       "blocks": {
         "show_1": {
           "type": "show",
-          "settings": { "date_range": "AUGUST 8–9", "name": "Ridgway Rendezvous", "location": "RIDGWAY, COLORADO" }
+          "settings": {
+            "date_range": "AUGUST 8–9",
+            "name": "Ridgway Rendezvous",
+            "location": "RIDGWAY, COLORADO",
+            "link": ""
+          }
         },
         "show_2": {
           "type": "show",
-          "settings": { "date_range": "SEPTEMBER 4–6", "name": "High Country Art Association", "location": "PINETOP-LAKESIDE, ARIZONA" }
+          "settings": {
+            "date_range": "SEPTEMBER 4–6",
+            "name": "High Country Art Association",
+            "location": "PINETOP-LAKESIDE, ARIZONA",
+            "link": ""
+          }
         },
         "show_3": {
           "type": "show",
-          "settings": { "date_range": "SEPTEMBER 19–20", "name": "Durango Autumn Arts Festival", "location": "DURANGO, COLORADO" }
+          "settings": {
+            "date_range": "SEPTEMBER 19–20",
+            "name": "Durango Autumn Arts Festival",
+            "location": "DURANGO, COLORADO",
+            "link": ""
+          }
         },
         "show_4": {
           "type": "show",
-          "settings": { "date_range": "SEPTEMBER 24–27", "name": "Telluride Autumn Classic", "location": "MOUNTAIN VILLAGE, COLORADO" }
+          "settings": {
+            "date_range": "SEPTEMBER 24–27",
+            "name": "Telluride Autumn Classic",
+            "location": "MOUNTAIN VILLAGE, COLORADO",
+            "link": ""
+          }
         },
         "show_5": {
           "type": "show",
-          "settings": { "date_range": "OCTOBER 10–11", "name": "Sedona Arts Festival", "location": "SEDONA, ARIZONA" }
+          "settings": {
+            "date_range": "OCTOBER 10–11",
+            "name": "Sedona Arts Festival",
+            "location": "SEDONA, ARIZONA",
+            "link": ""
+          }
         }
       },
-      "block_order": ["show_1", "show_2", "show_3", "show_4", "show_5"],
+      "block_order": [
+        "show_1",
+        "show_2",
+        "show_3",
+        "show_4",
+        "show_5"
+      ],
+      "name": "Come Find the Booth",
       "settings": {
         "eyebrow": "ON THE ROAD",
         "heading": "Come find the booth",
@@ -150,26 +250,43 @@
     },
     "feature_bar_ccg": {
       "type": "ccg-feature-bar",
-      "name": "Feature Bar",
       "blocks": {
         "feature_1": {
           "type": "feature",
-          "settings": { "title": "100% handmade", "text": "Every piece hand cut, stitched and finished in a small-batch home studio." }
+          "settings": {
+            "title": "100% handmade",
+            "text": "Every piece hand cut, stitched and finished in a small-batch home studio."
+          }
         },
         "feature_2": {
           "type": "feature",
-          "settings": { "title": "Premium US wool", "text": "Sourced from American woolen mills for warmth and lasting texture." }
+          "settings": {
+            "title": "Premium US wool",
+            "text": "Sourced from American woolen mills for warmth and lasting texture."
+          }
         },
         "feature_3": {
           "type": "feature",
-          "settings": { "title": "One of a kind", "text": "No two cowls or jackets are identical. Your style stays your own." }
+          "settings": {
+            "title": "One of a kind",
+            "text": "No two cowls or jackets are identical. Your style stays your own."
+          }
         },
         "feature_4": {
           "type": "feature",
-          "settings": { "title": "Direct to maker", "text": "You buy from the artisan who made it, and she picks up the phone." }
+          "settings": {
+            "title": "Direct to maker",
+            "text": "You buy from the artisan who made it, and she picks up the phone."
+          }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4"],
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4"
+      ],
+      "name": "Feature Bar",
       "settings": {}
     }
   },
