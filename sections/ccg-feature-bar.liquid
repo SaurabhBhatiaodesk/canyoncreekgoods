@@ -1,62 +1,46 @@
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
+{% render 'ccg-section-spacing' %}
 
-<div class="ccg-features section section--page-width">
-  <div class="ccg-features__row">
-    {%- for block in section.blocks -%}
-      <div class="ccg-features__item" {{ block.shopify_attributes }}>
+<div class="ccg-features">
+  {%- for block in section.blocks -%}
+    <div class="ccg-features__item" {{ block.shopify_attributes }}>
+      {%- if block.settings.icon != blank -%}
         <span class="ccg-features__icon">
-          {%- if block.settings.icon != blank -%}
-            {{ block.settings.icon | image_url: width: 80 | image_tag: widths: '40, 60, 80', alt: block.settings.title }}
-          {%- else -%}
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="12" cy="12" r="10.5" stroke="currentColor"></circle>
-              <path d="M8 12.5l2.5 2.5L16 9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-          {%- endif -%}
+          {{ block.settings.icon | image_url: width: 80 | image_tag: widths: '40, 60, 80', alt: block.settings.title }}
         </span>
-        <span class="ccg-features__title">{{ block.settings.title }}</span>
-        <span class="ccg-features__text">{{ block.settings.text }}</span>
-      </div>
-    {%- endfor -%}
-  </div>
+      {%- endif -%}
+      <span class="ccg-features__title">{{ block.settings.title }}</span>
+      <span class="ccg-features__text">{{ block.settings.text }}</span>
+    </div>
+  {%- endfor -%}
 </div>
 
 {% stylesheet %}
   .ccg-features {
-    --ccg-ink: #211c17;
-    --ccg-tan: #7a6d5d;
-
-    font-family: 'Karla', system-ui, sans-serif;
-    padding-block: 56px;
-    border-top: 1px solid var(--ccg-ink);
-    border-bottom: 1px solid var(--ccg-ink);
-  }
-
-  .ccg-features__row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
+    background: var(--ccg-cream);
+    border-top: 1px solid var(--ccg-hairline);
+    font-family: 'Karla', system-ui, sans-serif;
   }
 
   .ccg-features__item {
+    padding: 40px 32px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
+    gap: 8px;
+    border-right: 1px solid rgba(33, 28, 23, 0.12);
+  }
+
+  .ccg-features__item:last-child {
+    border-right: 0;
   }
 
   .ccg-features__icon {
-    width: 32px;
-    height: 32px;
-    color: var(--ccg-ink);
+    width: 28px;
+    height: 28px;
+    margin-bottom: 4px;
   }
 
-  .ccg-features__icon svg,
   .ccg-features__icon img {
     width: 100%;
     height: 100%;
@@ -65,25 +49,32 @@
 
   .ccg-features__title {
     font-family: 'Rye', serif;
+    font-weight: 400;
     font-size: 16px;
     color: var(--ccg-ink);
   }
 
   .ccg-features__text {
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--ccg-tan);
-    max-width: 26ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ccg-stone);
   }
 
   @media screen and (max-width: 749px) {
     .ccg-features {
-      padding-block: 36px;
+      grid-template-columns: 1fr 1fr;
     }
 
-    .ccg-features__row {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 28px 16px;
+    .ccg-features__item {
+      padding: 28px 20px;
+    }
+
+    .ccg-features__item:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .ccg-features__item:nth-child(-n + 2) {
+      border-bottom: 1px solid rgba(33, 28, 23, 0.12);
     }
   }
 {% endstylesheet %}
@@ -92,13 +83,57 @@
 {
   "name": "CCG Feature Bar",
   "tag": "section",
-  "class": "section-wrapper",
+  "class": "container ccg-flush",
   "settings": [
     {
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#ffffff"
+      "default": "#f8f5ee"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
     }
   ],
   "blocks": [

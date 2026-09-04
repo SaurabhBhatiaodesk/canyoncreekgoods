@@ -1,94 +1,83 @@
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
+{% render 'ccg-section-spacing' %}
 
-<div class="ccg-dtm section section--page-width">
-  <div class="ccg-dtm__row ccg-dtm--{{ section.settings.media_position }}">
-    <div class="ccg-dtm__media">
-      {%- if section.settings.image != blank -%}
-        {{
-          section.settings.image
-          | image_url: width: 1600
-          | image_tag: widths: '480, 750, 1000, 1600', sizes: '(min-width: 750px) 50vw, 100vw', alt: section.settings.image.alt
-        }}
-      {%- else -%}
-        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
-      {%- endif -%}
-    </div>
+<div class="ccg-dtm ccg-dtm--{{ section.settings.media_position }}">
+  <div class="ccg-dtm__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ccg-dtm__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="ccg-dtm__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.description != blank -%}
+      <div class="ccg-dtm__description">{{ section.settings.description }}</div>
+    {%- endif -%}
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link | default: '#' }}" class="ccg-dtm__link">{{ section.settings.button_label }}</a>
+    {%- endif -%}
+  </div>
 
-    <div class="ccg-dtm__content">
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="ccg-dtm__eyebrow">{{ section.settings.eyebrow }}</p>
-      {%- endif -%}
-      {%- if section.settings.heading != blank -%}
-        <h2 class="ccg-dtm__heading">{{ section.settings.heading }}</h2>
-      {%- endif -%}
-      {%- if section.settings.description != blank -%}
-        <div class="ccg-dtm__description">{{ section.settings.description }}</div>
-      {%- endif -%}
-      {%- if section.settings.button_label != blank -%}
-        <a href="{{ section.settings.button_link | default: '#' }}" class="ccg-btn">{{ section.settings.button_label }}</a>
-      {%- endif -%}
-    </div>
+  <div class="ccg-dtm__media">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 1600
+        | image_tag: widths: '480, 750, 1000, 1600', sizes: '(min-width: 750px) 50vw, 100vw', alt: section.settings.image.alt
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
   </div>
 </div>
 
 {% stylesheet %}
   .ccg-dtm {
-    --ccg-ink: #211c17;
-    --ccg-tan: #7a6d5d;
-
-    font-family: 'Karla', system-ui, sans-serif;
-    padding-block: 72px;
-  }
-
-  .ccg-dtm__row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 64px;
+    background: var(--ccg-sand);
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-dtm--left {
+    grid-template-areas: 'media content';
   }
 
   .ccg-dtm--right {
     grid-template-areas: 'content media';
   }
 
-  .ccg-dtm--right .ccg-dtm__media {
-    grid-area: media;
-  }
-
-  .ccg-dtm--right .ccg-dtm__content {
-    grid-area: content;
-  }
-
   .ccg-dtm__media {
-    aspect-ratio: 4 / 5;
+    grid-area: media;
+    min-height: 540px;
     overflow: hidden;
+  }
+
+  .ccg-dtm__content {
+    grid-area: content;
   }
 
   .ccg-dtm__media img,
   .ccg-dtm__media svg {
     width: 100%;
     height: 100%;
+    min-height: 540px;
     object-fit: cover;
     display: block;
   }
 
   .ccg-dtm__content {
+    padding: 96px 72px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
-    max-width: 42ch;
+    gap: 20px;
+    justify-content: center;
   }
 
   .ccg-dtm__eyebrow {
     margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--ccg-tan);
   }
@@ -97,54 +86,58 @@
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: clamp(26px, 3vw, 34px);
-    line-height: 1.25;
+    font-size: 32px;
+    line-height: 1.3;
     color: var(--ccg-ink);
   }
 
-  .ccg-dtm__description {
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--ccg-ink);
+  .ccg-dtm__description,
+  .ccg-dtm__description p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--ccg-muted);
+    text-wrap: pretty;
   }
 
-  .ccg-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 28px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+  .ccg-dtm__link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--ccg-ink);
     color: var(--ccg-ink);
-    background: transparent;
-    transition: opacity 0.2s ease;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ccg-ink);
+    align-self: flex-start;
+    padding-bottom: 3px;
+    margin-top: 8px;
   }
 
-  .ccg-btn:hover {
-    opacity: 0.7;
+  @media screen and (max-width: 989px) {
+    .ccg-dtm__content {
+      padding: 64px 40px;
+    }
+
+    .ccg-dtm__heading {
+      font-size: 26px;
+    }
   }
 
   @media screen and (max-width: 749px) {
     .ccg-dtm {
-      padding-block: 44px;
-    }
-
-    .ccg-dtm__row {
       grid-template-columns: 1fr;
-      grid-template-areas: 'media' 'content' !important;
-      gap: 28px;
+      grid-template-areas: 'media' 'content';
     }
 
-    .ccg-dtm__media {
-      aspect-ratio: 4 / 3;
+    .ccg-dtm__media,
+    .ccg-dtm__media img,
+    .ccg-dtm__media svg {
+      min-height: 320px;
     }
 
     .ccg-dtm__content {
-      max-width: none;
+      padding: 40px var(--ccg-container-pad) 56px;
     }
   }
 {% endstylesheet %}
@@ -153,7 +146,7 @@
 {
   "name": "CCG Direct to Maker",
   "tag": "section",
-  "class": "section-wrapper",
+  "class": "container ccg-flush",
   "settings": [
     {
       "type": "image_picker",
@@ -168,7 +161,7 @@
         { "value": "left", "label": "Left" },
         { "value": "right", "label": "Right" }
       ],
-      "default": "left"
+      "default": "right"
     },
     {
       "type": "text",
@@ -203,7 +196,51 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#ffffff"
+      "default": "#ede7dc"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [

@@ -1,17 +1,15 @@
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
+{% render 'ccg-section-spacing' %}
 
-<div class="ccg-bundles section section--page-width">
+<div class="ccg-bundles">
   <div class="ccg-bundles__head">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ccg-bundles__eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    {%- if section.settings.heading != blank -%}
-      <h2 class="ccg-bundles__heading">{{ section.settings.heading }}</h2>
-    {%- endif -%}
+    <div class="ccg-bundles__head-text">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ccg-bundles__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ccg-bundles__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
     {%- if section.settings.quote != blank -%}
       <p class="ccg-bundles__quote">{{ section.settings.quote }}</p>
     {%- endif -%}
@@ -23,21 +21,18 @@
         <div class="ccg-bundle-card__media">
           <span class="ccg-bundle-card__img">
             {%- if block.settings.image_1 != blank -%}
-              {{ block.settings.image_1 | image_url: width: 700 | image_tag: widths: '300, 450, 700', alt: block.settings.title }}
+              {{ block.settings.image_1 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: block.settings.title }}
             {%- else -%}
               {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
             {%- endif -%}
           </span>
           <span class="ccg-bundle-card__img">
             {%- if block.settings.image_2 != blank -%}
-              {{ block.settings.image_2 | image_url: width: 700 | image_tag: widths: '300, 450, 700', alt: block.settings.title }}
+              {{ block.settings.image_2 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: block.settings.title }}
             {%- else -%}
               {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder' }}
             {%- endif -%}
           </span>
-          {%- if block.settings.save_text != blank -%}
-            <span class="ccg-bundle-card__badge">{{ block.settings.save_text }}</span>
-          {%- endif -%}
         </div>
 
         <div class="ccg-bundle-card__body">
@@ -45,19 +40,17 @@
           {%- if block.settings.description != blank -%}
             <p class="ccg-bundle-card__description">{{ block.settings.description }}</p>
           {%- endif -%}
-          <div class="ccg-bundle-card__footer">
-            <span class="ccg-bundle-card__price">
-              {%- if block.settings.price != blank -%}
-                <span class="ccg-bundle-card__price-now">{{ block.settings.price }}</span>
-              {%- endif -%}
-              {%- if block.settings.compare_at_price != blank -%}
-                <span class="ccg-bundle-card__price-was">{{ block.settings.compare_at_price }}</span>
-              {%- endif -%}
-            </span>
-            <a href="{{ block.settings.button_link | default: '#' }}" class="ccg-btn ccg-btn--solid">
-              {{ block.settings.button_label | default: 'Add both' }}
-            </a>
+          <div class="ccg-bundle-card__price">
+            {%- if block.settings.price != blank -%}
+              <span class="ccg-bundle-card__price-now">{{ block.settings.price }}</span>
+            {%- endif -%}
+            {%- if block.settings.compare_at_price != blank -%}
+              <span class="ccg-bundle-card__price-was">{{ block.settings.compare_at_price }}</span>
+            {%- endif -%}
           </div>
+          {%- if block.settings.save_text != blank -%}
+            <span class="ccg-bundle-card__save">{{ block.settings.save_text }}</span>
+          {%- endif -%}
         </div>
       </div>
     {%- endfor -%}
@@ -66,29 +59,32 @@
 
 {% stylesheet %}
   .ccg-bundles {
-    --ccg-ink: #211c17;
-    --ccg-cream: #fbf8f2;
-    --ccg-tan: #7a6d5d;
-
     font-family: 'Karla', system-ui, sans-serif;
-    padding-block: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    background: var(--ccg-cream);
   }
 
   .ccg-bundles__head {
-    text-align: center;
-    max-width: 52ch;
-    margin: 0 auto 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+
+  .ccg-bundles__head-text {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
   .ccg-bundles__eyebrow {
     margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--ccg-tan);
   }
@@ -97,43 +93,46 @@
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: clamp(26px, 3vw, 34px);
+    font-size: 33px;
     color: var(--ccg-ink);
   }
 
   .ccg-bundles__quote {
-    margin: 8px 0 0;
-    font-style: italic;
-    color: var(--ccg-ink);
+    margin: 0;
+    font-size: 16px;
+    font-style: normal;
+    color: var(--ccg-stone);
+    max-width: 300px;
+    text-align: right;
+    line-height: 1.55;
   }
 
   .ccg-bundles__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
   }
 
   .ccg-bundle-card {
-    border: 1px solid var(--ccg-ink);
-    background: var(--ccg-cream);
     display: flex;
-    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    border: 1px solid var(--ccg-hairline);
+    padding: 24px;
+    background: var(--ccg-cream-soft);
   }
 
   .ccg-bundle-card__media {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
   }
 
   .ccg-bundle-card__img {
-    aspect-ratio: 1 / 1;
+    width: 124px;
+    height: 158px;
     overflow: hidden;
-    border-bottom: 1px solid var(--ccg-ink);
-  }
-
-  .ccg-bundle-card__img:first-child {
-    border-right: 1px solid var(--ccg-ink);
+    background: var(--ccg-sand);
   }
 
   .ccg-bundle-card__img img,
@@ -144,111 +143,85 @@
     display: block;
   }
 
-  .ccg-bundle-card__badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: var(--ccg-ink);
-    color: var(--ccg-cream);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 6px 10px;
-  }
-
   .ccg-bundle-card__body {
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    flex: 1;
+    gap: 10px;
+    min-width: 0;
   }
 
   .ccg-bundle-card__title {
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: 19px;
+    font-size: 18px;
+    line-height: 1.38;
     color: var(--ccg-ink);
   }
 
   .ccg-bundle-card__description {
     margin: 0;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--ccg-tan);
-    flex: 1;
-  }
-
-  .ccg-bundle-card__footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 8px;
-    flex-wrap: wrap;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ccg-stone);
   }
 
   .ccg-bundle-card__price {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 12px;
+    margin-top: 2px;
+  }
+
+  .ccg-bundle-card__price-now {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.04em;
     color: var(--ccg-ink);
   }
 
   .ccg-bundle-card__price-was {
     font-size: 15px;
-    font-weight: 400;
-    color: var(--ccg-tan);
+    color: #a2957f;
     text-decoration: line-through;
   }
 
-  .ccg-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 22px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+  .ccg-bundle-card__save {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.16em;
+    color: var(--ccg-tan);
     text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--ccg-ink);
-    white-space: nowrap;
-    transition: opacity 0.2s ease;
   }
 
-  .ccg-btn--solid {
-    background: var(--ccg-ink);
-    color: var(--ccg-cream);
-  }
-
-  .ccg-btn:hover {
-    opacity: 0.8;
+  @media screen and (max-width: 989px) {
+    .ccg-bundles__grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media screen and (max-width: 749px) {
     .ccg-bundles {
-      padding-block: 44px;
+      gap: 28px;
     }
 
-    .ccg-bundles__grid {
-      grid-template-columns: 1fr;
-      gap: 18px;
-    }
-
-    .ccg-bundle-card__footer {
+    .ccg-bundles__head {
       flex-direction: column;
-      align-items: stretch;
+      align-items: flex-start;
     }
 
-    .ccg-bundle-card__footer .ccg-btn {
-      width: 100%;
+    .ccg-bundles__quote {
+      text-align: left;
+      max-width: none;
+    }
+
+    .ccg-bundles__heading {
+      font-size: 26px;
+    }
+
+    .ccg-bundle-card {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 {% endstylesheet %}
@@ -257,7 +230,7 @@
 {
   "name": "CCG Bundle Cards",
   "tag": "section",
-  "class": "section-wrapper",
+  "class": "container",
   "settings": [
     {
       "type": "text",
@@ -281,7 +254,51 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#ffffff"
+      "default": "#f8f5ee"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
     }
   ],
   "blocks": [
@@ -300,7 +317,7 @@
         },
         { "type": "text", "id": "price", "label": "Price", "default": "$159" },
         { "type": "text", "id": "compare_at_price", "label": "Compare-at price", "default": "$177" },
-        { "type": "text", "id": "save_text", "label": "Save badge text", "default": "SAVE $18" },
+        { "type": "text", "id": "save_text", "label": "Save badge text", "default": "Save $18" },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Add both" },
         { "type": "url", "id": "button_link", "label": "Button link" }
       ]
@@ -317,7 +334,7 @@
             "description": "Same blanket run, cut back to back. One set exists.",
             "price": "$159",
             "compare_at_price": "$177",
-            "save_text": "SAVE $18"
+            "save_text": "Save $18"
           }
         },
         {
@@ -327,7 +344,7 @@
             "description": "The cold-morning uniform. Both one of one.",
             "price": "$289",
             "compare_at_price": "$318",
-            "save_text": "SAVE $29"
+            "save_text": "Save $29"
           }
         }
       ]

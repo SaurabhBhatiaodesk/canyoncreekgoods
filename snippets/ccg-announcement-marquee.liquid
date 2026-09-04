@@ -4,21 +4,25 @@
 {%- enddoc -%}
 
 {% liquid
-  assign items = 'FREE SHIPPING, NO MINIMUM|HAND CUT IN SNOWFLAKE, ARIZONA|ONE OF ONE — NEVER MADE TWICE|PREMIUM US-MILLED WOOL|MELISSA ANSWERS HER OWN EMAIL' | split: '|'
+  assign items = 'Free shipping, no minimum|Hand cut in Snowflake, Arizona|One of one — never made twice|Premium US-milled wool|Melissa answers her own email' | split: '|'
 %}
 
 <div class="ccg-marquee">
   <div class="ccg-marquee__track">
     <div class="ccg-marquee__group">
       {%- for item in items -%}
-        <span class="ccg-marquee__item">{{ item }}</span>
-        <span class="ccg-marquee__dot">•</span>
+        <span class="ccg-marquee__item">
+          <span class="ccg-marquee__text">{{ item }}</span>
+          <span class="ccg-marquee__dot" aria-hidden="true"></span>
+        </span>
       {%- endfor -%}
     </div>
     <div class="ccg-marquee__group" aria-hidden="true">
       {%- for item in items -%}
-        <span class="ccg-marquee__item">{{ item }}</span>
-        <span class="ccg-marquee__dot">•</span>
+        <span class="ccg-marquee__item">
+          <span class="ccg-marquee__text">{{ item }}</span>
+          <span class="ccg-marquee__dot"></span>
+        </span>
       {%- endfor -%}
     </div>
   </div>
@@ -26,37 +30,46 @@
 
 {% style %}
   .ccg-marquee {
-    background: #ded6c6;
-    color: #211c17;
-    border-bottom: 1px solid #211c17;
+    background: #f8f5ee;
     overflow: hidden;
-    font-family: 'Karla', system-ui, sans-serif;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(33, 28, 23, 0.14);
   }
 
   .ccg-marquee__track {
     display: flex;
     width: max-content;
-    animation: ccg-marquee-scroll 32s linear infinite;
-    padding-block: 10px;
+    animation: ccg-marquee-scroll 40s linear infinite;
   }
 
   .ccg-marquee__group {
     display: flex;
-    align-items: center;
-    flex-shrink: 0;
+    flex: none;
   }
 
   .ccg-marquee__item {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    padding: 0 26px;
+    flex-shrink: 0;
+  }
+
+  .ccg-marquee__text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: #5c5145;
     text-transform: uppercase;
     white-space: nowrap;
-    padding-inline: 20px;
   }
 
   .ccg-marquee__dot {
-    color: #8a5a32;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #b98a52;
+    flex-shrink: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {

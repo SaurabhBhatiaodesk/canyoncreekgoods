@@ -1,11 +1,7 @@
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
+{% render 'ccg-section-spacing' %}
 
-<div class="ccg-shows section section--page-width">
-  <div class="ccg-shows__head">
+<div class="ccg-shows">
+  <div class="ccg-shows__intro">
     {%- if section.settings.eyebrow != blank -%}
       <p class="ccg-shows__eyebrow">{{ section.settings.eyebrow }}</p>
     {%- endif -%}
@@ -21,8 +17,10 @@
     {%- for block in section.blocks -%}
       <li class="ccg-shows__row" {{ block.shopify_attributes }}>
         <span class="ccg-shows__date">{{ block.settings.date_range }}</span>
-        <span class="ccg-shows__name">{{ block.settings.name }}</span>
-        <span class="ccg-shows__location">{{ block.settings.location }}</span>
+        <span class="ccg-shows__copy">
+          <span class="ccg-shows__name">{{ block.settings.name }}</span>
+          <span class="ccg-shows__location">{{ block.settings.location }}</span>
+        </span>
         {%- if block.settings.link != blank -%}
           <a href="{{ block.settings.link }}" class="ccg-shows__link" aria-label="{{ block.settings.name }}"></a>
         {%- endif -%}
@@ -33,28 +31,25 @@
 
 {% stylesheet %}
   .ccg-shows {
-    --ccg-ink: #211c17;
-    --ccg-tan: #7a6d5d;
-
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 64px;
     font-family: 'Karla', system-ui, sans-serif;
-    padding-block: 72px;
+    background: var(--ccg-sand);
   }
 
-  .ccg-shows__head {
-    max-width: 56ch;
-    margin: 0 auto 36px;
-    text-align: center;
+  .ccg-shows__intro {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    gap: 16px;
   }
 
   .ccg-shows__eyebrow {
     margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--ccg-tan);
   }
@@ -63,55 +58,65 @@
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: clamp(26px, 3vw, 34px);
+    font-size: 32px;
+    line-height: 1.25;
     color: var(--ccg-ink);
   }
 
-  .ccg-shows__description {
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--ccg-ink);
+  .ccg-shows__description,
+  .ccg-shows__description p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ccg-muted);
+    max-width: 380px;
+    text-wrap: pretty;
   }
 
   .ccg-shows__list {
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--ccg-ink);
+    display: flex;
+    flex-direction: column;
   }
 
   .ccg-shows__row {
     position: relative;
     display: grid;
-    grid-template-columns: 160px 1fr auto;
-    align-items: center;
+    grid-template-columns: 190px 1fr;
     gap: 20px;
-    padding: 20px 4px;
-    border-bottom: 1px solid var(--ccg-ink);
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--ccg-hairline);
   }
 
   .ccg-shows__date {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-size: 19px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--ccg-tan);
   }
 
+  .ccg-shows__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
   .ccg-shows__name {
-    font-family: 'Rye', serif;
-    font-size: 19px;
+    font-size: 18px;
     color: var(--ccg-ink);
   }
 
   .ccg-shows__location {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: var(--ccg-stone);
     text-transform: uppercase;
-    color: var(--ccg-tan);
-    text-align: right;
   }
 
   .ccg-shows__link {
@@ -119,19 +124,26 @@
     inset: 0;
   }
 
-  @media screen and (max-width: 749px) {
+  @media screen and (max-width: 989px) {
     .ccg-shows {
-      padding-block: 44px;
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-shows__heading {
+      font-size: 26px;
     }
 
     .ccg-shows__row {
       grid-template-columns: 1fr;
-      gap: 4px;
-      padding: 16px 2px;
+      gap: 6px;
     }
 
-    .ccg-shows__location {
-      text-align: left;
+    .ccg-shows__description,
+    .ccg-shows__description p {
+      max-width: none;
     }
   }
 {% endstylesheet %}
@@ -140,7 +152,7 @@
 {
   "name": "CCG Shows List",
   "tag": "section",
-  "class": "section-wrapper",
+  "class": "container",
   "settings": [
     {
       "type": "text",
@@ -164,7 +176,51 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#ffffff"
+      "default": "#ede7dc"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
     }
   ],
   "blocks": [

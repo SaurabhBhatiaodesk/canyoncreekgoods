@@ -4,13 +4,9 @@
   assign description = section.settings.description
 %}
 
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
+{% render 'ccg-section-spacing' %}
 
-<div class="ccg-hero" style="--ccg-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
+<div class="ccg-hero">
   <div class="ccg-hero__media">
     {%- if section.settings.image != blank -%}
       <picture>
@@ -29,14 +25,14 @@
     <div class="ccg-hero__overlay"></div>
   </div>
 
-  <div class="ccg-hero__content section section--page-width">
+  <div class="ccg-hero__content">
     <div class="ccg-hero__row">
       <div class="ccg-hero__heading-col">
         {%- if eyebrow != blank -%}
           <p class="ccg-hero__eyebrow">{{ eyebrow }}</p>
         {%- endif -%}
         {%- if heading != blank -%}
-          <h1 class="ccg-hero__heading">{{ heading }}</h1>
+          <h1 class="ccg-hero__heading">{{ heading | newline_to_br }}</h1>
         {%- endif -%}
       </div>
       <div class="ccg-hero__text-col">
@@ -48,13 +44,13 @@
             {%- if section.settings.button_1_label != blank -%}
               <a
                 href="{{ section.settings.button_1_link | default: '#' }}"
-                class="ccg-btn ccg-btn--solid"
+                class="ccg-hero__btn ccg-hero__btn--solid"
               >{{ section.settings.button_1_label }}</a>
             {%- endif -%}
             {%- if section.settings.button_2_label != blank -%}
               <a
                 href="{{ section.settings.button_2_link | default: '#' }}"
-                class="ccg-btn ccg-btn--outline ccg-btn--on-media"
+                class="ccg-hero__btn ccg-hero__btn--outline"
               >{{ section.settings.button_2_label }}</a>
             {%- endif -%}
           </div>
@@ -66,13 +62,11 @@
 
 {% stylesheet %}
   .ccg-hero {
-    --ccg-ink: #211c17;
-    --ccg-cream: #fbf8f2;
-    --ccg-tan: #8a5a32;
-
     position: relative;
     display: grid;
-    min-height: 92svh;
+    height: 700px;
+    overflow: hidden;
+    background: var(--ccg-sand);
     font-family: 'Karla', system-ui, sans-serif;
   }
 
@@ -92,24 +86,30 @@
     object-fit: cover;
     object-position: center 30%;
     display: block;
+    filter: saturate(0.92) brightness(1.04);
   }
 
   .ccg-hero__img.placeholder {
-    height: 92svh;
+    height: 700px;
   }
 
   .ccg-hero__overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.05) 45%, rgb(0 0 0 / 0.25));
-    opacity: var(--ccg-hero-overlay, 0.5);
+    background: linear-gradient(
+      180deg,
+      rgba(248, 245, 238, 0.15) 0%,
+      rgba(60, 48, 38, 0.12) 55%,
+      rgba(38, 30, 24, 0.5) 100%
+    );
   }
 
   .ccg-hero__content {
     position: relative;
     z-index: 2;
     align-self: end;
-    padding-block: 48px 64px;
+    padding-inline: var(--ccg-container-pad);
+    padding-block: 0 56px;
     color: var(--ccg-cream);
   }
 
@@ -117,97 +117,106 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 40px;
+    gap: 48px;
   }
 
   .ccg-hero__heading-col {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    max-width: 46%;
+    gap: 18px;
+    max-width: 640px;
   }
 
   .ccg-hero__text-col {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 20px;
-    max-width: 40%;
-    text-align: right;
+    gap: 18px;
+    max-width: 420px;
   }
 
   .ccg-hero__eyebrow {
     margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
+    color: var(--ccg-cream);
   }
 
   .ccg-hero__heading {
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: clamp(40px, 6vw, 68px);
-    line-height: 1.08;
+    font-size: 62px;
+    line-height: 1.1;
+    color: #fbf8f2;
   }
 
-  .ccg-hero__description {
-    font-size: 16px;
+  .ccg-hero__description,
+  .ccg-hero__description p {
+    margin: 0;
+    font-size: 18px;
     line-height: 1.6;
+    color: #f1ebe0;
+    text-wrap: pretty;
   }
 
   .ccg-hero__actions {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
     gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
   }
 
-  .ccg-btn {
+  .ccg-hero__btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 28px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    padding: 16px 30px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid var(--ccg-ink);
     border-radius: 0;
     white-space: nowrap;
     transition: opacity 0.2s ease;
   }
 
-  .ccg-btn:hover {
-    opacity: 0.8;
+  .ccg-hero__btn:hover {
+    opacity: 0.85;
   }
 
-  .ccg-btn--solid {
-    background: var(--ccg-ink);
-    color: var(--ccg-cream);
-    border-color: var(--ccg-ink);
-  }
-
-  .ccg-btn--outline {
-    background: transparent;
+  .ccg-hero__btn--solid {
+    background: var(--ccg-cream);
     color: var(--ccg-ink);
-    border-color: var(--ccg-ink);
   }
 
-  .ccg-btn--on-media {
+  .ccg-hero__btn--outline {
+    background: transparent;
     color: var(--ccg-cream);
-    border-color: var(--ccg-cream);
+    border: 1px solid rgba(248, 245, 238, 0.7);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ccg-hero__heading {
+      font-size: clamp(36px, 8vw, 52px);
+    }
   }
 
   @media screen and (max-width: 749px) {
     .ccg-hero {
-      min-height: 82svh;
+      height: min(82svh, 640px);
+    }
+
+    .ccg-hero__img.placeholder {
+      height: min(82svh, 640px);
     }
 
     .ccg-hero__content {
-      padding-block: 32px 40px;
+      padding-block: 0 32px;
     }
 
     .ccg-hero__row {
@@ -221,16 +230,7 @@
       max-width: none;
     }
 
-    .ccg-hero__text-col {
-      align-items: flex-start;
-      text-align: left;
-    }
-
-    .ccg-hero__actions {
-      justify-content: flex-start;
-    }
-
-    .ccg-btn {
+    .ccg-hero__btn {
       flex: 1 1 auto;
     }
   }
@@ -240,7 +240,7 @@
 {
   "name": "CCG Hero",
   "tag": "section",
-  "class": "section-wrapper",
+  "class": "container ccg-flush",
   "settings": [
     {
       "type": "text",
@@ -301,20 +301,54 @@
       "label": "Background image (mobile)"
     },
     {
-      "type": "range",
-      "id": "overlay_opacity",
-      "label": "Overlay darkness",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 45
-    },
-    {
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#211c17"
+      "default": "#ede7dc"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [

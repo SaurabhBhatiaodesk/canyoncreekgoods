@@ -1,16 +1,12 @@
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
+{% render 'ccg-section-spacing' %}
 
-<div class="ccg-sellers section section--page-width">
+<div class="ccg-sellers">
   <div class="ccg-sellers__head">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ccg-sellers__eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
     {%- if section.settings.heading != blank -%}
       <h2 class="ccg-sellers__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ccg-sellers__note">{{ section.settings.eyebrow }}</p>
     {%- endif -%}
   </div>
 
@@ -40,8 +36,10 @@
               <span class="ccg-seller-card__badge">{{ badge }}</span>
             {%- endif -%}
           </span>
-          <span class="ccg-seller-card__title">{{ product.title }}</span>
-          <span class="ccg-seller-card__price">{{ product.price | money }}</span>
+          <span class="ccg-seller-card__meta">
+            <span class="ccg-seller-card__title">{{ product.title }}</span>
+            <span class="ccg-seller-card__price">{{ product.price | money }}</span>
+          </span>
         </a>
       {%- endfor -%}
     {%- else -%}
@@ -64,8 +62,10 @@
               <span class="ccg-seller-card__badge">{{ block.settings.badge_text }}</span>
             {%- endif -%}
           </span>
-          <span class="ccg-seller-card__title">{{ card_title }}</span>
-          <span class="ccg-seller-card__price">{{ card_price }}</span>
+          <span class="ccg-seller-card__meta">
+            <span class="ccg-seller-card__title">{{ card_title }}</span>
+            <span class="ccg-seller-card__price">{{ card_price }}</span>
+          </span>
         </a>
       {%- endfor -%}
     {%- endif -%}
@@ -74,49 +74,50 @@
 
 {% stylesheet %}
   .ccg-sellers {
-    --ccg-ink: #211c17;
-    --ccg-tan: #7a6d5d;
-
     font-family: 'Karla', system-ui, sans-serif;
-    padding-block: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
   }
 
   .ccg-sellers__head {
-    text-align: center;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 36px;
-  }
-
-  .ccg-sellers__eyebrow {
-    margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ccg-tan);
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    border-top: 1px solid var(--ccg-hairline);
+    padding-top: 34px;
   }
 
   .ccg-sellers__heading {
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: clamp(26px, 3vw, 34px);
+    font-size: 33px;
     color: var(--ccg-ink);
+  }
+
+  .ccg-sellers__note {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    color: var(--ccg-stone);
+    text-transform: uppercase;
+    white-space: nowrap;
   }
 
   .ccg-sellers__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 24px;
   }
 
   .ccg-seller-card {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 13px;
     text-decoration: none;
     color: var(--ccg-ink);
   }
@@ -124,9 +125,9 @@
   .ccg-seller-card__media {
     position: relative;
     display: block;
-    aspect-ratio: 3 / 4;
+    height: 410px;
     overflow: hidden;
-    background: #eee7db;
+    background: var(--ccg-sand);
   }
 
   .ccg-seller-card__media img,
@@ -144,40 +145,68 @@
 
   .ccg-seller-card__badge {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--ccg-ink);
-    color: #fbf8f2;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    top: 14px;
+    left: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    background: var(--ccg-cream-soft);
+    color: var(--ccg-ink);
+    padding: 5px 11px;
     text-transform: uppercase;
-    padding: 5px 9px;
+  }
+
+  .ccg-seller-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
   .ccg-seller-card__title {
-    font-size: 14px;
-    line-height: 1.4;
-    margin-top: 4px;
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--ccg-ink);
   }
 
   .ccg-seller-card__price {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--ccg-tan);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    color: var(--ccg-stone);
   }
 
   @media screen and (max-width: 989px) {
     .ccg-sellers__grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+    }
+
+    .ccg-seller-card__media {
+      height: 340px;
     }
   }
 
   @media screen and (max-width: 749px) {
     .ccg-sellers {
-      padding-block: 44px;
+      gap: 24px;
+    }
+
+    .ccg-sellers__head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .ccg-sellers__heading {
+      font-size: 26px;
+    }
+
+    .ccg-sellers__note {
+      white-space: normal;
+    }
+
+    .ccg-seller-card__media {
+      height: 260px;
     }
   }
 {% endstylesheet %}
@@ -186,12 +215,12 @@
 {
   "name": "CCG Best Sellers",
   "tag": "section",
-  "class": "section-wrapper",
+  "class": "container",
   "settings": [
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow",
+      "label": "Note (right side)",
       "default": "OUT THE DOOR IN 1–2 DAYS"
     },
     {
@@ -204,7 +233,51 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#ffffff"
+      "default": "#f8f5ee"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
     },
     {
       "type": "header",
@@ -243,10 +316,10 @@
           "label": "Badge",
           "options": [
             { "value": "", "label": "None" },
-            { "value": "BEST SELLER", "label": "Best seller" },
-            { "value": "LAST ONE", "label": "Last one" },
-            { "value": "ONE OF ONE", "label": "One of one" },
-            { "value": "NEW", "label": "New" }
+            { "value": "Best seller", "label": "Best seller" },
+            { "value": "Last one", "label": "Last one" },
+            { "value": "One of one", "label": "One of one" },
+            { "value": "New", "label": "New" }
           ],
           "default": ""
         }
@@ -257,10 +330,10 @@
     {
       "name": "CCG Best Sellers",
       "blocks": [
-        { "type": "product", "settings": { "title": "Wool Cowl Scarf — Nehalem", "price": "$79.00", "badge_text": "BEST SELLER" } },
-        { "type": "product", "settings": { "title": "Wool Cowl Scarf — Turquoise Chief", "price": "$79.00", "badge_text": "LAST ONE" } },
-        { "type": "product", "settings": { "title": "Western Cowl — Grey Aztec", "price": "$59.00", "badge_text": "ONE OF ONE" } },
-        { "type": "product", "settings": { "title": "Wool Cowl Scarf — Journey West", "price": "$79.00", "badge_text": "NEW" } }
+        { "type": "product", "settings": { "title": "Wool Cowl Scarf — Nehalem", "price": "$79.00", "badge_text": "Best seller" } },
+        { "type": "product", "settings": { "title": "Wool Cowl Scarf — Turquoise Chief", "price": "$79.00", "badge_text": "Last one" } },
+        { "type": "product", "settings": { "title": "Western Cowl — Grey Aztec", "price": "$59.00", "badge_text": "One of one" } },
+        { "type": "product", "settings": { "title": "Wool Cowl Scarf — Journey West", "price": "$79.00", "badge_text": "New" } }
       ]
     }
   ]

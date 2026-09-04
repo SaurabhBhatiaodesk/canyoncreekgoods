@@ -1,0 +1,29 @@
+/* Canyon Creek Goods — homepage container matching client mockup (1440px / 48px gutters) */
+:root {
+  --ccg-ink: #211c17;
+  --ccg-cream: #f8f5ee;
+  --ccg-cream-soft: #fbf9f4;
+  --ccg-sand: #ede7dc;
+  --ccg-tan: #8a5a32;
+  --ccg-muted: #5c5145;
+  --ccg-stone: #7a6d5d;
+  --ccg-gold: #b98a52;
+  --ccg-hairline: rgba(33, 28, 23, 0.16);
+  --ccg-container-pad: 48px;
+}
+
+.shopify-section.container {
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: var(--ccg-container-pad);
+}
+
+.shopify-section.container.ccg-flush {
+  padding-inline: 0;
+}
+
+@media screen and (max-width: 749px) {
+  :root {
+    --ccg-container-pad: 20px;
+  }
+}

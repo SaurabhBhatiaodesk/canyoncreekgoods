@@ -1,10 +1,6 @@
-{% style %}
-  #shopify-section-{{ section.id }} {
-    background-color: {{ section.settings.background_color }};
-  }
-{% endstyle %}
+{% render 'ccg-section-spacing' %}
 
-<div class="ccg-picker section section--page-width">
+<div class="ccg-picker">
   <div class="ccg-picker__head">
     <div class="ccg-picker__head-text">
       {%- if section.settings.eyebrow != blank -%}
@@ -68,12 +64,10 @@
 
 {% stylesheet %}
   .ccg-picker {
-    --ccg-ink: #211c17;
-    --ccg-cream: #fbf8f2;
-    --ccg-tan: #7a6d5d;
-
     font-family: 'Karla', system-ui, sans-serif;
-    padding-block: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
   }
 
   .ccg-picker__head {
@@ -81,20 +75,20 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 32px;
   }
 
   .ccg-picker__head-text {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 10px;
   }
 
   .ccg-picker__eyebrow {
     margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--ccg-tan);
   }
@@ -103,26 +97,27 @@
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: clamp(26px, 3vw, 34px);
+    font-size: 33px;
     color: var(--ccg-ink);
   }
 
   .ccg-picker__link {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--ccg-ink);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-color: var(--ccg-tan);
+    color: var(--ccg-tan);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(138, 90, 50, 0.5);
+    padding-bottom: 3px;
     white-space: nowrap;
   }
 
   .ccg-picker__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 24px;
   }
 
   .ccg-picker__tile {
@@ -134,9 +129,9 @@
 
   .ccg-picker__tile-media {
     display: block;
-    aspect-ratio: 4 / 5;
+    height: 420px;
     overflow: hidden;
-    background: var(--ccg-cream);
+    background: var(--ccg-sand);
   }
 
   .ccg-picker__tile-media img,
@@ -144,6 +139,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
     transition: transform 0.5s ease;
   }
 
@@ -160,26 +156,32 @@
   .ccg-picker__tile-title {
     font-family: 'Rye', serif;
     font-size: 19px;
+    font-weight: 400;
     color: var(--ccg-ink);
   }
 
   .ccg-picker__tile-subtitle {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--ccg-tan);
+    color: var(--ccg-stone);
   }
 
   @media screen and (max-width: 989px) {
     .ccg-picker__grid {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    .ccg-picker__tile-media {
+      height: 320px;
+    }
   }
 
   @media screen and (max-width: 599px) {
     .ccg-picker {
-      padding-block: 40px;
+      gap: 28px;
     }
 
     .ccg-picker__head {
@@ -188,9 +190,17 @@
       gap: 8px;
     }
 
+    .ccg-picker__heading {
+      font-size: 26px;
+    }
+
     .ccg-picker__grid {
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 14px;
+    }
+
+    .ccg-picker__tile-media {
+      height: 220px;
     }
   }
 {% endstylesheet %}
@@ -199,7 +209,7 @@
 {
   "name": "CCG Collection Picker",
   "tag": "section",
-  "class": "section-wrapper",
+  "class": "container",
   "settings": [
     {
       "type": "text",
@@ -228,7 +238,51 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#ffffff"
+      "default": "#f8f5ee"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
     }
   ],
   "blocks": [
