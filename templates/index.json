@@ -253,7 +253,7 @@
         "eyebrow": "ON THE ROAD",
         "heading": "Come find the booth",
         "description": "<p>Most pieces sell at shows before they ever reach the site. If you are close to one of these, come try things on.</p>",
-        "background_color": "#ffffff"
+        "background_color": "#F8F5EE"
       }
     },
     "feature_bar_ccg": {
@@ -296,7 +296,7 @@
       ],
       "name": "Feature Bar",
       "settings": {
-        "background_color": "#ffffff"
+        "background_color": "#F8F5EE"
       }
     }
   },
