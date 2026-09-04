@@ -13,15 +13,15 @@
       "type": "ccg-hero",
       "name": "Hero",
       "settings": {
-        "eyebrow": "Hand cut in a home studio · Snowflake, AZ",
-        "heading": "Forged for\nthe untamed.",
+        "eyebrow": "HAND CUT IN A HOME STUDIO · SNOWFLAKE, AZ",
+        "heading": "Forged for the untamed.",
         "description": "<p>Heirloom-quality wool cowls, sling bags and denim, hand cut one at a time from premium American wool. No two pieces alike.</p>",
         "button_1_label": "Shop the cowls",
         "button_1_link": "shopify://collections/all",
         "button_2_label": "Meet the maker",
         "button_2_link": "shopify://pages/our-story",
         "image": "shopify://shop_images/hero-duster-desert.jpg",
-        "background_color": "#ede7dc",
+        "background_color": "#211c17",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
         "mobile_padding_top": 0,
@@ -34,7 +34,7 @@
         "tile_1": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "denim-duster-jackets",
             "title": "Wool Cowls",
             "subtitle": "24 pieces · from $59",
             "link": ""
@@ -43,7 +43,7 @@
         "tile_2": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "patched-denim-jackets",
             "title": "Sling Bags",
             "subtitle": "Pairs with the cowls",
             "link": ""
@@ -52,7 +52,7 @@
         "tile_3": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "denim-jeans",
             "title": "Denim & Dusters",
             "subtitle": "4 collections",
             "link": ""
@@ -61,7 +61,7 @@
         "tile_4": {
           "type": "tile",
           "settings": {
-            "collection": "",
+            "collection": "denim-vests",
             "title": "Sweatshirts",
             "subtitle": "Buttery soft",
             "link": ""
@@ -76,11 +76,11 @@
       ],
       "name": "Pick Your Armor",
       "settings": {
-        "eyebrow": "Shop collections",
+        "eyebrow": "SHOP COLLECTIONS",
         "heading": "Pick your armor",
         "link_label": "Everything in the shop",
-        "link": "shopify://collections",
-        "background_color": "#f8f5ee",
+        "link": "shopify://collections/all",
+        "background_color": "#F8F5EE",
         "desktop_padding_top": 96,
         "desktop_padding_bottom": 72,
         "mobile_padding_top": 56,
@@ -91,13 +91,14 @@
       "type": "ccg-direct-to-maker",
       "name": "Direct to Maker",
       "settings": {
+        "image": "shopify://shop_images/b7a6632f-ff7a-43d2-9678-a5076955ef11.jpg",
         "media_position": "right",
-        "eyebrow": "Direct to maker",
+        "eyebrow": "DIRECT TO MAKER",
         "heading": "Every piece leaves my hands before it reaches yours.",
         "description": "<p>No production line, no overseas factory. I hand cut, stitch and finish each cowl and jacket in a small-batch home studio in Arizona, using premium wool milled in the US. You are buying from the woman who made it, and she answers her own email.</p>",
         "button_label": "Read the whole story",
         "button_link": "shopify://pages/our-story",
-        "background_color": "#ede7dc",
+        "background_color": "#f8f5ee",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
         "mobile_padding_top": 0,
@@ -114,7 +115,7 @@
             "description": "Same blanket run, cut back to back. One set exists.",
             "price": "$159",
             "compare_at_price": "$177",
-            "save_text": "Save $18",
+            "save_text": "SAVE $18",
             "button_label": "Add both",
             "button_link": ""
           }
@@ -126,7 +127,7 @@
             "description": "The cold-morning uniform. Both one of one.",
             "price": "$289",
             "compare_at_price": "$318",
-            "save_text": "Save $29",
+            "save_text": "SAVE $29",
             "button_label": "Add both",
             "button_link": ""
           }
@@ -138,7 +139,7 @@
       ],
       "name": "Complete the Look",
       "settings": {
-        "eyebrow": "Complete the look",
+        "eyebrow": "COMPLETE THE LOOK",
         "heading": "Matched sets, save 10%",
         "quote": "I pair these myself, from the same blanket run. — Melissa",
         "background_color": "#f8f5ee",
@@ -158,7 +159,7 @@
             "title": "Wool Cowl Scarf — Nehalem",
             "price": "$79.00",
             "link": "",
-            "badge_text": "Best seller"
+            "badge_text": "BEST SELLER"
           }
         },
         "product_2": {
@@ -168,7 +169,7 @@
             "title": "Wool Cowl Scarf — Turquoise Chief",
             "price": "$79.00",
             "link": "",
-            "badge_text": "Last one"
+            "badge_text": "LAST ONE"
           }
         },
         "product_3": {
@@ -178,7 +179,7 @@
             "title": "Western Cowl — Grey Aztec",
             "price": "$59.00",
             "link": "",
-            "badge_text": "One of one"
+            "badge_text": "ONE OF ONE"
           }
         },
         "product_4": {
@@ -188,7 +189,7 @@
             "title": "Wool Cowl Scarf — Journey West",
             "price": "$79.00",
             "link": "",
-            "badge_text": "New"
+            "badge_text": "NEW"
           }
         }
       },
@@ -200,15 +201,15 @@
       ],
       "name": "Ready to Ride Out",
       "settings": {
-        "eyebrow": "Out the door in 1–2 days",
+        "eyebrow": "OUT THE DOOR IN 1–2 DAYS",
         "heading": "Ready to ride out",
-        "collection": "all",
-        "product_limit": 4,
-        "background_color": "#f8f5ee",
+        "background_color": "#ffffff",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 96,
         "mobile_padding_top": 0,
-        "mobile_padding_bottom": 56
+        "mobile_padding_bottom": 56,
+        "collection": "all",
+        "product_limit": 4
       }
     },
     "shows_list_ccg": {
@@ -269,10 +270,10 @@
       ],
       "name": "Come Find the Booth",
       "settings": {
-        "eyebrow": "On the road",
+        "eyebrow": "ON THE ROAD",
         "heading": "Come find the booth",
         "description": "<p>Most pieces sell at shows before they ever reach the site. If you are close to one of these, come try things on.</p>",
-        "background_color": "#ede7dc",
+        "background_color": "#f8f5ee",
         "desktop_padding_top": 88,
         "desktop_padding_bottom": 88,
         "mobile_padding_top": 48,
