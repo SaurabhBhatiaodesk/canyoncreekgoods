@@ -75,7 +75,7 @@
         "eyebrow": "SHOP COLLECTIONS",
         "heading": "Pick your armor",
         "link_label": "Everything in the shop",
-        "link": "shopify://collections/all"
+        "link": "shopify://collections"
       }
     },
     "direct_to_maker_ccg": {
