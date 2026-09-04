@@ -83,7 +83,8 @@
       "type": "ccg-direct-to-maker",
       "name": "Direct to Maker",
       "settings": {
-        "media_position": "left",
+        "image": "shopify://shop_images/b7a6632f-ff7a-43d2-9678-a5076955ef11.jpg",
+        "media_position": "right",
         "eyebrow": "DIRECT TO MAKER",
         "heading": "Every piece leaves my hands before it reaches yours.",
         "description": "<p>No production line, no overseas factory. I hand cut, stitch and finish each cowl and jacket in a small-batch home studio in Arizona, using premium wool milled in the US. You are buying from the woman who made it, and she answers her own email.</p>",
