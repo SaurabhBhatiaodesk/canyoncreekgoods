@@ -6,9 +6,20 @@
   else
     assign account_url = routes.account_login_url
   endif
+
+  assign header_style = ''
+  if section.settings.background_color != blank
+    assign header_style = header_style | append: '--ccg-header-bg: ' | append: section.settings.background_color | append: ';'
+  endif
+  if section.settings.background_color_scrolled != blank
+    assign header_style = header_style | append: '--ccg-header-bg-scrolled: ' | append: section.settings.background_color_scrolled | append: ';'
+  endif
+  if section.settings.text_color_scrolled != blank
+    assign header_style = header_style | append: '--ccg-header-text-scrolled: ' | append: section.settings.text_color_scrolled | append: ';'
+  endif
 %}
 
-<header class="ccg-header">
+<header class="ccg-header" style="{{ header_style }}" data-ccg-header>
   <div class="ccg-header__bar">
     <a href="{{ routes.root_url }}" class="ccg-header__logo">
       {%- if section.settings.logo_image != blank -%}
@@ -74,6 +85,18 @@
   </div>
 </header>
 
+<script>
+  (function () {
+    var header = document.currentScript.previousElementSibling;
+    if (!header) return;
+    var toggle = function () {
+      header.classList.toggle('is-scrolled', window.scrollY > 4);
+    };
+    toggle();
+    window.addEventListener('scroll', toggle, { passive: true });
+  })();
+</script>
+
 {% stylesheet %}
   .ccg-header {
     --ccg-ink: #211c17;
@@ -87,9 +110,15 @@
     position: sticky;
     top: 0;
     z-index: 40;
-    background: var(--ccg-cream);
+    background: var(--ccg-header-bg, var(--ccg-cream));
     border-bottom: 1px solid var(--ccg-ink);
     font-family: 'Karla', system-ui, sans-serif;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+  }
+
+  .ccg-header.is-scrolled {
+    background: var(--ccg-header-bg-scrolled, var(--ccg-header-bg, var(--ccg-cream)));
+    --ccg-ink: var(--ccg-header-text-scrolled, #211c17);
   }
 
   .ccg-header__bar {
@@ -109,6 +138,7 @@
     gap: 8px;
     text-decoration: none;
     color: var(--ccg-ink);
+    transition: color 0.25s ease;
   }
 
   .ccg-header__logo-icon {
@@ -148,6 +178,7 @@
     text-underline-offset: 4px;
     padding-bottom: 4px;
     border-bottom: 1px solid transparent;
+    transition: color 0.25s ease, border-color 0.2s ease;
   }
 
   .ccg-header__nav-link:hover {
@@ -355,6 +386,28 @@
       "id": "menu",
       "label": "Menu",
       "default": "header-menu"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fbf8f2"
+    },
+    {
+      "type": "color",
+      "id": "background_color_scrolled",
+      "label": "Background color on scroll",
+      "info": "Applied once the page is scrolled. Leave blank to keep the same background at all times."
+    },
+    {
+      "type": "color",
+      "id": "text_color_scrolled",
+      "label": "Text color on scroll",
+      "info": "Optional. Leave blank to keep the default text color."
     }
   ],
   "presets": [
