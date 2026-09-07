@@ -16,7 +16,19 @@
     {%- endif -%}
   </div>
 
-  <div class="ccg-bundles__grid" data-bundler-grid="{{ section.id }}"></div>
+  {%- liquid
+    assign filter_names = ''
+    for block in section.blocks
+      if block.settings.bundle_name != blank
+        assign filter_names = filter_names | append: block.settings.bundle_name | append: '|||'
+      endif
+    endfor
+  -%}
+  <div
+    class="ccg-bundles__grid"
+    data-bundler-grid="{{ section.id }}"
+    data-bundler-filter="{{ filter_names | escape }}"
+  ></div>
   </div>
 </div>
 
@@ -24,6 +36,11 @@
   (function () {
     var grid = document.querySelector('[data-bundler-grid="{{ section.id }}"]');
     if (!grid) return;
+
+    var filterNames = (grid.getAttribute('data-bundler-filter') || '')
+      .split('|||')
+      .map(function (s) { return s.trim(); })
+      .filter(Boolean);
 
     var money = function (cents) {
       return '$' + (cents / 100).toFixed(2);
@@ -121,9 +138,21 @@
     function renderBundles(bundles) {
       if (!Array.isArray(bundles) || !bundles.length) return;
 
-      var active = bundles.filter(function (b) {
+      var enabled = bundles.filter(function (b) {
         return !b.status || b.status === 'enabled' || b.status === 'active';
       });
+
+      var active;
+      if (filterNames.length) {
+        active = filterNames
+          .map(function (name) {
+            var norm = name.toLowerCase();
+            return enabled.find(function (b) { return (b.name || '').trim().toLowerCase() === norm; });
+          })
+          .filter(Boolean);
+      } else {
+        active = enabled;
+      }
       if (!active.length) return;
 
       Promise.all(
@@ -389,7 +418,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Cards in this section are 100% automatic — pulled live from the Bundler app (name, products, images, price, discount). No product, image or price needs to be set here, and no block needs to be added when a new bundle is created in Bundler."
+      "content": "Cards are pulled live from the Bundler app (name, products, images, price, discount) — no product, image or price is ever set here. By default every enabled bundle shows automatically. To show only specific bundles, or control their order, add a block below for each and type the exact bundle name from Bundler."
     },
     {
       "type": "text",
@@ -458,6 +487,20 @@
       "step": 4,
       "unit": "px",
       "default": 56
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bundle_name",
+      "name": "Bundle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "bundle_name",
+          "label": "Bundle name",
+          "info": "Must exactly match the bundle's name in the Bundler app. Leave no blocks here to show every enabled bundle automatically instead."
+        }
+      ]
     }
   ],
   "presets": [
