@@ -21,7 +21,7 @@
         "button_2_label": "Meet the maker",
         "button_2_link": "shopify://pages/our-story",
         "image": "shopify://shop_images/hero-duster-desert.jpg",
-        "image_mobile": "shopify://shop_images/20241027-115213.jpg",
+        "image_mobile": "shopify://shop_images/20251115_161049.jpg",
         "background_color": "#f8f5ee",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
@@ -81,6 +81,7 @@
         "heading": "Pick your armor",
         "link_label": "Everything in the shop",
         "link": "shopify://collections/all",
+        "image_ratio": "portrait",
         "background_color": "#f8f5ee",
         "desktop_padding_top": 96,
         "desktop_padding_bottom": 72,
@@ -213,7 +214,7 @@
         "desktop_padding_bottom": 96,
         "mobile_padding_top": 0,
         "mobile_padding_bottom": 56,
-        "collection": "all",
+        "collection": "ready-to-ride-out",
         "product_limit": 4
       }
     },
