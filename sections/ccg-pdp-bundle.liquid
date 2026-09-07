@@ -213,12 +213,12 @@
       }
 
       var currentHandle = null;
-      var handles = Object.values(match.products)
-        .map(function (p) {
-          if (String(p.id) === currentProductId) currentHandle = p.handle;
-          return p.handle;
-        })
-        .filter(Boolean);
+      var handles = [];
+      Object.keys(match.products).forEach(function (key) {
+        var p = match.products[key];
+        if (key === currentProductId) currentHandle = p.handle;
+        if (p.handle) handles.push(p.handle);
+      });
       if (!handles.length) return;
 
       Promise.all(handles.map(fetchProduct))

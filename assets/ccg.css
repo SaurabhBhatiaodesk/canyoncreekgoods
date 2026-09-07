@@ -11,6 +11,15 @@
   --ccg-hairline: rgba(33, 28, 23, 0.16);
   --ccg-container-pad: 48px;
 }
+.bundler-target-element{
+  display: none;
+}
+/* Hide Bundler app's own auto-injected widget - replaced by the custom
+   "Complete the Look" bundle section on the product page. */
+.bundler-target-element,
+.bndlr-automatic {
+  display: none !important;
+}
 
 body {
   background: var(--ccg-cream);
