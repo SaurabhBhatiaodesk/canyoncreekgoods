@@ -324,6 +324,19 @@
         "padding-block-end": 0
       }
     },
+    "pdp_bundle_ccg": {
+      "type": "ccg-pdp-bundle",
+      "name": "Complete the Look (PDP)",
+      "settings": {
+        "eyebrow": "COMPLETE THE LOOK",
+        "quote": "Cut from the same blanket, back to back. One set exists. — Melissa",
+        "background_color": "#ede7dc",
+        "desktop_padding_top": 64,
+        "desktop_padding_bottom": 64,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
     "product_recommendations_qggXJq": {
       "type": "product-recommendations",
       "blocks": {
@@ -469,6 +482,7 @@
   },
   "order": [
     "main",
+    "pdp_bundle_ccg",
     "product_recommendations_qggXJq"
   ]
 }

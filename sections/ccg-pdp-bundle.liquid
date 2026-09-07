@@ -1,0 +1,515 @@
+{% render 'ccg-section-spacing' %}
+
+<div class="ccg-pdp-bundle section" data-pdp-bundle-grid="{{ section.id }}" data-pdp-bundle-product-id="{{ product.id }}" hidden>
+  <div class="ccg-pdp-bundle__inner">
+    <div class="ccg-pdp-bundle__head">
+      <div class="ccg-pdp-bundle__head-text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ccg-pdp-bundle__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="ccg-pdp-bundle__heading" data-pdp-bundle-heading></h2>
+      </div>
+      {%- if section.settings.quote != blank -%}
+        <p class="ccg-pdp-bundle__quote">{{ section.settings.quote }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="ccg-pdp-bundle__card" data-pdp-bundle-card></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var section = document.querySelector('[data-pdp-bundle-grid="{{ section.id }}"]');
+    if (!section) return;
+    var currentProductId = section.getAttribute('data-pdp-bundle-product-id');
+    var headingEl = section.querySelector('[data-pdp-bundle-heading]');
+    var card = section.querySelector('[data-pdp-bundle-card]');
+    if (!currentProductId) return;
+
+    var money = function (cents) {
+      return '$' + (cents / 100).toFixed(2);
+    };
+
+    function fetchProduct(handle) {
+      return fetch('/products/' + handle + '.js', { credentials: 'same-origin' }).then(function (r) {
+        if (!r.ok) throw new Error('Failed to fetch product: ' + handle);
+        return r.json();
+      });
+    }
+
+    function buildCard(bundle, products, currentHandle) {
+      var regularCents = 0;
+      products.forEach(function (p) { regularCents += p.price; });
+
+      var discountPercent = parseFloat(bundle.percentage_value) || 0;
+      var fixedAmount = parseFloat(bundle.fixed_amount_value) || 0;
+      var priceCents = regularCents;
+      if (bundle.discount_type === 'percentage' && discountPercent > 0) {
+        priceCents = Math.round(regularCents * (100 - discountPercent) / 100);
+      } else if (bundle.discount_type === 'fixed_amount' && fixedAmount > 0) {
+        priceCents = Math.max(regularCents - Math.round(fixedAmount * 100), 0);
+      }
+      var saveCents = regularCents - priceCents;
+
+      var otherProducts = products.filter(function (p) { return p.handle !== currentHandle; });
+      var title = bundle.name || products.map(function (p) { return p.title; }).join(' + ');
+
+      var headingText = otherProducts.length
+        ? 'Add the matching ' + otherProducts.map(function (p) { return p.title; }).join(' + ')
+        : title;
+      if (discountPercent > 0) {
+        headingText += ', save ' + discountPercent + '%';
+      } else if (saveCents > 0) {
+        headingText += ', save ' + money(saveCents);
+      }
+      if (headingEl) headingEl.textContent = headingText;
+
+      var media = document.createElement('div');
+      media.className = 'ccg-pdp-bundle__media';
+
+      products.forEach(function (p, i) {
+        if (i > 0) {
+          var plus = document.createElement('span');
+          plus.className = 'ccg-pdp-bundle__plus';
+          plus.textContent = '+';
+          media.appendChild(plus);
+        }
+        var img = document.createElement('img');
+        img.className = 'ccg-pdp-bundle__img';
+        img.src = p.featured_image || (p.images && p.images[0]) || '';
+        img.alt = p.title || title;
+        img.loading = 'lazy';
+        media.appendChild(img);
+      });
+
+      var body = document.createElement('div');
+      body.className = 'ccg-pdp-bundle__body';
+
+      var titleEl = document.createElement('h3');
+      titleEl.className = 'ccg-pdp-bundle__title';
+      titleEl.textContent = title;
+      body.appendChild(titleEl);
+
+      var descEl = document.createElement('p');
+      descEl.className = 'ccg-pdp-bundle__description';
+      descEl.textContent = discountPercent > 0
+        ? 'Cut from the same run. Add both now and save ' + discountPercent + '% at checkout.'
+        : 'Cut from the same run. Add both now and save at checkout.';
+      body.appendChild(descEl);
+
+      var priceRow = document.createElement('div');
+      priceRow.className = 'ccg-pdp-bundle__price';
+
+      var priceNow = document.createElement('span');
+      priceNow.className = 'ccg-pdp-bundle__price-now';
+      priceNow.textContent = money(priceCents);
+      priceRow.appendChild(priceNow);
+
+      if (saveCents > 0) {
+        var priceWas = document.createElement('span');
+        priceWas.className = 'ccg-pdp-bundle__price-was';
+        priceWas.textContent = money(regularCents);
+        priceRow.appendChild(priceWas);
+
+        var saveEl = document.createElement('span');
+        saveEl.className = 'ccg-pdp-bundle__save';
+        saveEl.textContent = 'Save ' + money(saveCents);
+        priceRow.appendChild(saveEl);
+      }
+      body.appendChild(priceRow);
+
+      var actions = document.createElement('div');
+      actions.className = 'ccg-pdp-bundle__actions';
+
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'ccg-pdp-bundle__btn';
+      button.textContent = 'Add both';
+      button.addEventListener('click', function () {
+        button.disabled = true;
+        button.textContent = 'Adding…';
+        var items = products
+          .map(function (p) {
+            var variant = p.variants && p.variants.find(function (v) { return v.available; });
+            return variant ? { id: variant.id, quantity: 1 } : null;
+          })
+          .filter(Boolean);
+        if (!items.length) {
+          button.disabled = false;
+          button.textContent = 'Add both';
+          return;
+        }
+        fetch('/cart/add.js', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: items })
+        })
+          .then(function (r) {
+            if (!r.ok) throw new Error('Add to cart failed');
+            window.location.href = '/cart';
+          })
+          .catch(function () {
+            button.disabled = false;
+            button.textContent = 'Add both';
+          });
+      });
+      actions.appendChild(button);
+      body.appendChild(actions);
+
+      card.innerHTML = '';
+      card.appendChild(media);
+      card.appendChild(body);
+      section.hidden = false;
+    }
+
+    function findMatch(bundles) {
+      var enabled = bundles.filter(function (b) {
+        return !b.status || b.status === 'enabled' || b.status === 'active';
+      });
+      return enabled.find(function (b) {
+        return b.products && Object.prototype.hasOwnProperty.call(b.products, currentProductId);
+      });
+    }
+
+    function renderBundle(bundles) {
+      if (!Array.isArray(bundles) || !bundles.length) return;
+      var match = findMatch(bundles);
+      if (!match) return;
+
+      var currentHandle = null;
+      var handles = Object.values(match.products)
+        .map(function (p) {
+          if (String(p.id) === currentProductId) currentHandle = p.handle;
+          return p.handle;
+        })
+        .filter(Boolean);
+      if (!handles.length) return;
+
+      Promise.all(handles.map(fetchProduct))
+        .then(function (products) {
+          buildCard(match, products, currentHandle);
+        })
+        .catch(function (e) {
+          console.warn('[ccg-pdp-bundle] Failed to render bundle:', e);
+        });
+    }
+
+    var attempts = 0;
+    var maxAttempts = 100;
+    var rendered = false;
+
+    (function waitForBundler() {
+      attempts++;
+      if (window.bndlr && typeof window.bndlr.getBundles === 'function') {
+        try {
+          var result = window.bndlr.getBundles();
+          if (result && typeof result.then === 'function') {
+            result.then(function (bundles) {
+              if (Array.isArray(bundles) && bundles.length) {
+                rendered = true;
+                renderBundle(bundles);
+              }
+            }).catch(function () {});
+          } else if (Array.isArray(result) && result.length) {
+            rendered = true;
+            renderBundle(result);
+          }
+        } catch (e) {
+          console.warn('[ccg-pdp-bundle] Bundler getBundles() failed:', e);
+        }
+      }
+      if (!rendered && attempts < maxAttempts) {
+        setTimeout(waitForBundler, 300);
+      }
+    })();
+  })();
+</script>
+
+{% stylesheet %}
+  .ccg-pdp-bundle {
+    font-family: 'Karla', system-ui, sans-serif;
+    background: var(--ccg-sand);
+  }
+
+  .ccg-pdp-bundle__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .ccg-pdp-bundle__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+
+  .ccg-pdp-bundle__head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ccg-pdp-bundle__eyebrow {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ccg-tan);
+  }
+
+  .ccg-pdp-bundle__heading {
+    margin: 0;
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: 30px;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-pdp-bundle__quote {
+    margin: 0;
+    font-size: 16px;
+    color: var(--ccg-stone);
+    max-width: 320px;
+    text-align: right;
+    line-height: 1.55;
+  }
+
+  .ccg-pdp-bundle__card {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    border: 1px solid var(--ccg-hairline);
+    background: var(--ccg-cream-soft);
+    padding: 32px;
+  }
+
+  .ccg-pdp-bundle__media {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .ccg-pdp-bundle__img {
+    width: 180px;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+    background: var(--ccg-sand);
+  }
+
+  .ccg-pdp-bundle__plus {
+    font-family: 'Rye', serif;
+    font-size: 22px;
+    color: var(--ccg-stone);
+  }
+
+  .ccg-pdp-bundle__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .ccg-pdp-bundle__title {
+    margin: 0;
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-pdp-bundle__description {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ccg-stone);
+    max-width: 480px;
+  }
+
+  .ccg-pdp-bundle__price {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-top: 2px;
+  }
+
+  .ccg-pdp-bundle__price-now {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-pdp-bundle__price-was {
+    font-size: 15px;
+    color: #a2957f;
+    text-decoration: line-through;
+  }
+
+  .ccg-pdp-bundle__save {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.16em;
+    color: var(--ccg-tan);
+    text-transform: uppercase;
+  }
+
+  .ccg-pdp-bundle__actions {
+    margin-top: 8px;
+  }
+
+  .ccg-pdp-bundle__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--ccg-ink);
+    border: 1px solid var(--ccg-ink);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .ccg-pdp-bundle__btn:hover {
+    background: var(--ccg-ink);
+    color: var(--ccg-cream);
+  }
+
+  .ccg-pdp-bundle__btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-pdp-bundle__inner {
+      gap: 20px;
+    }
+
+    .ccg-pdp-bundle__head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .ccg-pdp-bundle__quote {
+      text-align: left;
+      max-width: none;
+    }
+
+    .ccg-pdp-bundle__heading {
+      font-size: 22px;
+    }
+
+    .ccg-pdp-bundle__card {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .ccg-pdp-bundle__img {
+      width: 110px;
+      height: 140px;
+    }
+
+    .ccg-pdp-bundle__actions {
+      width: 100%;
+    }
+
+    .ccg-pdp-bundle__btn {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG PDP Bundle",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows automatically only on a product page whose product is part of a live Bundler bundle. Products, images, price and discount come live from Bundler - nothing to configure. Hidden entirely if the current product has no matching bundle."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "COMPLETE THE LOOK"
+    },
+    {
+      "type": "text",
+      "id": "quote",
+      "label": "Quote line",
+      "default": "Cut from the same blanket, back to back. One set exists. — Melissa"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ede7dc"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG PDP Bundle"
+    }
+  ]
+}
+{% endschema %}
