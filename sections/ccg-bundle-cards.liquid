@@ -151,23 +151,31 @@
     }
 
     var attempts = 0;
+    var maxAttempts = 100;
+    var rendered = false;
+
     (function waitForBundler() {
       attempts++;
       if (window.bndlr && typeof window.bndlr.getBundles === 'function') {
         try {
           var result = window.bndlr.getBundles();
           if (result && typeof result.then === 'function') {
-            result.then(renderBundles).catch(function () {});
-          } else {
+            result.then(function (bundles) {
+              if (Array.isArray(bundles) && bundles.length) {
+                rendered = true;
+                renderBundles(bundles);
+              }
+            }).catch(function () {});
+          } else if (Array.isArray(result) && result.length) {
+            rendered = true;
             renderBundles(result);
           }
         } catch (e) {
           console.warn('[ccg-bundles] Bundler getBundles() failed:', e);
         }
-        return;
       }
-      if (attempts < 25) {
-        setTimeout(waitForBundler, 200);
+      if (!rendered && attempts < maxAttempts) {
+        setTimeout(waitForBundler, 300);
       }
     })();
   })();
