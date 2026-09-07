@@ -42,7 +42,7 @@ body {
 .header-section .header__row--top.section,
 .header-section .header__row--top .header__columns {
   padding-inline:0;
-  padding-block: 14px;
+  padding-block:10.5px;
 }
 
 .header-section .header-logo {
