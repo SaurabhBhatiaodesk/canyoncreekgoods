@@ -127,4 +127,15 @@ body {
   .header-section .menu-list__item {
     font-size: 16px;
   } */
+
+  .menu-drawer__menu-item {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 19px !important;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .menu-drawer__featured-content {
+    display: none !important;
+  }
 }
