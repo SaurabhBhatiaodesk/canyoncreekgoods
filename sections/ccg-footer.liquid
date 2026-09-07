@@ -66,83 +66,61 @@
           {{ block.shopify_attributes }}
         >
 
-          <details class="ccg-footer__accordion">
+          {%- if block.settings.heading != blank -%}
+            <p class="ccg-footer__heading">{{ block.settings.heading }}</p>
+          {%- endif -%}
 
-            {%- if block.settings.heading != blank -%}
+          <ul class="ccg-footer__links">
 
-              <summary class="ccg-footer__heading">
+            {%- if block.settings.menu != blank -%}
 
-                <span>
-                  {{ block.settings.heading }}
-                </span>
+              {%- for link in block.settings.menu.links -%}
 
-                <span
-                  class="ccg-footer__accordion-icon"
-                  aria-hidden="true"
-                ></span>
+                <li>
+                  <a href="{{ link.url }}">
+                    {{ link.title }}
+                  </a>
+                </li>
 
-              </summary>
+              {%- endfor -%}
 
-            {%- endif -%}
+            {%- else -%}
 
+              {%- assign rows = block.settings.links | newline_to_br | split: '<br />' -%}
 
-            <div class="ccg-footer__accordion-content">
+              {%- for row in rows -%}
 
-              <ul class="ccg-footer__links">
+                {%- assign line = row | strip -%}
 
-                {%- if block.settings.menu != blank -%}
+                {%- if line != blank -%}
 
-                  {%- for link in block.settings.menu.links -%}
+                  {%- assign parts = line | split: ' | ' -%}
 
-                    <li>
-                      <a href="{{ link.url }}">
-                        {{ link.title }}
+                  <li>
+
+                    {%- if parts.size > 1 -%}
+
+                      <a href="{{ parts.last | strip }}">
+                        {{ parts.first | strip }}
                       </a>
-                    </li>
 
-                  {%- endfor -%}
+                    {%- else -%}
 
-                {%- else -%}
-
-                  {%- assign rows = block.settings.links | newline_to_br | split: '<br />' -%}
-
-                  {%- for row in rows -%}
-
-                    {%- assign line = row | strip -%}
-
-                    {%- if line != blank -%}
-
-                      {%- assign parts = line | split: ' | ' -%}
-
-                      <li>
-
-                        {%- if parts.size > 1 -%}
-
-                          <a href="{{ parts.last | strip }}">
-                            {{ parts.first | strip }}
-                          </a>
-
-                        {%- else -%}
-
-                          <span>
-                            {{ line }}
-                          </span>
-
-                        {%- endif -%}
-
-                      </li>
+                      <span>
+                        {{ line }}
+                      </span>
 
                     {%- endif -%}
 
-                  {%- endfor -%}
+                  </li>
 
                 {%- endif -%}
 
-              </ul>
+              {%- endfor -%}
 
-            </div>
+            {%- endif -%}
 
-          </details>
+          </ul>
 
         </div>
 
@@ -270,37 +248,12 @@
   }
 
 
-  .ccg-footer__accordion {
-    width: 100%;
-  }
-
-
   .ccg-footer__heading {
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
     font-size: 15px;
     color: #c4a177;
-  }
-
-
-  .ccg-footer__accordion summary {
-    list-style: none;
-  }
-
-
-  .ccg-footer__accordion summary::-webkit-details-marker {
-    display: none;
-  }
-
-
-  .ccg-footer__accordion-icon {
-    display: none;
-  }
-
-
-  .ccg-footer__accordion-content {
-    display: block;
   }
 
 
@@ -391,78 +344,18 @@
 
 
     .ccg-footer__grid {
-      grid-template-columns: 1fr;
-      gap: 0;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 20px;
+      row-gap: 28px;
     }
 
-
-    .ccg-footer__column {
-      border-top: 1px solid rgba(237, 231, 220, 0.18);
-      gap: 0;
-    }
-
-
-    .ccg-footer__column:last-child {
-      border-bottom: 1px solid rgba(237, 231, 220, 0.18);
-    }
-
-
-    .ccg-footer__accordion {
-      width: 100%;
-    }
-
-
-    .ccg-footer__accordion summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 18px 0;
-      cursor: pointer;
+    .ccg-footer__brand {
+      grid-column: 1 / -1;
     }
 
 
     .ccg-footer__heading {
       font-size: 15px;
-    }
-
-
-    .ccg-footer__accordion-icon {
-      display: block;
-      position: relative;
-      width: 16px;
-      height: 16px;
-      flex: 0 0 16px;
-    }
-
-
-    .ccg-footer__accordion-icon::before,
-    .ccg-footer__accordion-icon::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 14px;
-      height: 1px;
-      background: #c4a177;
-      transform: translate(-50%, -50%);
-    }
-
-
-    .ccg-footer__accordion-icon::after {
-      transform: translate(-50%, -50%) rotate(90deg);
-      transition: transform 0.3s ease;
-    }
-
-
-    .ccg-footer__accordion[open]
-      .ccg-footer__accordion-icon::after {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-
-    .ccg-footer__accordion-content {
-      padding: 0 0 18px;
     }
 
 
@@ -479,44 +372,6 @@
   }
 
 {% endstylesheet %}
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const footerSections = document.querySelectorAll(
-      '.ccg-footer'
-    );
-
-    footerSections.forEach(function (footer) {
-
-      const accordions = footer.querySelectorAll(
-        '.ccg-footer__accordion'
-      );
-
-      function updateFooterAccordion() {
-
-        accordions.forEach(function (accordion) {
-
-          if (window.innerWidth > 749) {
-            accordion.setAttribute('open', '');
-          } else {
-            accordion.removeAttribute('open');
-          }
-
-        });
-
-      }
-
-      updateFooterAccordion();
-
-      window.addEventListener(
-        'resize',
-        updateFooterAccordion
-      );
-
-    });
-  });
-</script>
 
 
 {% schema %}

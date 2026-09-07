@@ -64,6 +64,11 @@
         assign card_image_1_hover = product_1.images[1]
         assign card_image_2_hover = product_2.images[1]
       -%}
+      {%- if block.settings.bundler_shortcode != blank -%}
+        <div class="ccg-bundle-card ccg-bundle-card--app" {{ block.shopify_attributes }}>
+          {{ block.settings.bundler_shortcode }}
+        </div>
+      {%- else -%}
       <div class="ccg-bundle-card" {{ block.shopify_attributes }}>
         <div class="ccg-bundle-card__media">
           <span class="ccg-bundle-card__img{% if card_image_1_hover != blank %} ccg-bundle-card__img--has-alt{% endif %}">
@@ -122,6 +127,7 @@
           {%- endif -%}
         </div>
       </div>
+      {%- endif -%}
     {%- endfor -%}
   </div>
   </div>
@@ -194,6 +200,11 @@
     padding: 24px;
     background: var(--ccg-cream-soft);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ccg-bundle-card--app {
+    display: block;
+    min-height: 120px;
   }
 
   .ccg-bundle-card:hover {
@@ -409,6 +420,16 @@
       "type": "bundle",
       "name": "Bundle",
       "settings": [
+        {
+          "type": "textarea",
+          "id": "bundler_shortcode",
+          "label": "Bundler app shortcode",
+          "info": "Paste the shortcode copied from the Bundler app (Bundles > your bundle > Copy). When set, this replaces the card below with Bundler's own live widget — products, price and discount all come from Bundler, nothing else on this block is used."
+        },
+        {
+          "type": "header",
+          "content": "Manual card (used only when no shortcode is set above)"
+        },
         { "type": "product", "id": "product_1", "label": "Product 1" },
         { "type": "product", "id": "product_2", "label": "Product 2" },
         {
