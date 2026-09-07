@@ -6,28 +6,30 @@
 
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-hero">
-  <div class="ccg-hero__media">
-    {%- if section.settings.image != blank -%}
-      <div
-        class="ccg-hero__bg{% if section.settings.image_mobile != blank %} ccg-hero__bg--desktop-only{% endif %}"
-        style="background-image: url('{{ section.settings.image | image_url: width: 2600 }}');"
-        role="img"
-        aria-label="{{ section.settings.image.alt | default: heading | escape }}"
-      ></div>
-      {%- if section.settings.image_mobile != blank -%}
-        <div
-          class="ccg-hero__bg ccg-hero__bg--mobile-only"
-          style="background-image: url('{{ section.settings.image_mobile | image_url: width: 1200 }}');"
-          role="img"
-          aria-label="{{ section.settings.image_mobile.alt | default: heading | escape }}"
-        ></div>
-      {%- endif -%}
-    {%- else -%}
-      {{ 'hero-apparel-1' | placeholder_svg_tag: 'ccg-hero__img placeholder' }}
-    {%- endif -%}
-    <div class="ccg-hero__overlay"></div>
-  </div>
+{%- liquid
+  assign hero_style = ''
+  if section.settings.image != blank
+    assign bg_desktop = section.settings.image | image_url: width: 2600
+    assign hero_style = hero_style | append: '--ccg-hero-bg: url(' | append: bg_desktop | append: ');'
+  endif
+  if section.settings.image_mobile != blank
+    assign bg_mobile = section.settings.image_mobile | image_url: width: 1200
+    assign hero_style = hero_style | append: '--ccg-hero-bg-mobile: url(' | append: bg_mobile | append: ');'
+  endif
+-%}
+
+<div
+  class="ccg-hero{% if section.settings.image != blank %} ccg-hero--has-image{% endif %}"
+  style="{{ hero_style }}"
+  {% if section.settings.image != blank %}
+    role="img"
+    aria-label="{{ section.settings.image.alt | default: heading | escape }}"
+  {% endif %}
+>
+  {%- if section.settings.image == blank -%}
+    {{ 'hero-apparel-1' | placeholder_svg_tag: 'ccg-hero__img placeholder' }}
+  {%- endif -%}
+  <div class="ccg-hero__overlay"></div>
 
   <div class="ccg-hero__content section">
     <div class="ccg-hero__row">
@@ -74,29 +76,16 @@
     font-family: 'Karla', system-ui, sans-serif;
   }
 
-  .ccg-hero__media,
-  .ccg-hero__content {
-    grid-area: 1 / 1;
-  }
-
-  .ccg-hero__media {
-    display: block;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ccg-hero__bg {
-    position: absolute;
-    display: block;
-    inset: 0;
+  .ccg-hero--has-image {
+    background-image: var(--ccg-hero-bg);
     background-size: cover;
     background-position: center 22%;
     background-repeat: no-repeat;
-    filter: saturate(0.92) brightness(1.04);
   }
 
-  .ccg-hero__bg--mobile-only {
-    display: none;
+  .ccg-hero__img,
+  .ccg-hero__content {
+    grid-area: 1 / 1;
   }
 
   .ccg-hero__img {
@@ -241,12 +230,8 @@
       height: min(82svh, 640px);
     }
 
-    .ccg-hero__bg--desktop-only {
-      display: none;
-    }
-
-    .ccg-hero__bg--mobile-only {
-      display: block;
+    .ccg-hero--has-image {
+      background-image: var(--ccg-hero-bg-mobile, var(--ccg-hero-bg));
     }
 
     .ccg-hero__img.placeholder {
