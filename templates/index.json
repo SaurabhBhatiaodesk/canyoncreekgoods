@@ -35,8 +35,8 @@
         "tile_1": {
           "type": "tile",
           "settings": {
-            "collection": "denim-duster-jackets",
-            "image_hover": "shopify://shop_images/DSC-6136.jpg",
+            "collection": "wool-cowls",
+            "image_hover": "shopify://shop_images/20251115_164125.jpg",
             "title": "Wool Cowls",
             "subtitle": "24 pieces · from $59",
             "link": ""
@@ -45,8 +45,8 @@
         "tile_2": {
           "type": "tile",
           "settings": {
-            "collection": "patched-denim-jackets",
-            "image_hover": "shopify://shop_images/DSC-6229.jpg",
+            "collection": "sling-bags",
+            "image_hover": "shopify://shop_images/f3072e1d-c2e5-438e-9eaa-7698def612b1.jpg",
             "title": "Sling Bags",
             "subtitle": "Pairs with the cowls",
             "link": ""
@@ -55,7 +55,8 @@
         "tile_3": {
           "type": "tile",
           "settings": {
-            "collection": "denim-jeans",
+            "collection": "denim-dusters",
+            "image_hover": "shopify://shop_images/rn-image_picker_lib_temp_e44fe59c-a32e-492c-a0ab-ae1de06ff74c.jpg",
             "title": "Denim & Dusters",
             "subtitle": "4 collections",
             "link": ""
@@ -64,7 +65,8 @@
         "tile_4": {
           "type": "tile",
           "settings": {
-            "collection": "denim-vests",
+            "collection": "western-sweatshirts",
+            "image_hover": "shopify://shop_images/a1a356971d9d3652a9dc8a663de4bb87cdb6fbe9157a47675b0280c8c6d0eb08.jpg",
             "title": "Sweatshirts",
             "subtitle": "Buttery soft",
             "link": ""
