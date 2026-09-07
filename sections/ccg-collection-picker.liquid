@@ -35,6 +35,7 @@
     {%- for block in section.blocks -%}
       {%- liquid
         assign tile_image = block.settings.image
+        assign tile_hover_image = block.settings.image_hover
         assign tile_title = block.settings.title
         assign tile_subtitle = block.settings.subtitle
         assign tile_link = block.settings.link
@@ -56,15 +57,22 @@
         class="ccg-picker__tile"
         {{ block.shopify_attributes }}
       >
-        <span class="ccg-picker__tile-media">
+        <span class="ccg-picker__tile-media{% if tile_hover_image != blank %} ccg-picker__tile-media--has-alt{% endif %}">
           {%- if tile_image != blank -%}
             {{
               tile_image
               | image_url: width: 1200
-              | image_tag: widths: '400, 600, 900, 1200', sizes: '(min-width: 990px) 25vw, 50vw', alt: tile_title
+              | image_tag: widths: '400, 600, 900, 1200', sizes: '(min-width: 990px) 25vw, 50vw', alt: tile_title, class: 'ccg-picker__tile-img ccg-picker__tile-img--primary'
             }}
           {%- else -%}
             {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+          {%- endif -%}
+          {%- if tile_hover_image != blank -%}
+            {{
+              tile_hover_image
+              | image_url: width: 1200
+              | image_tag: widths: '400, 600, 900, 1200', sizes: '(min-width: 990px) 25vw, 50vw', alt: tile_title, class: 'ccg-picker__tile-img ccg-picker__tile-img--secondary'
+            }}
           {%- endif -%}
         </span>
         <span class="ccg-picker__tile-caption">
@@ -148,6 +156,7 @@
   }
 
   .ccg-picker__tile-media {
+    position: relative;
     display: block;
     aspect-ratio: var(--ccg-picker-ratio, 4 / 5);
     overflow: hidden;
@@ -165,6 +174,24 @@
 
   .ccg-picker__tile:hover .ccg-picker__tile-media img {
     transform: scale(1.04);
+  }
+
+  .ccg-picker__tile-media--has-alt .ccg-picker__tile-img {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+  }
+
+  .ccg-picker__tile-media--has-alt .ccg-picker__tile-img--secondary {
+    opacity: 0;
+  }
+
+  .ccg-picker__tile:hover .ccg-picker__tile-media--has-alt .ccg-picker__tile-img--primary {
+    opacity: 0;
+  }
+
+  .ccg-picker__tile:hover .ccg-picker__tile-media--has-alt .ccg-picker__tile-img--secondary {
+    opacity: 1;
   }
 
   .ccg-picker__tile-caption {
@@ -323,6 +350,12 @@
           "type": "image_picker",
           "id": "image",
           "label": "Image override"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_hover",
+          "label": "Hover image",
+          "info": "Optional. Shown on hover instead of the main image."
         },
         {
           "type": "text",
