@@ -9,16 +9,20 @@
 <div class="ccg-hero">
   <div class="ccg-hero__media">
     {%- if section.settings.image != blank -%}
-      <picture>
-        {%- if section.settings.image_mobile != blank -%}
-          <source media="(max-width: 749px)" srcset="{{ section.settings.image_mobile | image_url: width: 1200 }}">
-        {%- endif -%}
-        {{
-          section.settings.image
-          | image_url: width: 2600
-          | image_tag: widths: '750, 1100, 1500, 2000, 2600', sizes: '100vw', class: 'ccg-hero__img', alt: section.settings.image.alt | default: heading, fetchpriority: 'high'
-        }}
-      </picture>
+      <div
+        class="ccg-hero__bg{% if section.settings.image_mobile != blank %} ccg-hero__bg--desktop-only{% endif %}"
+        style="background-image: url('{{ section.settings.image | image_url: width: 2600 }}');"
+        role="img"
+        aria-label="{{ section.settings.image.alt | default: heading | escape }}"
+      ></div>
+      {%- if section.settings.image_mobile != blank -%}
+        <div
+          class="ccg-hero__bg ccg-hero__bg--mobile-only"
+          style="background-image: url('{{ section.settings.image_mobile | image_url: width: 1200 }}');"
+          role="img"
+          aria-label="{{ section.settings.image_mobile.alt | default: heading | escape }}"
+        ></div>
+      {%- endif -%}
     {%- else -%}
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'ccg-hero__img placeholder' }}
     {%- endif -%}
@@ -79,6 +83,20 @@
     display: block;
     position: relative;
     overflow: hidden;
+  }
+
+  .ccg-hero__bg {
+    position: absolute;
+    display: block;
+    inset: 0;
+    background-size: cover;
+    background-position: center 22%;
+    background-repeat: no-repeat;
+    filter: saturate(0.92) brightness(1.04);
+  }
+
+  .ccg-hero__bg--mobile-only {
+    display: none;
   }
 
   .ccg-hero__img {
@@ -221,6 +239,14 @@
   @media screen and (max-width: 749px) {
     .ccg-hero {
       height: min(82svh, 640px);
+    }
+
+    .ccg-hero__bg--desktop-only {
+      display: none;
+    }
+
+    .ccg-hero__bg--mobile-only {
+      display: block;
     }
 
     .ccg-hero__img.placeholder {
