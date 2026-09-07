@@ -1,6 +1,7 @@
 {% render 'ccg-section-spacing' %}
 
 <div class="ccg-picker section section--page-width">
+  <div class="ccg-picker__inner">
   <div class="ccg-picker__head">
     <div class="ccg-picker__head-text">
       {%- if section.settings.eyebrow != blank -%}
@@ -60,11 +61,15 @@
       </a>
     {%- endfor -%}
   </div>
+  </div>
 </div>
 
 {% stylesheet %}
   .ccg-picker {
     font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-picker__inner {
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -180,7 +185,7 @@
   }
 
   @media screen and (max-width: 599px) {
-    .ccg-picker {
+    .ccg-picker__inner {
       gap: 28px;
     }
 

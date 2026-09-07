@@ -1,6 +1,7 @@
 {% render 'ccg-section-spacing' %}
 
 <div class="ccg-bundles section section--page-width">
+  <div class="ccg-bundles__inner">
   <div class="ccg-bundles__head">
     <div class="ccg-bundles__head-text">
       {%- if section.settings.eyebrow != blank -%}
@@ -69,15 +70,19 @@
       </div>
     {%- endfor -%}
   </div>
+  </div>
 </div>
 
 {% stylesheet %}
   .ccg-bundles {
     font-family: 'Karla', system-ui, sans-serif;
+    background: var(--ccg-cream);
+  }
+
+  .ccg-bundles__inner {
     display: flex;
     flex-direction: column;
     gap: 40px;
-    background: var(--ccg-cream);
   }
 
   .ccg-bundles__head {
@@ -215,7 +220,7 @@
   }
 
   @media screen and (max-width: 749px) {
-    .ccg-bundles {
+    .ccg-bundles__inner {
       gap: 28px;
     }
 

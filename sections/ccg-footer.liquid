@@ -1,6 +1,7 @@
 {% render 'ccg-section-spacing' %}
 
 <div class="ccg-footer section section--page-width">
+  <div class="ccg-footer__inner">
   <div class="ccg-footer__grid">
     <div class="ccg-footer__brand">
       <a href="{{ routes.root_url }}" class="ccg-footer__logo">
@@ -68,15 +69,19 @@
     <span>{{ section.settings.copyright_text }}</span>
     <span>{{ section.settings.payment_text }}</span>
   </div>
+  </div>
 </div>
 
 {% stylesheet %}
   .ccg-footer {
+    color: #ede7dc;
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-footer__inner {
     display: flex;
     flex-direction: column;
     gap: 48px;
-    color: #ede7dc;
-    font-family: 'Karla', system-ui, sans-serif;
   }
 
   .ccg-footer__grid {
@@ -186,7 +191,7 @@
   }
 
   @media screen and (max-width: 749px) {
-    .ccg-footer {
+    .ccg-footer__inner {
       gap: 36px;
     }
 
