@@ -1,6 +1,6 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-bundles">
+<div class="ccg-bundles section section--page-width">
   <div class="ccg-bundles__head">
     <div class="ccg-bundles__head-text">
       {%- if section.settings.eyebrow != blank -%}
@@ -17,18 +17,32 @@
 
   <div class="ccg-bundles__grid">
     {%- for block in section.blocks -%}
+      {%- liquid
+        assign product_1 = block.settings.product_1
+        assign product_2 = block.settings.product_2
+        assign card_image_1 = block.settings.image_1 | default: product_1.featured_image
+        assign card_image_2 = block.settings.image_2 | default: product_2.featured_image
+        assign card_title = block.settings.title
+        if card_title == blank
+          if product_1 != blank and product_2 != blank
+            assign card_title = product_1.title | append: ' + ' | append: product_2.title
+          elsif product_1 != blank
+            assign card_title = product_1.title
+          endif
+        endif
+      -%}
       <div class="ccg-bundle-card" {{ block.shopify_attributes }}>
         <div class="ccg-bundle-card__media">
           <span class="ccg-bundle-card__img">
-            {%- if block.settings.image_1 != blank -%}
-              {{ block.settings.image_1 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: block.settings.title }}
+            {%- if card_image_1 != blank -%}
+              {{ card_image_1 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: card_title }}
             {%- else -%}
               {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
             {%- endif -%}
           </span>
           <span class="ccg-bundle-card__img">
-            {%- if block.settings.image_2 != blank -%}
-              {{ block.settings.image_2 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: block.settings.title }}
+            {%- if card_image_2 != blank -%}
+              {{ card_image_2 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: card_title }}
             {%- else -%}
               {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder' }}
             {%- endif -%}
@@ -36,7 +50,7 @@
         </div>
 
         <div class="ccg-bundle-card__body">
-          <h3 class="ccg-bundle-card__title">{{ block.settings.title }}</h3>
+          <h3 class="ccg-bundle-card__title">{{ card_title }}</h3>
           {%- if block.settings.description != blank -%}
             <p class="ccg-bundle-card__description">{{ block.settings.description }}</p>
           {%- endif -%}
@@ -230,7 +244,7 @@
 {
   "name": "CCG Bundle Cards",
   "tag": "section",
-  "class": "container",
+  "class": "section-wrapper",
   "settings": [
     {
       "type": "text",
@@ -306,9 +320,16 @@
       "type": "bundle",
       "name": "Bundle",
       "settings": [
-        { "type": "image_picker", "id": "image_1", "label": "Image 1" },
-        { "type": "image_picker", "id": "image_2", "label": "Image 2" },
-        { "type": "text", "id": "title", "label": "Title", "default": "Nehalem Cowl + Matching Sling" },
+        { "type": "product", "id": "product_1", "label": "Product 1" },
+        { "type": "product", "id": "product_2", "label": "Product 2" },
+        { "type": "image_picker", "id": "image_1", "label": "Image 1 override" },
+        { "type": "image_picker", "id": "image_2", "label": "Image 2 override" },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title override",
+          "info": "Leave blank to use the selected products' names automatically."
+        },
         {
           "type": "text",
           "id": "description",

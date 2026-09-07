@@ -25,7 +25,7 @@
     <div class="ccg-hero__overlay"></div>
   </div>
 
-  <div class="ccg-hero__content">
+  <div class="ccg-hero__content section section--page-width">
     <div class="ccg-hero__row">
       <div class="ccg-hero__heading-col">
         {%- if eyebrow != blank -%}
@@ -108,7 +108,6 @@
     position: relative;
     z-index: 2;
     align-self: end;
-    padding-inline: var(--ccg-container-pad);
     padding-block: 0 56px;
     color: var(--ccg-cream);
   }
@@ -240,7 +239,7 @@
 {
   "name": "CCG Hero",
   "tag": "section",
-  "class": "container ccg-flush",
+  "class": "section-wrapper",
   "settings": [
     {
       "type": "text",

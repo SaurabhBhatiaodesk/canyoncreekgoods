@@ -1,40 +1,45 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-dtm ccg-dtm--{{ section.settings.media_position }}">
-  <div class="ccg-dtm__content">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ccg-dtm__eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    {%- if section.settings.heading != blank -%}
-      <h2 class="ccg-dtm__heading">{{ section.settings.heading }}</h2>
-    {%- endif -%}
-    {%- if section.settings.description != blank -%}
-      <div class="ccg-dtm__description">{{ section.settings.description }}</div>
-    {%- endif -%}
-    {%- if section.settings.button_label != blank -%}
-      <a href="{{ section.settings.button_link | default: '#' }}" class="ccg-dtm__link">{{ section.settings.button_label }}</a>
-    {%- endif -%}
-  </div>
+<div class="ccg-dtm section section--full-width">
+  <div class="ccg-dtm__row ccg-dtm--{{ section.settings.media_position }}">
+    <div class="ccg-dtm__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ccg-dtm__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ccg-dtm__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <div class="ccg-dtm__description">{{ section.settings.description }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="ccg-dtm__link">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
 
-  <div class="ccg-dtm__media">
-    {%- if section.settings.image != blank -%}
-      {{
-        section.settings.image
-        | image_url: width: 1600
-        | image_tag: widths: '480, 750, 1000, 1600', sizes: '(min-width: 750px) 50vw, 100vw', alt: section.settings.image.alt
-      }}
-    {%- else -%}
-      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
-    {%- endif -%}
+    <div class="ccg-dtm__media">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1600
+          | image_tag: widths: '480, 750, 1000, 1600', sizes: '(min-width: 750px) 50vw, 100vw', alt: section.settings.image.alt
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+      {%- endif -%}
+    </div>
   </div>
 </div>
 
 {% stylesheet %}
   .ccg-dtm {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     background: var(--ccg-sand);
     font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-dtm__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .ccg-dtm--left {
@@ -125,7 +130,7 @@
   }
 
   @media screen and (max-width: 749px) {
-    .ccg-dtm {
+    .ccg-dtm__row {
       grid-template-columns: 1fr;
       grid-template-areas: 'media' 'content';
     }
@@ -146,7 +151,7 @@
 {
   "name": "CCG Direct to Maker",
   "tag": "section",
-  "class": "container ccg-flush",
+  "class": "section-wrapper",
   "settings": [
     {
       "type": "image_picker",

@@ -1,26 +1,31 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-features">
-  {%- for block in section.blocks -%}
-    <div class="ccg-features__item" {{ block.shopify_attributes }}>
-      {%- if block.settings.icon != blank -%}
-        <span class="ccg-features__icon">
-          {{ block.settings.icon | image_url: width: 80 | image_tag: widths: '40, 60, 80', alt: block.settings.title }}
-        </span>
-      {%- endif -%}
-      <span class="ccg-features__title">{{ block.settings.title }}</span>
-      <span class="ccg-features__text">{{ block.settings.text }}</span>
-    </div>
-  {%- endfor -%}
+<div class="ccg-features section section--full-width">
+  <div class="ccg-features__row">
+    {%- for block in section.blocks -%}
+      <div class="ccg-features__item" {{ block.shopify_attributes }}>
+        {%- if block.settings.icon != blank -%}
+          <span class="ccg-features__icon">
+            {{ block.settings.icon | image_url: width: 80 | image_tag: widths: '40, 60, 80', alt: block.settings.title }}
+          </span>
+        {%- endif -%}
+        <span class="ccg-features__title">{{ block.settings.title }}</span>
+        <span class="ccg-features__text">{{ block.settings.text }}</span>
+      </div>
+    {%- endfor -%}
+  </div>
 </div>
 
 {% stylesheet %}
   .ccg-features {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
     background: var(--ccg-cream);
     border-top: 1px solid var(--ccg-hairline);
     font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-features__row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .ccg-features__item {
@@ -61,7 +66,7 @@
   }
 
   @media screen and (max-width: 749px) {
-    .ccg-features {
+    .ccg-features__row {
       grid-template-columns: 1fr 1fr;
     }
 
@@ -83,7 +88,7 @@
 {
   "name": "CCG Feature Bar",
   "tag": "section",
-  "class": "container ccg-flush",
+  "class": "section-wrapper",
   "settings": [
     {
       "type": "color",

@@ -1,41 +1,46 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-shows">
-  <div class="ccg-shows__intro">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ccg-shows__eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    {%- if section.settings.heading != blank -%}
-      <h2 class="ccg-shows__heading">{{ section.settings.heading }}</h2>
-    {%- endif -%}
-    {%- if section.settings.description != blank -%}
-      <div class="ccg-shows__description">{{ section.settings.description }}</div>
-    {%- endif -%}
-  </div>
+<div class="ccg-shows section section--page-width">
+  <div class="ccg-shows__row-layout">
+    <div class="ccg-shows__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ccg-shows__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ccg-shows__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <div class="ccg-shows__description">{{ section.settings.description }}</div>
+      {%- endif -%}
+    </div>
 
-  <ul class="ccg-shows__list">
-    {%- for block in section.blocks -%}
-      <li class="ccg-shows__row" {{ block.shopify_attributes }}>
-        <span class="ccg-shows__date">{{ block.settings.date_range }}</span>
-        <span class="ccg-shows__copy">
-          <span class="ccg-shows__name">{{ block.settings.name }}</span>
-          <span class="ccg-shows__location">{{ block.settings.location }}</span>
-        </span>
-        {%- if block.settings.link != blank -%}
-          <a href="{{ block.settings.link }}" class="ccg-shows__link" aria-label="{{ block.settings.name }}"></a>
-        {%- endif -%}
-      </li>
-    {%- endfor -%}
-  </ul>
+    <ul class="ccg-shows__list">
+      {%- for block in section.blocks -%}
+        <li class="ccg-shows__row" {{ block.shopify_attributes }}>
+          <span class="ccg-shows__date">{{ block.settings.date_range }}</span>
+          <span class="ccg-shows__copy">
+            <span class="ccg-shows__name">{{ block.settings.name }}</span>
+            <span class="ccg-shows__location">{{ block.settings.location }}</span>
+          </span>
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="ccg-shows__link" aria-label="{{ block.settings.name }}"></a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
 </div>
 
 {% stylesheet %}
   .ccg-shows {
+    font-family: 'Karla', system-ui, sans-serif;
+    background: var(--ccg-sand);
+  }
+
+  .ccg-shows__row-layout {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     gap: 64px;
-    font-family: 'Karla', system-ui, sans-serif;
-    background: var(--ccg-sand);
   }
 
   .ccg-shows__intro {
@@ -125,7 +130,7 @@
   }
 
   @media screen and (max-width: 989px) {
-    .ccg-shows {
+    .ccg-shows__row-layout {
       grid-template-columns: 1fr;
       gap: 36px;
     }
@@ -152,7 +157,7 @@
 {
   "name": "CCG Shows List",
   "tag": "section",
-  "class": "container",
+  "class": "section-wrapper",
   "settings": [
     {
       "type": "text",
