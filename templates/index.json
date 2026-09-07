@@ -113,6 +113,24 @@
     },
     "bundle_cards_ccg": {
       "type": "ccg-bundle-cards",
+      "blocks": {
+        "bundle_1": {
+          "type": "bundle",
+          "settings": {
+            "bundle_id": "865898"
+          }
+        },
+        "bundle_2": {
+          "type": "bundle",
+          "settings": {
+            "bundle_id": "865897"
+          }
+        }
+      },
+      "block_order": [
+        "bundle_1",
+        "bundle_2"
+      ],
       "name": "Complete the Look",
       "settings": {
         "eyebrow": "COMPLETE THE LOOK",

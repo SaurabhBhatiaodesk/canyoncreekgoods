@@ -142,16 +142,13 @@
         return !b.status || b.status === 'enabled' || b.status === 'active';
       });
 
-      var active;
-      if (filterIds.length) {
-        active = filterIds
-          .map(function (id) {
-            return enabled.find(function (b) { return String(b.id) === id; });
-          })
-          .filter(Boolean);
-      } else {
-        active = enabled;
-      }
+      if (!filterIds.length) return;
+
+      var active = filterIds
+        .map(function (id) {
+          return enabled.find(function (b) { return String(b.id) === id; });
+        })
+        .filter(Boolean);
       if (!active.length) return;
 
       Promise.all(
@@ -176,6 +173,30 @@
         });
     }
 
+    function showDesignModeHelper(bundles) {
+      if (!window.Shopify || !window.Shopify.designMode) return;
+      if (!Array.isArray(bundles)) return;
+      var old = document.querySelector('[data-bundler-helper="' + grid.getAttribute('data-bundler-grid') + '"]');
+      if (old) old.remove();
+
+      var helper = document.createElement('div');
+      helper.setAttribute('data-bundler-helper', grid.getAttribute('data-bundler-grid'));
+      helper.style.cssText = 'margin-bottom:16px;padding:12px 16px;background:#fff8e6;border:1px dashed #c4a177;font-family:monospace;font-size:13px;line-height:1.7;color:#4a3d31;';
+
+      var title = document.createElement('div');
+      title.style.cssText = 'font-weight:700;margin-bottom:6px;';
+      title.textContent = 'Bundle IDs (live from Bundler — only visible while editing):';
+      helper.appendChild(title);
+
+      bundles.forEach(function (b) {
+        var row = document.createElement('div');
+        row.textContent = (b.name || 'Untitled') + '  =  ' + b.id + '  (' + (b.status || 'unknown') + ')';
+        helper.appendChild(row);
+      });
+
+      grid.parentElement.insertBefore(helper, grid);
+    }
+
     var attempts = 0;
     var maxAttempts = 100;
     var rendered = false;
@@ -189,11 +210,13 @@
             result.then(function (bundles) {
               if (Array.isArray(bundles) && bundles.length) {
                 rendered = true;
+                showDesignModeHelper(bundles);
                 renderBundles(bundles);
               }
             }).catch(function () {});
           } else if (Array.isArray(result) && result.length) {
             rendered = true;
+            showDesignModeHelper(result);
             renderBundles(result);
           }
         } catch (e) {
@@ -417,15 +440,11 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Cards (products, images, price, discount) always come live from the Bundler app — nothing below sets a product, image or price. With no bundle blocks added, EVERY active bundle in Bundler shows automatically. Add a \"Bundle\" block below only if you want to feature specific bundles, or control their order — type the Bundle ID into it."
-    },
-    {
-      "type": "header",
-      "content": "Bundle IDs (updated 2026-09-07)"
+      "content": "Cards (products, images, price, discount) always come live from the Bundler app — nothing below sets a product, image or price. Nothing shows on the storefront until you add at least one \"Bundle\" block below with its Bundle ID."
     },
     {
       "type": "paragraph",
-      "content": "Duster + Grey Aztec Cowl = 865898\nNehalem Cowl + Matching Sling = 865897\nTest = 865934\n\nNew bundle not listed here yet? It still shows automatically on the site — ask your developer to add its ID to this list."
+      "content": "To find a Bundle ID: scroll down on this section's live preview on the right while you're in this editor — a yellow box lists every current Bundler bundle's name, ID and status, pulled live so it's always up to date (that box is only visible here, never on the live site)."
     },
     {
       "type": "text",
@@ -505,7 +524,7 @@
           "type": "text",
           "id": "bundle_id",
           "label": "Bundle ID",
-          "info": "The bundle's numeric ID from the Bundler app (see the list above). Add one block per bundle you want to feature, in the order you want them shown."
+          "info": "Required — the bundle's numeric ID from the Bundler app (find it in the yellow live-preview box on the right). Add one block per bundle you want to feature, in the order you want them shown. No blocks = section shows nothing."
         }
       ]
     }
