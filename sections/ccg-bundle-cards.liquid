@@ -32,35 +32,32 @@
           endif
         endif
 
-        assign price_cents = 0
-        assign compare_cents = 0
+        assign regular_cents = 0
         assign has_product_pricing = false
         if product_1 != blank
           assign has_product_pricing = true
-          assign compare_1 = product_1.compare_at_price | default: product_1.price
-          assign price_cents = price_cents | plus: product_1.price
-          assign compare_cents = compare_cents | plus: compare_1
+          assign regular_cents = regular_cents | plus: product_1.price
         endif
         if product_2 != blank
           assign has_product_pricing = true
-          assign compare_2 = product_2.compare_at_price | default: product_2.price
-          assign price_cents = price_cents | plus: product_2.price
-          assign compare_cents = compare_cents | plus: compare_2
+          assign regular_cents = regular_cents | plus: product_2.price
         endif
 
+        assign discount_percent = block.settings.discount_percent
         assign card_price = block.settings.price
         assign card_compare_at_price = block.settings.compare_at_price
         assign card_save_text = block.settings.save_text
-        if has_product_pricing
-          assign card_price = price_cents | money
-          if compare_cents > price_cents
-            assign card_compare_at_price = compare_cents | money
-            assign save_cents = compare_cents | minus: price_cents
-            assign card_save_text = 'Save ' | append: save_cents | money
-          else
-            assign card_compare_at_price = blank
-            assign card_save_text = blank
-          endif
+        if has_product_pricing and discount_percent > 0
+          assign discount_factor = 100 | minus: discount_percent
+          assign discounted_cents = regular_cents | times: discount_factor | divided_by: 100
+          assign save_cents = regular_cents | minus: discounted_cents
+          assign card_price = discounted_cents | money
+          assign card_compare_at_price = regular_cents | money
+          assign card_save_text = 'Save ' | append: save_cents | money
+        elsif has_product_pricing
+          assign card_price = regular_cents | money
+          assign card_compare_at_price = blank
+          assign card_save_text = blank
         endif
 
         assign card_image_1_hover = product_1.images[1]
@@ -413,6 +410,17 @@
       "settings": [
         { "type": "product", "id": "product_1", "label": "Product 1" },
         { "type": "product", "id": "product_2", "label": "Product 2" },
+        {
+          "type": "range",
+          "id": "discount_percent",
+          "label": "Bundle discount",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "default": 10,
+          "info": "Set to match the discount configured in your bundle app (e.g. Bundler)."
+        },
         { "type": "image_picker", "id": "image_1", "label": "Image 1 override" },
         { "type": "image_picker", "id": "image_2", "label": "Image 2 override" },
         {
