@@ -417,7 +417,15 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Cards are pulled live from the Bundler app (products, images, price, discount) — no product, image or price is ever set here. By default every enabled bundle shows automatically. To show only specific bundles, or control their order, add a block below for each with its Bundle ID. Current bundle IDs: Duster + Grey Aztec Cowl = 865898, Nehalem Cowl + Matching Sling = 865897."
+      "content": "Cards (products, images, price, discount) always come live from the Bundler app — nothing below sets a product, image or price. With no bundle blocks added, EVERY active bundle in Bundler shows automatically. Add a \"Bundle\" block below only if you want to feature specific bundles, or control their order — type the Bundle ID into it."
+    },
+    {
+      "type": "header",
+      "content": "Bundle IDs (updated 2026-09-07)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Duster + Grey Aztec Cowl = 865898\nNehalem Cowl + Matching Sling = 865897\nTest = 865934\n\nNew bundle not listed here yet? It still shows automatically on the site — ask your developer to add its ID to this list."
     },
     {
       "type": "text",
@@ -490,14 +498,14 @@
   ],
   "blocks": [
     {
-      "type": "bundle_name",
+      "type": "bundle",
       "name": "Bundle",
       "settings": [
         {
           "type": "text",
           "id": "bundle_id",
           "label": "Bundle ID",
-          "info": "The bundle's numeric ID from the Bundler app (not the name — IDs don't change if you rename a bundle later). Leave no blocks here to show every enabled bundle automatically instead."
+          "info": "The bundle's numeric ID from the Bundler app (see the list above). Add one block per bundle you want to feature, in the order you want them shown."
         }
       ]
     }
