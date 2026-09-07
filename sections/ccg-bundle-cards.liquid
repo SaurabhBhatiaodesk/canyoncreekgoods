@@ -16,15 +16,13 @@
     {%- endif -%}
   </div>
 
-  <div class="ccg-bundles__grid" data-bundler-grid></div>
+  <div class="ccg-bundles__grid" data-bundler-grid="{{ section.id }}"></div>
   </div>
 </div>
 
 <script>
   (function () {
-    var section = document.currentScript.closest('.ccg-bundles');
-    if (!section) return;
-    var grid = section.querySelector('[data-bundler-grid]');
+    var grid = document.querySelector('[data-bundler-grid="{{ section.id }}"]');
     if (!grid) return;
 
     var money = function (cents) {
