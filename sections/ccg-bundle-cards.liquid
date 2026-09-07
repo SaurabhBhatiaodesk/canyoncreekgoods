@@ -17,17 +17,17 @@
   </div>
 
   {%- liquid
-    assign filter_names = ''
+    assign filter_ids = ''
     for block in section.blocks
-      if block.settings.bundle_name != blank
-        assign filter_names = filter_names | append: block.settings.bundle_name | append: '|||'
+      if block.settings.bundle_id != blank
+        assign filter_ids = filter_ids | append: block.settings.bundle_id | append: '|||'
       endif
     endfor
   -%}
   <div
     class="ccg-bundles__grid"
     data-bundler-grid="{{ section.id }}"
-    data-bundler-filter="{{ filter_names | escape }}"
+    data-bundler-filter="{{ filter_ids | escape }}"
   ></div>
   </div>
 </div>
@@ -37,7 +37,7 @@
     var grid = document.querySelector('[data-bundler-grid="{{ section.id }}"]');
     if (!grid) return;
 
-    var filterNames = (grid.getAttribute('data-bundler-filter') || '')
+    var filterIds = (grid.getAttribute('data-bundler-filter') || '')
       .split('|||')
       .map(function (s) { return s.trim(); })
       .filter(Boolean);
@@ -143,11 +143,10 @@
       });
 
       var active;
-      if (filterNames.length) {
-        active = filterNames
-          .map(function (name) {
-            var norm = name.toLowerCase();
-            return enabled.find(function (b) { return (b.name || '').trim().toLowerCase() === norm; });
+      if (filterIds.length) {
+        active = filterIds
+          .map(function (id) {
+            return enabled.find(function (b) { return String(b.id) === id; });
           })
           .filter(Boolean);
       } else {
@@ -418,7 +417,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Cards are pulled live from the Bundler app (name, products, images, price, discount) — no product, image or price is ever set here. By default every enabled bundle shows automatically. To show only specific bundles, or control their order, add a block below for each and type the exact bundle name from Bundler."
+      "content": "Cards are pulled live from the Bundler app (products, images, price, discount) — no product, image or price is ever set here. By default every enabled bundle shows automatically. To show only specific bundles, or control their order, add a block below for each with its Bundle ID. Current bundle IDs: Duster + Grey Aztec Cowl = 865898, Nehalem Cowl + Matching Sling = 865897."
     },
     {
       "type": "text",
@@ -496,9 +495,9 @@
       "settings": [
         {
           "type": "text",
-          "id": "bundle_name",
-          "label": "Bundle name",
-          "info": "Must exactly match the bundle's name in the Bundler app. Leave no blocks here to show every enabled bundle automatically instead."
+          "id": "bundle_id",
+          "label": "Bundle ID",
+          "info": "The bundle's numeric ID from the Bundler app (not the name — IDs don't change if you rename a bundle later). Leave no blocks here to show every enabled bundle automatically instead."
         }
       ]
     }
