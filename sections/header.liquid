@@ -492,7 +492,9 @@
     --header-group-height: var(--header-height);
     --transparent-header-offset-boolean: 0; /* stylelint-disable-line declaration-property-value-disallowed-list */
   }
-
+  .header .header__column--right{
+      font-family: Barlow Condensed, sans-serif;
+  }
   .header {
     /* Set header paddings based on height setting */
     --header-padding: var(--padding-sm);
@@ -508,6 +510,7 @@
     .button-secondary,
     .header-actions__action {
       /* reset style from base.css */
+      
       transition: color var(--header-content-transition-timing), border-color var(--header-content-transition-timing);
     }
   }
