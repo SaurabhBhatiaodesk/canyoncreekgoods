@@ -200,7 +200,7 @@
         "image_ratio": "portrait",
         "background_color": "#f8f5ee",
         "desktop_padding_top": 0,
-        "desktop_padding_bottom": 96,
+        "desktop_padding_bottom": 76,
         "mobile_padding_top": 0,
         "mobile_padding_bottom": 56,
         "collection": "ready-to-ride-out",
