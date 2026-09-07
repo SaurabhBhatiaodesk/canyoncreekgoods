@@ -80,7 +80,7 @@
         "heading": "Pick your armor",
         "link_label": "Everything in the shop",
         "link": "shopify://collections/all",
-        "background_color": "#F8F5EE",
+        "background_color": "#f8f5ee",
         "desktop_padding_top": 96,
         "desktop_padding_bottom": 72,
         "mobile_padding_top": 56,
@@ -111,6 +111,8 @@
         "bundle_1": {
           "type": "bundle",
           "settings": {
+            "product_1": "wool-cowl-scarf-nehalem",
+            "product_2": "copy-western-crossbody-sling-harding-tonal",
             "title": "Nehalem Cowl + Matching Sling",
             "description": "Same blanket run, cut back to back. One set exists.",
             "price": "$159",
@@ -123,6 +125,8 @@
         "bundle_2": {
           "type": "bundle",
           "settings": {
+            "product_1": "single-christmas-stocking-wool-08336",
+            "product_2": "womens-wool-cowl-wild-rags-buckaroo-18369",
             "title": "Duster + Grey Aztec Cowl",
             "description": "The cold-morning uniform. Both one of one.",
             "price": "$289",
@@ -142,7 +146,7 @@
         "eyebrow": "COMPLETE THE LOOK",
         "heading": "Matched sets, save 10%",
         "quote": "I pair these myself, from the same blanket run. — Melissa",
-        "background_color": "#F8F5EE",
+        "background_color": "#f8f5ee",
         "desktop_padding_top": 96,
         "desktop_padding_bottom": 96,
         "mobile_padding_top": 56,
@@ -203,7 +207,7 @@
       "settings": {
         "eyebrow": "OUT THE DOOR IN 1–2 DAYS",
         "heading": "Ready to ride out",
-        "background_color": "#F8F5EE",
+        "background_color": "#f8f5ee",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 96,
         "mobile_padding_top": 0,
@@ -273,7 +277,7 @@
         "eyebrow": "ON THE ROAD",
         "heading": "Come find the booth",
         "description": "<p>Most pieces sell at shows before they ever reach the site. If you are close to one of these, come try things on.</p>",
-        "background_color": "#EDE7DC",
+        "background_color": "#ede7dc",
         "desktop_padding_top": 88,
         "desktop_padding_bottom": 88,
         "mobile_padding_top": 48,
