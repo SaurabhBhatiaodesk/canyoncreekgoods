@@ -11,17 +11,6 @@
   "type": "header",
   "name": "t:names.header",
   "sections": {
-    "header_ccg": {
-      "type": "ccg-header",
-      "name": "CCG Header (bison logo)",
-      "settings": {
-        "logo_text": "Canyon Creek Goods",
-        "menu": "header-menu",
-        "background_color": "#fbf8f2",
-        "background_color_scrolled": "#fbf8f2",
-        "text_color_scrolled": ""
-      }
-    },
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
@@ -56,7 +45,6 @@
       }
     },
     "header_section": {
-      "disabled": true,
       "type": "header",
       "blocks": {
         "header-logo": {
@@ -121,7 +109,7 @@
         "actions_font_size": "1.125rem",
         "actions_font": "body",
         "actions_text_case": "uppercase",
-        "background_color_top": "#F8F5EE",
+        "background_color_top": "#f8f5ee",
         "text_color_top": "#211c17",
         "background_color_bottom": "",
         "text_color_bottom": "",
@@ -138,12 +126,60 @@
         "collection_inverse_logo": false,
         "text_color_transparent_collection": ""
       }
+    },
+    "ccg_announcement_marquee_UJqAX8": {
+      "type": "ccg-announcement-marquee",
+      "blocks": {
+        "item_DJ9W7G": {
+          "type": "item",
+          "settings": {
+            "text": "Free shipping, no minimum"
+          }
+        },
+        "item_F6LEk9": {
+          "type": "item",
+          "settings": {
+            "text": "Hand cut in Snowflake, Arizona"
+          }
+        },
+        "item_xRi8EA": {
+          "type": "item",
+          "settings": {
+            "text": "One of one — never made twice"
+          }
+        },
+        "item_KyB7me": {
+          "type": "item",
+          "settings": {
+            "text": "Premium US-milled wool"
+          }
+        },
+        "item_jjNNqT": {
+          "type": "item",
+          "settings": {
+            "text": "Melissa answers her own email"
+          }
+        }
+      },
+      "block_order": [
+        "item_DJ9W7G",
+        "item_F6LEk9",
+        "item_xRi8EA",
+        "item_KyB7me",
+        "item_jjNNqT"
+      ],
+      "name": "CCG Announcement Marquee",
+      "settings": {
+        "background_color": "#f8f5ee",
+        "text_color": "#5c5145",
+        "dot_color": "#b98a52",
+        "speed": 40
+      }
     }
   },
   "order": [
-    "header_ccg",
     "header_announcements_9jGBFp",
+    "ccg_announcement_marquee_UJqAX8",
     "header_section"
   ]
 }
-
