@@ -1,6 +1,21 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-sellers section">
+{%- liquid
+  case section.settings.image_ratio
+    when 'square'
+      assign ccg_sellers_ratio = '1 / 1'
+    when 'portrait'
+      assign ccg_sellers_ratio = '3 / 4'
+    when 'landscape'
+      assign ccg_sellers_ratio = '4 / 3'
+    when 'wide'
+      assign ccg_sellers_ratio = '16 / 9'
+    else
+      assign ccg_sellers_ratio = '3 / 4'
+  endcase
+-%}
+
+<div class="ccg-sellers section" style="--ccg-sellers-ratio: {{ ccg_sellers_ratio }};">
   <div class="ccg-sellers__inner">
   <div class="ccg-sellers__head">
     {%- if section.settings.heading != blank -%}
@@ -25,13 +40,25 @@
           elsif product.tags contains 'new'
             assign badge = 'New'
           endif
+          assign second_image = product.images[1]
         -%}
         <a href="{{ product.url }}" class="ccg-seller-card">
-          <span class="ccg-seller-card__media">
+          <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
             {%- if product.featured_image != blank -%}
-              {{ product.featured_image | image_url: width: 800 | image_tag: widths: '300, 500, 800', alt: product.title }}
+              {{
+                product.featured_image
+                | image_url: width: 800
+                | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
+              }}
             {%- else -%}
               {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+            {%- endif -%}
+            {%- if second_image != blank -%}
+              {{
+                second_image
+                | image_url: width: 800
+                | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
+              }}
             {%- endif -%}
             {%- if badge != blank -%}
               <span class="ccg-seller-card__badge">{{ badge }}</span>
@@ -51,13 +78,25 @@
           assign card_title = product.title | default: block.settings.title
           assign card_price = product.price | money | default: block.settings.price
           assign card_url = product.url | default: block.settings.link
+          assign second_image = product.images[1]
         -%}
         <a href="{{ card_url | default: '#' }}" class="ccg-seller-card" {{ block.shopify_attributes }}>
-          <span class="ccg-seller-card__media">
+          <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
             {%- if card_image != blank -%}
-              {{ card_image | image_url: width: 800 | image_tag: widths: '300, 500, 800', alt: card_title }}
+              {{
+                card_image
+                | image_url: width: 800
+                | image_tag: widths: '300, 500, 800', alt: card_title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
+              }}
             {%- else -%}
               {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+            {%- endif -%}
+            {%- if second_image != blank -%}
+              {{
+                second_image
+                | image_url: width: 800
+                | image_tag: widths: '300, 500, 800', alt: card_title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
+              }}
             {%- endif -%}
             {%- if block.settings.badge_text != blank -%}
               <span class="ccg-seller-card__badge">{{ block.settings.badge_text }}</span>
@@ -130,7 +169,7 @@
   .ccg-seller-card__media {
     position: relative;
     display: block;
-    height: 410px;
+    aspect-ratio: var(--ccg-sellers-ratio, 3 / 4);
     overflow: hidden;
     background: var(--ccg-sand);
   }
@@ -146,6 +185,24 @@
 
   .ccg-seller-card:hover .ccg-seller-card__media img {
     transform: scale(1.04);
+  }
+
+  .ccg-seller-card__media--has-alt .ccg-seller-card__img {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+  }
+
+  .ccg-seller-card__media--has-alt .ccg-seller-card__img--secondary {
+    opacity: 0;
+  }
+
+  .ccg-seller-card:hover .ccg-seller-card__media--has-alt .ccg-seller-card__img--primary {
+    opacity: 0;
+  }
+
+  .ccg-seller-card:hover .ccg-seller-card__media--has-alt .ccg-seller-card__img--secondary {
+    opacity: 1;
   }
 
   .ccg-seller-card__badge {
@@ -185,10 +242,6 @@
     .ccg-sellers__grid {
       grid-template-columns: repeat(2, 1fr);
     }
-
-    .ccg-seller-card__media {
-      height: 340px;
-    }
   }
 
   @media screen and (max-width: 749px) {
@@ -208,10 +261,6 @@
 
     .ccg-sellers__note {
       white-space: normal;
-    }
-
-    .ccg-seller-card__media {
-      height: 260px;
     }
   }
 {% endstylesheet %}
@@ -233,6 +282,18 @@
       "id": "heading",
       "label": "Heading",
       "default": "Ready to ride out"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "portrait", "label": "Portrait (3:4)" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "portrait"
     },
     {
       "type": "color",
