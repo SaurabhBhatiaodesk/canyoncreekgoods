@@ -51,9 +51,10 @@
           assign discount_factor = 100 | minus: discount_percent
           assign discounted_cents = regular_cents | times: discount_factor | divided_by: 100
           assign save_cents = regular_cents | minus: discounted_cents
+          assign save_money = save_cents | money
           assign card_price = discounted_cents | money
           assign card_compare_at_price = regular_cents | money
-          assign card_save_text = 'Save ' | append: save_cents | money
+          assign card_save_text = 'Save ' | append: save_money
         elsif has_product_pricing
           assign card_price = regular_cents | money
           assign card_compare_at_price = blank
