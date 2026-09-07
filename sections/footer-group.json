@@ -11,6 +11,53 @@
   "type": "footer",
   "name": "t:names.footer",
   "sections": {
+    "ccg_feature_bar_th9648": {
+      "type": "ccg-feature-bar",
+      "blocks": {
+        "feature_GL8kfT": {
+          "type": "feature",
+          "settings": {
+            "title": "100% handmade",
+            "text": "Every piece hand cut, stitched and finished in a small-batch home studio."
+          }
+        },
+        "feature_aEN7Md": {
+          "type": "feature",
+          "settings": {
+            "title": "Premium US wool",
+            "text": "Sourced from American woolen mills for warmth and lasting texture."
+          }
+        },
+        "feature_ABWBWb": {
+          "type": "feature",
+          "settings": {
+            "title": "One of a kind",
+            "text": "No two cowls or jackets are identical. Your style stays your own."
+          }
+        },
+        "feature_BVDDAP": {
+          "type": "feature",
+          "settings": {
+            "title": "Direct to maker",
+            "text": "You buy from the artisan who made it, and she picks up the phone."
+          }
+        }
+      },
+      "block_order": [
+        "feature_GL8kfT",
+        "feature_aEN7Md",
+        "feature_ABWBWb",
+        "feature_BVDDAP"
+      ],
+      "name": "CCG Feature Bar",
+      "settings": {
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 0,
+        "desktop_padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
+      }
+    },
     "footer_ccg": {
       "type": "ccg-footer",
       "blocks": {
@@ -18,6 +65,7 @@
           "type": "column",
           "settings": {
             "heading": "Shop",
+            "menu": "shop",
             "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim\nSweatshirts | /collections/sweatshirts\nMatched Sets | /collections/matched-sets"
           }
         },
@@ -25,6 +73,7 @@
           "type": "column",
           "settings": {
             "heading": "Help",
+            "menu": "help",
             "links": "Shipping Policy | /policies/shipping-policy\nReturns & Exchanges | /policies/refund-policy\nCare Instructions | /pages/care-instructions\nFAQs | /pages/faqs\nTerms & Privacy | /policies/terms-of-service"
           }
         },
@@ -32,6 +81,7 @@
           "type": "column",
           "settings": {
             "heading": "Canyon Creek",
+            "menu": "canyon-creek",
             "links": "About Melissa | /pages/about-melissa\nUpcoming Shows | /pages/shows\nHow To Wear Your Cowl | /pages/how-to-wear-it\nContact | /pages/contact"
           }
         }
@@ -51,14 +101,14 @@
         "facebook_url": "https://www.facebook.com/",
         "tiktok_url": "https://www.tiktok.com/",
         "pinterest_url": "https://www.pinterest.com/",
+        "background_color": "#211c17",
+        "heading_color": "#c89457",
+        "link_color": "#ddd3c4",
+        "bottom_text_color": "#a88963",
         "ink_color": "#c08a50",
         "tan_color": "#a88963",
-        "heading_color": "#c89457",
         "logo_color": "#ffffff",
-        "link_color": "#ddd3c4",
-        "background_color": "#211C17",
         "divider_color": "#4a3d31",
-        "bottom_text_color": "#a88963",
         "copyright_text": "© 2026 Canyon Creek Goods",
         "payment_text": "Amex · Apple Pay · Google Pay · Mastercard · Shop Pay · Visa",
         "desktop_padding_top": 72,
@@ -279,6 +329,7 @@
     }
   },
   "order": [
+    "ccg_feature_bar_th9648",
     "footer_ccg",
     "footer_m9NzUG",
     "footer_utilities_jLGE8U"

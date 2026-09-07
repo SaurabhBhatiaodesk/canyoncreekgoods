@@ -313,6 +313,7 @@
         "feature_3",
         "feature_4"
       ],
+      "disabled": true,
       "name": "Feature Bar",
       "settings": {
         "background_color": "#f8f5ee",
