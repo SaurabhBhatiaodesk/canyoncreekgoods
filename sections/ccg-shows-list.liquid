@@ -94,6 +94,15 @@
     align-items: baseline;
     padding: 18px 0;
     border-bottom: 1px solid var(--ccg-hairline);
+    transition: background-color 0.2s ease;
+  }
+
+  .ccg-shows__row:has(.ccg-shows__link):hover {
+    background-color: var(--ccg-cream-soft, rgba(33, 28, 23, 0.03));
+  }
+
+  .ccg-shows__row:has(.ccg-shows__link):hover .ccg-shows__name {
+    color: var(--ccg-tan);
   }
 
   .ccg-shows__date {
@@ -114,6 +123,7 @@
   .ccg-shows__name {
     font-size: 18px;
     color: var(--ccg-ink);
+    transition: color 0.2s ease;
   }
 
   .ccg-shows__location {

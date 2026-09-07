@@ -170,6 +170,16 @@
     border: 1px solid var(--ccg-hairline);
     padding: 24px;
     background: var(--ccg-cream-soft);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ccg-bundle-card:hover {
+    border-color: var(--ccg-tan);
+    box-shadow: 0 4px 16px rgba(33, 28, 23, 0.08);
+  }
+
+  .ccg-bundle-card:hover .ccg-bundle-card__img img {
+    transform: scale(1.03);
   }
 
   .ccg-bundle-card__media {
@@ -191,6 +201,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.5s ease;
   }
 
   .ccg-bundle-card__body {
