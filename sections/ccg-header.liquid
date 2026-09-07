@@ -1,0 +1,284 @@
+{% liquid
+  assign menu = section.settings.menu
+  assign cart_count = cart.item_count
+  if shop.customer_accounts_enabled
+    assign account_url = routes.account_url
+  else
+    assign account_url = routes.account_login_url
+  endif
+%}
+
+<header class="ccg-header">
+  <div class="ccg-header__bar">
+    <a href="{{ routes.root_url }}" class="ccg-header__logo">
+      {%- if section.settings.logo_image != blank -%}
+        {{
+          section.settings.logo_image
+          | image_url: width: 300
+          | image_tag: widths: '120, 180, 240, 300', alt: shop.name, class: 'ccg-header__logo-img'
+        }}
+      {%- else -%}
+        <svg class="ccg-header__logo-icon" viewBox="0 0 64 40" fill="currentColor" aria-hidden="true">
+          <path d="M32 4c-3 0-5 2-6 4-1-2-3-3-5-2-2 1-2 4 0 6-3 0-6 2-7 5-3 0-6 2-6 5 0 2 1 3 3 3-1 2 0 4 2 5 0 2 2 4 5 4h28c3 0 5-2 5-4 2-1 3-3 2-5 2 0 3-1 3-3 0-3-3-5-6-5-1-3-4-5-7-5 2-2 2-5 0-6-2-1-4 0-5 2-1-2-3-4-6-4z" />
+        </svg>
+      {%- endif -%}
+      <span class="ccg-header__logo-text">{{ section.settings.logo_text | default: shop.name }}</span>
+    </a>
+
+    <nav class="ccg-header__nav" aria-label="Primary">
+      {%- for link in menu.links -%}
+        <a
+          href="{{ link.url }}"
+          class="ccg-header__nav-link{% if link.active %} ccg-header__nav-link--active{% endif %}"
+        >{{ link.title }}</a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="ccg-header__actions">
+      <a href="{{ routes.search_url }}" class="ccg-header__action">Search</a>
+      <a href="{{ account_url }}" class="ccg-header__action">Account</a>
+      <a href="{{ routes.cart_url }}" class="ccg-header__action">Cart ({{ cart_count }})</a>
+    </div>
+
+    <details class="ccg-header__mobile-toggle">
+      <summary class="ccg-header__mobile-summary" aria-label="Menu">
+        <span class="ccg-header__burger"></span>
+      </summary>
+      <nav class="ccg-header__mobile-nav" aria-label="Primary mobile">
+        {%- for link in menu.links -%}
+          <a href="{{ link.url }}" class="ccg-header__mobile-link">{{ link.title }}</a>
+        {%- endfor -%}
+        <div class="ccg-header__mobile-actions">
+          <a href="{{ routes.search_url }}" class="ccg-header__mobile-link">Search</a>
+          <a href="{{ account_url }}" class="ccg-header__mobile-link">Account</a>
+          <a href="{{ routes.cart_url }}" class="ccg-header__mobile-link">Cart ({{ cart_count }})</a>
+        </div>
+      </nav>
+    </details>
+  </div>
+</header>
+
+{% style %}
+  .ccg-header {
+    --ccg-ink: #211c17;
+    --ccg-cream: #fbf8f2;
+    --ccg-tan: #7a6d5d;
+
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--ccg-cream);
+    border-bottom: 1px solid var(--ccg-ink);
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-header__bar {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 24px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 24px;
+    min-height: 78px;
+  }
+
+  .ccg-header__logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-header__logo-icon {
+    width: 32px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .ccg-header__logo-img {
+    display: block;
+    height: 36px;
+    width: auto;
+  }
+
+  .ccg-header__logo-text {
+    font-family: 'Rye', serif;
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+  }
+
+  .ccg-header__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+  }
+
+  .ccg-header__nav-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+  }
+
+  .ccg-header__nav-link:hover {
+    border-bottom-color: var(--ccg-tan);
+  }
+
+  .ccg-header__nav-link--active {
+    border-bottom-color: var(--ccg-ink);
+  }
+
+  .ccg-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .ccg-header__action {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .ccg-header__action:hover {
+    color: var(--ccg-tan);
+  }
+
+  .ccg-header__mobile-toggle {
+    display: none;
+  }
+
+  .ccg-header__mobile-summary {
+    list-style: none;
+    cursor: pointer;
+    width: 28px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+  }
+
+  .ccg-header__mobile-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ccg-header__burger,
+  .ccg-header__burger::before,
+  .ccg-header__burger::after {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--ccg-ink);
+    position: relative;
+  }
+
+  .ccg-header__burger::before,
+  .ccg-header__burger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .ccg-header__burger::before {
+    top: -7px;
+  }
+
+  .ccg-header__burger::after {
+    top: 7px;
+  }
+
+  .ccg-header__mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 24px 28px;
+    border-top: 1px solid var(--ccg-ink);
+  }
+
+  .ccg-header__mobile-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    text-decoration: none;
+  }
+
+  .ccg-header__mobile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px solid rgb(33 28 23 / 0.15);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ccg-header__nav {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-header__bar {
+      grid-template-columns: auto auto 1fr;
+      min-height: 64px;
+    }
+
+    .ccg-header__actions {
+      display: none;
+    }
+
+    .ccg-header__mobile-toggle {
+      display: block;
+      justify-self: end;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "CCG Header",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image",
+      "info": "Leave blank to use the bison icon with the shop name."
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "Canyon Creek Goods"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "header-menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Header"
+    }
+  ]
+}
+{% endschema %}

@@ -11,6 +11,14 @@
   "type": "header",
   "name": "t:names.header",
   "sections": {
+    "header_ccg": {
+      "type": "ccg-header",
+      "name": "Header",
+      "settings": {
+        "logo_text": "Canyon Creek Goods",
+        "menu": "header-menu"
+      }
+    },
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
@@ -45,6 +53,7 @@
       }
     },
     "header_section": {
+      "disabled": true,
       "type": "header",
       "blocks": {
         "header-logo": {
@@ -129,6 +138,7 @@
     }
   },
   "order": [
+    "header_ccg",
     "header_announcements_9jGBFp",
     "header_section"
   ]
