@@ -30,16 +30,7 @@
     {%- if section.settings.collection != blank -%}
       {%- for product in section.settings.collection.products limit: section.settings.product_limit -%}
         {%- liquid
-          assign badge = ''
-          if product.tags contains 'best-seller'
-            assign badge = 'Best seller'
-          elsif product.tags contains 'last-one'
-            assign badge = 'Last one'
-          elsif product.tags contains 'one-of-one'
-            assign badge = 'One of one'
-          elsif product.tags contains 'new'
-            assign badge = 'New'
-          endif
+          assign badge = product.metafields.custom.custom_product_tag.value
           assign second_image = product.images[1]
         -%}
         <a href="{{ product.url }}" class="ccg-seller-card">
@@ -79,6 +70,7 @@
           assign card_price = product.price | money | default: block.settings.price
           assign card_url = product.url | default: block.settings.link
           assign second_image = product.images[1]
+          assign badge = product.metafields.custom.custom_product_tag.value | default: block.settings.badge_text
         -%}
         <a href="{{ card_url | default: '#' }}" class="ccg-seller-card" {{ block.shopify_attributes }}>
           <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
@@ -98,8 +90,8 @@
                 | image_tag: widths: '300, 500, 800', alt: card_title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
               }}
             {%- endif -%}
-            {%- if block.settings.badge_text != blank -%}
-              <span class="ccg-seller-card__badge">{{ block.settings.badge_text }}</span>
+            {%- if badge != blank -%}
+              <span class="ccg-seller-card__badge">{{ badge }}</span>
             {%- endif -%}
           </span>
           <span class="ccg-seller-card__meta">
