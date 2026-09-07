@@ -1,6 +1,12 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-pdp-bundle section" data-pdp-bundle-grid="{{ section.id }}" data-pdp-bundle-product-id="{{ product.id }}" hidden>
+<div
+  class="ccg-pdp-bundle section"
+  data-pdp-bundle-grid="{{ section.id }}"
+  data-pdp-bundle-product-id="{{ product.id }}"
+  data-pdp-bundle-fixed-id="{{ section.settings.fixed_bundle_id }}"
+  hidden
+>
   <div class="ccg-pdp-bundle__inner">
     <div class="ccg-pdp-bundle__head">
       <div class="ccg-pdp-bundle__head-text">
@@ -23,6 +29,7 @@
     var section = document.querySelector('[data-pdp-bundle-grid="{{ section.id }}"]');
     if (!section) return;
     var currentProductId = section.getAttribute('data-pdp-bundle-product-id');
+    var fixedBundleId = (section.getAttribute('data-pdp-bundle-fixed-id') || '').trim();
     var headingEl = section.querySelector('[data-pdp-bundle-heading]');
     var card = section.querySelector('[data-pdp-bundle-card]');
     if (!currentProductId) return;
@@ -168,6 +175,9 @@
       var enabled = bundles.filter(function (b) {
         return !b.status || b.status === 'enabled' || b.status === 'active';
       });
+      if (fixedBundleId) {
+        return enabled.find(function (b) { return String(b.id) === fixedBundleId; });
+      }
       return enabled.find(function (b) {
         return b.products && Object.prototype.hasOwnProperty.call(b.products, currentProductId);
       });
@@ -475,7 +485,13 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows automatically only on a product page whose product is part of a live Bundler bundle. Products, images, price and discount come live from Bundler - nothing to configure. Hidden entirely if the current product has no matching bundle."
+      "content": "By default, shows automatically only on a product page whose product is part of a live Bundler bundle (matched per-product). Products, images, price and discount always come live from Bundler."
+    },
+    {
+      "type": "text",
+      "id": "fixed_bundle_id",
+      "label": "Always show this Bundle ID (optional)",
+      "info": "Leave blank for automatic per-product matching. Fill in a Bundle ID to show that same bundle on every product page regardless of which product is being viewed. Find current bundle IDs in the yellow live-preview box on the right while editing."
     },
     {
       "type": "text",
