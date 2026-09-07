@@ -39,20 +39,26 @@
           <p class="ccg-footer__heading">{{ block.settings.heading }}</p>
         {%- endif -%}
         <ul class="ccg-footer__links">
-          {%- assign rows = block.settings.links | newline_to_br | split: '<br />' -%}
-          {%- for row in rows -%}
-            {%- assign line = row | strip -%}
-            {%- if line != blank -%}
-              {%- assign parts = line | split: ' | ' -%}
-              <li>
-                {%- if parts.size > 1 -%}
-                  <a href="{{ parts.last | strip }}">{{ parts.first | strip }}</a>
-                {%- else -%}
-                  <span>{{ line }}</span>
-                {%- endif -%}
-              </li>
-            {%- endif -%}
-          {%- endfor -%}
+          {%- if block.settings.menu != blank -%}
+            {%- for link in block.settings.menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- assign rows = block.settings.links | newline_to_br | split: '<br />' -%}
+            {%- for row in rows -%}
+              {%- assign line = row | strip -%}
+              {%- if line != blank -%}
+                {%- assign parts = line | split: ' | ' -%}
+                <li>
+                  {%- if parts.size > 1 -%}
+                    <a href="{{ parts.last | strip }}">{{ parts.first | strip }}</a>
+                  {%- else -%}
+                    <span>{{ line }}</span>
+                  {%- endif -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
         </ul>
       </div>
     {%- endfor -%}
@@ -317,10 +323,16 @@
       "settings": [
         { "type": "text", "id": "heading", "label": "Heading" },
         {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "info": "Pick a navigation menu to link to real pages, collections, products, etc. Create one under Content > Menus, then select it here. Leave blank to use the manual list below."
+        },
+        {
           "type": "textarea",
           "id": "links",
-          "label": "Links",
-          "info": "One per line. Use Label | /url"
+          "label": "Manual links (fallback)",
+          "info": "Only used when no menu is selected above. One per line: Label | /url"
         }
       ]
     }
