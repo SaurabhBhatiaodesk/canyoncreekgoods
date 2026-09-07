@@ -62,21 +62,46 @@
             assign card_save_text = blank
           endif
         endif
+
+        assign card_image_1_hover = product_1.images[1]
+        assign card_image_2_hover = product_2.images[1]
       -%}
       <div class="ccg-bundle-card" {{ block.shopify_attributes }}>
         <div class="ccg-bundle-card__media">
-          <span class="ccg-bundle-card__img">
+          <span class="ccg-bundle-card__img{% if card_image_1_hover != blank %} ccg-bundle-card__img--has-alt{% endif %}">
             {%- if card_image_1 != blank -%}
-              {{ card_image_1 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: card_title }}
+              {{
+                card_image_1
+                | image_url: width: 400
+                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--primary'
+              }}
             {%- else -%}
               {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
             {%- endif -%}
+            {%- if card_image_1_hover != blank -%}
+              {{
+                card_image_1_hover
+                | image_url: width: 400
+                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--secondary'
+              }}
+            {%- endif -%}
           </span>
-          <span class="ccg-bundle-card__img">
+          <span class="ccg-bundle-card__img{% if card_image_2_hover != blank %} ccg-bundle-card__img--has-alt{% endif %}">
             {%- if card_image_2 != blank -%}
-              {{ card_image_2 | image_url: width: 400 | image_tag: widths: '200, 300, 400', alt: card_title }}
+              {{
+                card_image_2
+                | image_url: width: 400
+                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--primary'
+              }}
             {%- else -%}
               {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder' }}
+            {%- endif -%}
+            {%- if card_image_2_hover != blank -%}
+              {{
+                card_image_2_hover
+                | image_url: width: 400
+                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--secondary'
+              }}
             {%- endif -%}
           </span>
         </div>
@@ -189,6 +214,7 @@
   }
 
   .ccg-bundle-card__img {
+    position: relative;
     width: 124px;
     height: 158px;
     overflow: hidden;
@@ -202,6 +228,24 @@
     object-fit: cover;
     display: block;
     transition: transform 0.5s ease;
+  }
+
+  .ccg-bundle-card__img--has-alt .ccg-bundle-card__photo {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+  }
+
+  .ccg-bundle-card__img--has-alt .ccg-bundle-card__photo--secondary {
+    opacity: 0;
+  }
+
+  .ccg-bundle-card:hover .ccg-bundle-card__img--has-alt .ccg-bundle-card__photo--primary {
+    opacity: 0;
+  }
+
+  .ccg-bundle-card:hover .ccg-bundle-card__img--has-alt .ccg-bundle-card__photo--secondary {
+    opacity: 1;
   }
 
   .ccg-bundle-card__body {
