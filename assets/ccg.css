@@ -100,7 +100,10 @@ body {
   :root {
     --ccg-container-pad: 20px;
   }
-
+  .header-section header-actions,
+  .header-section .header-actions {
+    gap: 0px;
+  }
   .header-section {
     --menu-top-level-font-size: 16px;
     --menu-top-level-font-size-desktop: 16px;
