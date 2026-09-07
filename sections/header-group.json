@@ -11,14 +11,6 @@
   "type": "header",
   "name": "t:names.header",
   "sections": {
-    "header_ccg": {
-      "type": "ccg-header",
-      "name": "Header",
-      "settings": {
-        "logo_text": "Canyon Creek Goods",
-        "menu": "header-menu"
-      }
-    },
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
@@ -53,7 +45,6 @@
       }
     },
     "header_section": {
-      "disabled": true,
       "type": "header",
       "blocks": {
         "header-logo": {
@@ -73,10 +64,10 @@
             "menu": "header-menu",
             "background_color": "{{ settings.color_palette.background }}",
             "text_color": "",
-            "type_font_primary_size": "0.875rem",
+            "type_font_primary_size": "1.125rem",
             "menu_font_style": "inverse",
             "type_font_primary_link": "body",
-            "type_case_primary_link": "none",
+            "type_case_primary_link": "uppercase",
             "menu_style": "featured_products",
             "featured_products_aspect_ratio": "4 / 5",
             "featured_collections_aspect_ratio": "16 / 9",
@@ -112,12 +103,12 @@
         "divider_width": 0,
         "divider_size": "page-width",
         "divider_color": "",
-        "border_width": 1,
+        "border_width": 0,
         "bottom_border_color": "#211c17",
-        "actions_display_style": "icon",
-        "actions_font_size": "0.875rem",
+        "actions_display_style": "text",
+        "actions_font_size": "1.125rem",
         "actions_font": "body",
-        "actions_text_case": "none",
+        "actions_text_case": "uppercase",
         "background_color_top": "#fbf8f2",
         "text_color_top": "#211c17",
         "background_color_bottom": "",
@@ -138,7 +129,6 @@
     }
   },
   "order": [
-    "header_ccg",
     "header_announcements_9jGBFp",
     "header_section"
   ]
