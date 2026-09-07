@@ -2,7 +2,6 @@
 
 <div class="ccg-footer section">
   <div class="ccg-footer__inner">
-
     <div class="ccg-footer__grid">
 
       <div class="ccg-footer__brand">
@@ -11,10 +10,7 @@
             {{
               section.settings.logo_image
               | image_url: width: 400
-              | image_tag:
-                widths: '180, 280, 400',
-                alt: shop.name,
-                class: 'ccg-footer__logo-img'
+              | image_tag: widths: '180, 280, 400', alt: shop.name, class: 'ccg-footer__logo-img'
             }}
           {%- else -%}
             <span class="ccg-footer__logo-text">
@@ -30,140 +26,85 @@
         {%- endif -%}
 
         <div class="ccg-footer__social">
-
           {%- if section.settings.instagram_url != blank -%}
-            <a href="{{ section.settings.instagram_url }}">
-              Instagram
-            </a>
+            <a href="{{ section.settings.instagram_url }}">Instagram</a>
           {%- endif -%}
 
           {%- if section.settings.facebook_url != blank -%}
-            <a href="{{ section.settings.facebook_url }}">
-              Facebook
-            </a>
+            <a href="{{ section.settings.facebook_url }}">Facebook</a>
           {%- endif -%}
 
           {%- if section.settings.tiktok_url != blank -%}
-            <a href="{{ section.settings.tiktok_url }}">
-              TikTok
-            </a>
+            <a href="{{ section.settings.tiktok_url }}">TikTok</a>
           {%- endif -%}
 
           {%- if section.settings.pinterest_url != blank -%}
-            <a href="{{ section.settings.pinterest_url }}">
-              Pinterest
-            </a>
+            <a href="{{ section.settings.pinterest_url }}">Pinterest</a>
           {%- endif -%}
-
         </div>
       </div>
 
-
       {%- for block in section.blocks -%}
+        <div class="ccg-footer__column" {{ block.shopify_attributes }}>
 
-        <div
-          class="ccg-footer__column"
-          {{ block.shopify_attributes }}
-        >
+          {%- if block.settings.heading != blank -%}
+            <p class="ccg-footer__heading">
+              {{ block.settings.heading }}
+            </p>
+          {%- endif -%}
 
-          <details class="ccg-footer__accordion">
+          <ul class="ccg-footer__links">
 
-            {%- if block.settings.heading != blank -%}
+            {%- if block.settings.menu != blank -%}
 
-              <summary class="ccg-footer__heading">
+              {%- for link in block.settings.menu.links -%}
+                <li>
+                  <a href="{{ link.url }}">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {%- endfor -%}
 
-                <span>
-                  {{ block.settings.heading }}
-                </span>
+            {%- else -%}
 
-                <span
-                  class="ccg-footer__accordion-icon"
-                  aria-hidden="true"
-                ></span>
+              {%- assign rows = block.settings.links | newline_to_br | split: '<br />' -%}
 
-              </summary>
+              {%- for row in rows -%}
+                {%- assign line = row | strip -%}
+
+                {%- if line != blank -%}
+                  {%- assign parts = line | split: ' | ' -%}
+
+                  <li>
+                    {%- if parts.size > 1 -%}
+                      <a href="{{ parts.last | strip }}">
+                        {{ parts.first | strip }}
+                      </a>
+                    {%- else -%}
+                      <span>
+                        {{ line }}
+                      </span>
+                    {%- endif -%}
+                  </li>
+                {%- endif -%}
+
+              {%- endfor -%}
 
             {%- endif -%}
 
-
-            <div class="ccg-footer__accordion-content">
-
-              <ul class="ccg-footer__links">
-
-                {%- if block.settings.menu != blank -%}
-
-                  {%- for link in block.settings.menu.links -%}
-                    <li>
-                      <a href="{{ link.url }}">
-                        {{ link.title }}
-                      </a>
-                    </li>
-                  {%- endfor -%}
-
-                {%- else -%}
-
-                  {%- assign rows = block.settings.links | newline_to_br | split: '<br />' -%}
-
-                  {%- for row in rows -%}
-
-                    {%- assign line = row | strip -%}
-
-                    {%- if line != blank -%}
-
-                      {%- assign parts = line | split: ' | ' -%}
-
-                      <li>
-
-                        {%- if parts.size > 1 -%}
-
-                          <a href="{{ parts.last | strip }}">
-                            {{ parts.first | strip }}
-                          </a>
-
-                        {%- else -%}
-
-                          <span>
-                            {{ line }}
-                          </span>
-
-                        {%- endif -%}
-
-                      </li>
-
-                    {%- endif -%}
-
-                  {%- endfor -%}
-
-                {%- endif -%}
-
-              </ul>
-
-            </div>
-
-          </details>
-
+          </ul>
         </div>
-
       {%- endfor -%}
 
     </div>
 
-
     <div class="ccg-footer__bottom">
-
-      <span>
-        {{ section.settings.copyright_text }}
-      </span>
-
-      <span>
-        {{ section.settings.payment_text }}
-      </span>
-
+      <span>{{ section.settings.copyright_text }}</span>
+      <span>{{ section.settings.payment_text }}</span>
     </div>
 
   </div>
 </div>
-
 
 {% stylesheet %}
 
@@ -172,13 +113,11 @@
     font-family: 'Karla', system-ui, sans-serif;
   }
 
-
   .ccg-footer__inner {
     display: flex;
     flex-direction: column;
     gap: 48px;
   }
-
 
   .ccg-footer__grid {
     display: grid;
@@ -186,19 +125,16 @@
     gap: 44px;
   }
 
-
   .ccg-footer__brand {
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
 
-
   .ccg-footer__logo {
     align-self: flex-start;
     text-decoration: none;
   }
-
 
   .ccg-footer__logo-img {
     height: 58px;
@@ -206,13 +142,11 @@
     display: block;
   }
 
-
   .ccg-footer__logo-text {
     font-family: 'Rye', serif;
     font-size: 22px;
     color: #c4a177;
   }
-
 
   .ccg-footer__tagline {
     margin: 0;
@@ -221,7 +155,6 @@
     color: #a2957f;
     max-width: 320px;
   }
-
 
   .ccg-footer__social {
     display: flex;
@@ -233,55 +166,16 @@
     text-transform: uppercase;
   }
 
-
   .ccg-footer__social a {
-    position: relative;
     color: #c4a177;
     text-decoration: none;
   }
-
-
-  .ccg-footer__social a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    width: 100%;
-    height: 1px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s ease;
-  }
-
-
-  .ccg-footer__social a:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-
 
   .ccg-footer__column {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
-
-
-  .ccg-footer__accordion {
-    width: 100%;
-  }
-
-
-  .ccg-footer__accordion summary {
-    list-style: none;
-  }
-
-
-  .ccg-footer__accordion summary::-webkit-details-marker {
-    display: none;
-  }
-
 
   .ccg-footer__heading {
     margin: 0;
@@ -290,17 +184,6 @@
     font-size: 15px;
     color: #c4a177;
   }
-
-
-  .ccg-footer__accordion-icon {
-    display: none;
-  }
-
-
-  .ccg-footer__accordion-content {
-    display: block;
-  }
-
 
   .ccg-footer__links {
     list-style: none;
@@ -311,7 +194,6 @@
     gap: 12px;
   }
 
-
   .ccg-footer__links a,
   .ccg-footer__links span {
     font-size: 15px;
@@ -319,16 +201,15 @@
     text-decoration: none;
   }
 
-
-  /* Menu link hover underline effect */
-
+  /*
+    Menu link hover text-decoration effect
+  */
   .ccg-footer__links a {
     position: relative;
     display: inline-block;
     width: fit-content;
     transition: color 0.3s ease;
   }
-
 
   .ccg-footer__links a::after {
     content: '';
@@ -343,17 +224,14 @@
     transition: transform 0.3s ease;
   }
 
-
   .ccg-footer__links a:hover {
     color: #ede7dc;
   }
-
 
   .ccg-footer__links a:hover::after {
     transform: scaleX(1);
     transform-origin: left;
   }
-
 
   .ccg-footer__bottom {
     display: flex;
@@ -369,38 +247,11 @@
     text-transform: uppercase;
   }
 
-
-  /*
-    DESKTOP
-    Accordion content always visible.
-    No toggle icon on desktop.
-  */
-
-  @media screen and (min-width: 750px) {
-
-    .ccg-footer__accordion {
-      display: block;
-    }
-
-    .ccg-footer__accordion-content {
-      display: block;
-    }
-
-  }
-
-
   @media screen and (max-width: 989px) {
-
     .ccg-footer__grid {
       grid-template-columns: 1fr 1fr;
     }
-
   }
-
-
-  /*
-    MOBILE ACCORDION ONLY
-  */
 
   @media screen and (max-width: 749px) {
 
@@ -408,100 +259,10 @@
       gap: 36px;
     }
 
-
     .ccg-footer__grid {
       grid-template-columns: 1fr;
-      gap: 0;
+      gap: 28px;
     }
-
-
-    .ccg-footer__column {
-      border-top: 1px solid rgba(237, 231, 220, 0.18);
-      gap: 0;
-    }
-
-
-    .ccg-footer__column:last-child {
-      border-bottom: 1px solid rgba(237, 231, 220, 0.18);
-    }
-
-
-    .ccg-footer__accordion {
-      width: 100%;
-    }
-
-
-    .ccg-footer__accordion summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 18px 0;
-      cursor: pointer;
-    }
-
-
-    .ccg-footer__heading {
-      font-size: 15px;
-    }
-
-
-    /*
-      Plus icon
-    */
-
-    .ccg-footer__accordion-icon {
-      display: block;
-      position: relative;
-      width: 16px;
-      height: 16px;
-      flex: 0 0 16px;
-    }
-
-
-    .ccg-footer__accordion-icon::before,
-    .ccg-footer__accordion-icon::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 14px;
-      height: 1px;
-      background: #c4a177;
-      transform: translate(-50%, -50%);
-    }
-
-
-    /*
-      Vertical line rotates away when open
-      Plus → Minus
-    */
-
-    .ccg-footer__accordion-icon::after {
-      transform: translate(-50%, -50%) rotate(90deg);
-      transition: transform 0.3s ease;
-    }
-
-
-    .ccg-footer__accordion[open]
-      .ccg-footer__accordion-icon::after {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-
-    /*
-      Accordion content
-    */
-
-    .ccg-footer__accordion-content {
-      padding: 0 0 18px;
-    }
-
-
-    .ccg-footer__links {
-      gap: 12px;
-    }
-
 
     .ccg-footer__bottom {
       flex-direction: column;
@@ -511,7 +272,6 @@
   }
 
 {% endstylesheet %}
-
 
 {% schema %}
 {
