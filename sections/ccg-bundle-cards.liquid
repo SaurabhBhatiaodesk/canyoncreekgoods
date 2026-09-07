@@ -1,6 +1,6 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-bundles section section--page-width">
+<div class="ccg-bundles section">
   <div class="ccg-bundles__inner">
   <div class="ccg-bundles__head">
     <div class="ccg-bundles__head-text">
@@ -31,6 +31,37 @@
             assign card_title = product_1.title
           endif
         endif
+
+        assign price_cents = 0
+        assign compare_cents = 0
+        assign has_product_pricing = false
+        if product_1 != blank
+          assign has_product_pricing = true
+          assign compare_1 = product_1.compare_at_price | default: product_1.price
+          assign price_cents = price_cents | plus: product_1.price
+          assign compare_cents = compare_cents | plus: compare_1
+        endif
+        if product_2 != blank
+          assign has_product_pricing = true
+          assign compare_2 = product_2.compare_at_price | default: product_2.price
+          assign price_cents = price_cents | plus: product_2.price
+          assign compare_cents = compare_cents | plus: compare_2
+        endif
+
+        assign card_price = block.settings.price
+        assign card_compare_at_price = block.settings.compare_at_price
+        assign card_save_text = block.settings.save_text
+        if has_product_pricing
+          assign card_price = price_cents | money
+          if compare_cents > price_cents
+            assign card_compare_at_price = compare_cents | money
+            assign save_cents = compare_cents | minus: price_cents
+            assign card_save_text = 'Save ' | append: save_cents | money
+          else
+            assign card_compare_at_price = blank
+            assign card_save_text = blank
+          endif
+        endif
       -%}
       <div class="ccg-bundle-card" {{ block.shopify_attributes }}>
         <div class="ccg-bundle-card__media">
@@ -56,15 +87,15 @@
             <p class="ccg-bundle-card__description">{{ block.settings.description }}</p>
           {%- endif -%}
           <div class="ccg-bundle-card__price">
-            {%- if block.settings.price != blank -%}
-              <span class="ccg-bundle-card__price-now">{{ block.settings.price }}</span>
+            {%- if card_price != blank -%}
+              <span class="ccg-bundle-card__price-now">{{ card_price }}</span>
             {%- endif -%}
-            {%- if block.settings.compare_at_price != blank -%}
-              <span class="ccg-bundle-card__price-was">{{ block.settings.compare_at_price }}</span>
+            {%- if card_compare_at_price != blank -%}
+              <span class="ccg-bundle-card__price-was">{{ card_compare_at_price }}</span>
             {%- endif -%}
           </div>
-          {%- if block.settings.save_text != blank -%}
-            <span class="ccg-bundle-card__save">{{ block.settings.save_text }}</span>
+          {%- if card_save_text != blank -%}
+            <span class="ccg-bundle-card__save">{{ card_save_text }}</span>
           {%- endif -%}
         </div>
       </div>
@@ -341,9 +372,24 @@
           "label": "Description",
           "default": "Same blanket run, cut back to back. One set exists."
         },
-        { "type": "text", "id": "price", "label": "Price", "default": "$159" },
-        { "type": "text", "id": "compare_at_price", "label": "Compare-at price", "default": "$177" },
-        { "type": "text", "id": "save_text", "label": "Save badge text", "default": "Save $18" },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price override",
+          "info": "Auto-calculated from the two products' prices when both are selected."
+        },
+        {
+          "type": "text",
+          "id": "compare_at_price",
+          "label": "Compare-at price override",
+          "info": "Auto-calculated from the products' compare-at prices when selected."
+        },
+        {
+          "type": "text",
+          "id": "save_text",
+          "label": "Save badge text override",
+          "info": "Auto-calculated (Save $X) when products are selected."
+        },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Add both" },
         { "type": "url", "id": "button_link", "label": "Button link" }
       ]
