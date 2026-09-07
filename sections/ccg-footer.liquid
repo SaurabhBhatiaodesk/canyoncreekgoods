@@ -93,13 +93,11 @@
                 {%- if block.settings.menu != blank -%}
 
                   {%- for link in block.settings.menu.links -%}
-
                     <li>
                       <a href="{{ link.url }}">
                         {{ link.title }}
                       </a>
                     </li>
-
                   {%- endfor -%}
 
                 {%- else -%}
@@ -275,15 +273,6 @@
   }
 
 
-  .ccg-footer__heading {
-    margin: 0;
-    font-family: 'Rye', serif;
-    font-weight: 400;
-    font-size: 15px;
-    color: #c4a177;
-  }
-
-
   .ccg-footer__accordion summary {
     list-style: none;
   }
@@ -291,6 +280,15 @@
 
   .ccg-footer__accordion summary::-webkit-details-marker {
     display: none;
+  }
+
+
+  .ccg-footer__heading {
+    margin: 0;
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #c4a177;
   }
 
 
@@ -322,9 +320,7 @@
   }
 
 
-  /*
-    Menu link hover underline effect
-  */
+  /* Menu link hover underline effect */
 
   .ccg-footer__links a {
     position: relative;
@@ -374,6 +370,25 @@
   }
 
 
+  /*
+    DESKTOP
+    Accordion content always visible.
+    No toggle icon on desktop.
+  */
+
+  @media screen and (min-width: 750px) {
+
+    .ccg-footer__accordion {
+      display: block;
+    }
+
+    .ccg-footer__accordion-content {
+      display: block;
+    }
+
+  }
+
+
   @media screen and (max-width: 989px) {
 
     .ccg-footer__grid {
@@ -382,6 +397,10 @@
 
   }
 
+
+  /*
+    MOBILE ACCORDION ONLY
+  */
 
   @media screen and (max-width: 749px) {
 
@@ -427,6 +446,10 @@
     }
 
 
+    /*
+      Plus icon
+    */
+
     .ccg-footer__accordion-icon {
       display: block;
       position: relative;
@@ -449,6 +472,11 @@
     }
 
 
+    /*
+      Vertical line rotates away when open
+      Plus → Minus
+    */
+
     .ccg-footer__accordion-icon::after {
       transform: translate(-50%, -50%) rotate(90deg);
       transition: transform 0.3s ease;
@@ -460,6 +488,10 @@
       transform: translate(-50%, -50%) rotate(0deg);
     }
 
+
+    /*
+      Accordion content
+    */
 
     .ccg-footer__accordion-content {
       padding: 0 0 18px;
@@ -479,44 +511,6 @@
   }
 
 {% endstylesheet %}
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const footerSections = document.querySelectorAll(
-      '.ccg-footer'
-    );
-
-    footerSections.forEach(function (footer) {
-
-      const accordions = footer.querySelectorAll(
-        '.ccg-footer__accordion'
-      );
-
-      function updateFooterAccordion() {
-
-        accordions.forEach(function (accordion) {
-
-          if (window.innerWidth > 749) {
-            accordion.setAttribute('open', '');
-          } else {
-            accordion.removeAttribute('open');
-          }
-
-        });
-
-      }
-
-      updateFooterAccordion();
-
-      window.addEventListener(
-        'resize',
-        updateFooterAccordion
-      );
-
-    });
-  });
-</script>
 
 
 {% schema %}
