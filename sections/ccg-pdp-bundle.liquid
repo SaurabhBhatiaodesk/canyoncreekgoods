@@ -173,10 +173,44 @@
       });
     }
 
+    function showDesignModeHelper(bundles, match) {
+      if (!window.Shopify || !window.Shopify.designMode) return;
+      section.hidden = false;
+
+      var old = section.querySelector('[data-pdp-bundle-helper]');
+      if (old) old.remove();
+
+      var helper = document.createElement('div');
+      helper.setAttribute('data-pdp-bundle-helper', '');
+      helper.style.cssText = 'margin-bottom:16px;padding:12px 16px;background:#fff8e6;border:1px dashed #c4a177;font-family:monospace;font-size:13px;line-height:1.7;color:#4a3d31;';
+
+      var title = document.createElement('div');
+      title.style.cssText = 'font-weight:700;margin-bottom:6px;';
+      title.textContent = match
+        ? 'Bundle match found for this product (live from Bundler, only visible while editing):'
+        : 'No Bundler bundle includes this product (only visible while editing). All current bundles:';
+      helper.appendChild(title);
+
+      bundles.forEach(function (b) {
+        var row = document.createElement('div');
+        var isMatch = match && b.id === match.id;
+        row.textContent = (isMatch ? '→ ' : '') + (b.name || 'Untitled') + '  =  ' + b.id + '  (' + (b.status || 'unknown') + ')';
+        helper.appendChild(row);
+      });
+
+      card.parentElement.insertBefore(helper, card);
+    }
+
     function renderBundle(bundles) {
       if (!Array.isArray(bundles) || !bundles.length) return;
       var match = findMatch(bundles);
-      if (!match) return;
+      showDesignModeHelper(bundles, match);
+      if (!match) {
+        if (headingEl && window.Shopify && window.Shopify.designMode) {
+          headingEl.textContent = 'Complete the look';
+        }
+        return;
+      }
 
       var currentHandle = null;
       var handles = Object.values(match.products)
