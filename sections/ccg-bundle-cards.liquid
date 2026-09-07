@@ -16,125 +16,7 @@
     {%- endif -%}
   </div>
 
-  <div class="ccg-bundles__grid">
-    {%- for block in section.blocks -%}
-      {%- liquid
-        assign product_1 = block.settings.product_1
-        assign product_2 = block.settings.product_2
-        assign card_image_1 = block.settings.image_1 | default: product_1.featured_image
-        assign card_image_2 = block.settings.image_2 | default: product_2.featured_image
-        assign card_title = block.settings.title
-        if card_title == blank
-          if product_1 != blank and product_2 != blank
-            assign card_title = product_1.title | append: ' + ' | append: product_2.title
-          elsif product_1 != blank
-            assign card_title = product_1.title
-          endif
-        endif
-
-        assign regular_cents = 0
-        assign has_product_pricing = false
-        if product_1 != blank
-          assign has_product_pricing = true
-          assign regular_cents = regular_cents | plus: product_1.price
-        endif
-        if product_2 != blank
-          assign has_product_pricing = true
-          assign regular_cents = regular_cents | plus: product_2.price
-        endif
-
-        assign discount_percent = block.settings.discount_percent
-        assign card_price = block.settings.price
-        assign card_compare_at_price = block.settings.compare_at_price
-        assign card_save_text = block.settings.save_text
-        if has_product_pricing and discount_percent > 0
-          assign discount_factor = 100 | minus: discount_percent
-          assign discounted_cents = regular_cents | times: discount_factor | divided_by: 100
-          assign save_cents = regular_cents | minus: discounted_cents
-          assign save_money = save_cents | money
-          assign card_price = discounted_cents | money
-          assign card_compare_at_price = regular_cents | money
-          assign card_save_text = 'Save ' | append: save_money
-        elsif has_product_pricing
-          assign card_price = regular_cents | money
-          assign card_compare_at_price = blank
-          assign card_save_text = blank
-        endif
-
-        assign card_image_1_hover = product_1.images[1]
-        assign card_image_2_hover = product_2.images[1]
-      -%}
-      {%- if block.settings.bundler_shortcode != blank -%}
-        <div class="ccg-bundle-card ccg-bundle-card--app" {{ block.shopify_attributes }}>
-          {{ block.settings.bundler_shortcode }}
-        </div>
-      {%- else -%}
-      <div
-        class="ccg-bundle-card"
-        data-bundler-card
-        data-bundler-title="{{ card_title | escape }}"
-        {{ block.shopify_attributes }}
-      >
-        <div class="ccg-bundle-card__media">
-          <span class="ccg-bundle-card__img{% if card_image_1_hover != blank %} ccg-bundle-card__img--has-alt{% endif %}">
-            {%- if card_image_1 != blank -%}
-              {{
-                card_image_1
-                | image_url: width: 400
-                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--primary'
-              }}
-            {%- else -%}
-              {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
-            {%- endif -%}
-            {%- if card_image_1_hover != blank -%}
-              {{
-                card_image_1_hover
-                | image_url: width: 400
-                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--secondary'
-              }}
-            {%- endif -%}
-          </span>
-          <span class="ccg-bundle-card__img{% if card_image_2_hover != blank %} ccg-bundle-card__img--has-alt{% endif %}">
-            {%- if card_image_2 != blank -%}
-              {{
-                card_image_2
-                | image_url: width: 400
-                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--primary'
-              }}
-            {%- else -%}
-              {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder' }}
-            {%- endif -%}
-            {%- if card_image_2_hover != blank -%}
-              {{
-                card_image_2_hover
-                | image_url: width: 400
-                | image_tag: widths: '200, 300, 400', alt: card_title, class: 'ccg-bundle-card__photo ccg-bundle-card__photo--secondary'
-              }}
-            {%- endif -%}
-          </span>
-        </div>
-
-        <div class="ccg-bundle-card__body">
-          <h3 class="ccg-bundle-card__title">{{ card_title }}</h3>
-          {%- if block.settings.description != blank -%}
-            <p class="ccg-bundle-card__description">{{ block.settings.description }}</p>
-          {%- endif -%}
-          <div class="ccg-bundle-card__price">
-            {%- if card_price != blank -%}
-              <span class="ccg-bundle-card__price-now">{{ card_price }}</span>
-            {%- endif -%}
-            {%- if card_compare_at_price != blank -%}
-              <span class="ccg-bundle-card__price-was">{{ card_compare_at_price }}</span>
-            {%- endif -%}
-          </div>
-          {%- if card_save_text != blank -%}
-            <span class="ccg-bundle-card__save">{{ card_save_text }}</span>
-          {%- endif -%}
-        </div>
-      </div>
-      {%- endif -%}
-    {%- endfor -%}
-  </div>
+  <div class="ccg-bundles__grid" data-bundler-grid></div>
   </div>
 </div>
 
@@ -142,15 +24,11 @@
   (function () {
     var section = document.currentScript.closest('.ccg-bundles');
     if (!section) return;
-    var cards = section.querySelectorAll('[data-bundler-card]');
-    if (!cards.length) return;
+    var grid = section.querySelector('[data-bundler-grid]');
+    if (!grid) return;
 
     var money = function (cents) {
       return '$' + (cents / 100).toFixed(2);
-    };
-
-    var norm = function (str) {
-      return (str || '').toString().trim().toLowerCase();
     };
 
     function fetchProduct(handle) {
@@ -160,11 +38,9 @@
       });
     }
 
-    function applyBundleProducts(card, bundle, products) {
+    function buildCard(bundle, products) {
       var regularCents = 0;
-      products.forEach(function (p) {
-        regularCents += p.price;
-      });
+      products.forEach(function (p) { regularCents += p.price; });
 
       var discountPercent = parseFloat(bundle.percentage_value) || 0;
       var fixedAmount = parseFloat(bundle.fixed_amount_value) || 0;
@@ -176,59 +52,102 @@
       }
       var saveCents = regularCents - priceCents;
 
-      var priceEl = card.querySelector('.ccg-bundle-card__price-now');
-      var compareEl = card.querySelector('.ccg-bundle-card__price-was');
-      var saveEl = card.querySelector('.ccg-bundle-card__save');
+      var title = bundle.name || products.map(function (p) { return p.title; }).join(' + ');
 
-      if (priceEl) priceEl.textContent = money(priceCents);
+      var card = document.createElement('div');
+      card.className = 'ccg-bundle-card';
+
+      var media = document.createElement('div');
+      media.className = 'ccg-bundle-card__media';
+
+      products.forEach(function (p) {
+        var hasAlt = !!(p.images && p.images[1]);
+        var slot = document.createElement('span');
+        slot.className = 'ccg-bundle-card__img' + (hasAlt ? ' ccg-bundle-card__img--has-alt' : '');
+
+        var primary = document.createElement('img');
+        primary.className = 'ccg-bundle-card__photo ccg-bundle-card__photo--primary';
+        primary.src = p.featured_image || (p.images && p.images[0]) || '';
+        primary.alt = p.title || title;
+        primary.loading = 'lazy';
+        slot.appendChild(primary);
+
+        if (hasAlt) {
+          var secondary = document.createElement('img');
+          secondary.className = 'ccg-bundle-card__photo ccg-bundle-card__photo--secondary';
+          secondary.src = p.images[1];
+          secondary.alt = p.title || title;
+          secondary.loading = 'lazy';
+          slot.appendChild(secondary);
+        }
+
+        media.appendChild(slot);
+      });
+
+      var body = document.createElement('div');
+      body.className = 'ccg-bundle-card__body';
+
+      var titleEl = document.createElement('h3');
+      titleEl.className = 'ccg-bundle-card__title';
+      titleEl.textContent = title;
+      body.appendChild(titleEl);
+
+      var priceWrap = document.createElement('div');
+      priceWrap.className = 'ccg-bundle-card__price';
+
+      var priceNow = document.createElement('span');
+      priceNow.className = 'ccg-bundle-card__price-now';
+      priceNow.textContent = money(priceCents);
+      priceWrap.appendChild(priceNow);
+
       if (saveCents > 0) {
-        if (compareEl) { compareEl.textContent = money(regularCents); compareEl.style.display = ''; }
-        if (saveEl) { saveEl.textContent = 'Save ' + money(saveCents); saveEl.style.display = ''; }
-      } else {
-        if (compareEl) compareEl.style.display = 'none';
-        if (saveEl) saveEl.style.display = 'none';
+        var priceWas = document.createElement('span');
+        priceWas.className = 'ccg-bundle-card__price-was';
+        priceWas.textContent = money(regularCents);
+        priceWrap.appendChild(priceWas);
+      }
+      body.appendChild(priceWrap);
+
+      if (saveCents > 0) {
+        var saveEl = document.createElement('span');
+        saveEl.className = 'ccg-bundle-card__save';
+        saveEl.textContent = 'Save ' + money(saveCents);
+        body.appendChild(saveEl);
       }
 
-      var imgSlots = card.querySelectorAll('.ccg-bundle-card__img');
-      products.forEach(function (p, i) {
-        if (!imgSlots[i]) return;
-        var primary = imgSlots[i].querySelector('.ccg-bundle-card__photo--primary');
-        var secondary = imgSlots[i].querySelector('.ccg-bundle-card__photo--secondary');
-        if (primary && primary.tagName === 'IMG' && p.featured_image) {
-          primary.src = p.featured_image;
-          primary.removeAttribute('srcset');
-        }
-        if (secondary && secondary.tagName === 'IMG' && p.images && p.images[1]) {
-          secondary.src = p.images[1];
-          secondary.removeAttribute('srcset');
-        }
-      });
+      card.appendChild(media);
+      card.appendChild(body);
+      return card;
     }
 
-    function matchAndApply(bundles) {
-      if (!Array.isArray(bundles)) return;
-      window.__ccgBundlerData = bundles; // for debugging in the console
-      cards.forEach(function (card) {
-        var title = norm(card.getAttribute('data-bundler-title'));
-        var match = bundles.find(function (b) {
-          var bName = norm(b.name);
-          return bName && (bName === title || bName.indexOf(title) !== -1 || title.indexOf(bName) !== -1);
-        });
-        if (!match || !match.products) return;
+    function renderBundles(bundles) {
+      if (!Array.isArray(bundles) || !bundles.length) return;
 
-        var handles = Object.values(match.products)
-          .map(function (p) { return p.handle; })
-          .filter(Boolean);
-        if (!handles.length) return;
-
-        Promise.all(handles.map(fetchProduct))
-          .then(function (products) {
-            applyBundleProducts(card, match, products);
-          })
-          .catch(function (e) {
-            console.warn('[ccg-bundles] Failed to fetch bundle products:', e);
-          });
+      var active = bundles.filter(function (b) {
+        return !b.status || b.status === 'enabled' || b.status === 'active';
       });
+      if (!active.length) return;
+
+      Promise.all(
+        active.map(function (bundle) {
+          var handles = Object.values(bundle.products || {})
+            .map(function (p) { return p.handle; })
+            .filter(Boolean);
+          if (!handles.length) return null;
+          return Promise.all(handles.map(fetchProduct)).then(function (products) {
+            return buildCard(bundle, products);
+          });
+        })
+      )
+        .then(function (cards) {
+          grid.innerHTML = '';
+          cards.forEach(function (card) {
+            if (card) grid.appendChild(card);
+          });
+        })
+        .catch(function (e) {
+          console.warn('[ccg-bundles] Failed to render bundles:', e);
+        });
     }
 
     var attempts = 0;
@@ -238,9 +157,9 @@
         try {
           var result = window.bndlr.getBundles();
           if (result && typeof result.then === 'function') {
-            result.then(matchAndApply).catch(function () {});
+            result.then(renderBundles).catch(function () {});
           } else {
-            matchAndApply(result);
+            renderBundles(result);
           }
         } catch (e) {
           console.warn('[ccg-bundles] Bundler getBundles() failed:', e);
@@ -321,11 +240,6 @@
     padding: 24px;
     background: var(--ccg-cream-soft);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .ccg-bundle-card--app {
-    display: block;
-    min-height: 120px;
   }
 
   .ccg-bundle-card:hover {
@@ -468,6 +382,10 @@
   "class": "section-wrapper",
   "settings": [
     {
+      "type": "paragraph",
+      "content": "Cards in this section are 100% automatic — pulled live from the Bundler app (name, products, images, price, discount). No product, image or price needs to be set here, and no block needs to be added when a new bundle is created in Bundler."
+    },
+    {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
@@ -536,96 +454,9 @@
       "default": 56
     }
   ],
-  "blocks": [
-    {
-      "type": "bundle",
-      "name": "Bundle",
-      "settings": [
-        {
-          "type": "textarea",
-          "id": "bundler_shortcode",
-          "label": "Bundler app shortcode",
-          "info": "Paste the shortcode copied from the Bundler app (Bundles > your bundle > Copy). When set, this replaces the card below with Bundler's own live widget — products, price and discount all come from Bundler, nothing else on this block is used."
-        },
-        {
-          "type": "header",
-          "content": "Manual card (used only when no shortcode is set above)"
-        },
-        { "type": "product", "id": "product_1", "label": "Product 1" },
-        { "type": "product", "id": "product_2", "label": "Product 2" },
-        {
-          "type": "range",
-          "id": "discount_percent",
-          "label": "Bundle discount",
-          "min": 0,
-          "max": 50,
-          "step": 1,
-          "unit": "%",
-          "default": 10,
-          "info": "Set to match the discount configured in your bundle app (e.g. Bundler)."
-        },
-        { "type": "image_picker", "id": "image_1", "label": "Image 1 override" },
-        { "type": "image_picker", "id": "image_2", "label": "Image 2 override" },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title override",
-          "info": "Leave blank to use the selected products' names automatically."
-        },
-        {
-          "type": "text",
-          "id": "description",
-          "label": "Description",
-          "default": "Same blanket run, cut back to back. One set exists."
-        },
-        {
-          "type": "text",
-          "id": "price",
-          "label": "Price override",
-          "info": "Auto-calculated from the two products' prices when both are selected."
-        },
-        {
-          "type": "text",
-          "id": "compare_at_price",
-          "label": "Compare-at price override",
-          "info": "Auto-calculated from the products' compare-at prices when selected."
-        },
-        {
-          "type": "text",
-          "id": "save_text",
-          "label": "Save badge text override",
-          "info": "Auto-calculated (Save $X) when products are selected."
-        },
-        { "type": "text", "id": "button_label", "label": "Button label", "default": "Add both" },
-        { "type": "url", "id": "button_link", "label": "Button link" }
-      ]
-    }
-  ],
   "presets": [
     {
-      "name": "CCG Bundle Cards",
-      "blocks": [
-        {
-          "type": "bundle",
-          "settings": {
-            "title": "Nehalem Cowl + Matching Sling",
-            "description": "Same blanket run, cut back to back. One set exists.",
-            "price": "$159",
-            "compare_at_price": "$177",
-            "save_text": "Save $18"
-          }
-        },
-        {
-          "type": "bundle",
-          "settings": {
-            "title": "Duster + Grey Aztec Cowl",
-            "description": "The cold-morning uniform. Both one of one.",
-            "price": "$289",
-            "compare_at_price": "$318",
-            "save_text": "Save $29"
-          }
-        }
-      ]
+      "name": "CCG Bundle Cards"
     }
   ]
 }

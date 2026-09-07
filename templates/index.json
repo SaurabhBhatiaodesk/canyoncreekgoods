@@ -113,40 +113,6 @@
     },
     "bundle_cards_ccg": {
       "type": "ccg-bundle-cards",
-      "blocks": {
-        "bundle_1": {
-          "type": "bundle",
-          "settings": {
-            "product_1": "wool-cowl-scarf-nehalem",
-            "product_2": "copy-western-crossbody-sling-harding-tonal",
-            "title": "Nehalem Cowl + Matching Sling",
-            "description": "Same blanket run, cut back to back. One set exists.",
-            "price": "$159",
-            "compare_at_price": "$177",
-            "save_text": "SAVE $18",
-            "button_label": "Add both",
-            "button_link": ""
-          }
-        },
-        "bundle_2": {
-          "type": "bundle",
-          "settings": {
-            "product_1": "single-christmas-stocking-wool-08336",
-            "product_2": "womens-wool-cowl-wild-rags-buckaroo-18369",
-            "title": "Duster + Grey Aztec Cowl",
-            "description": "The cold-morning uniform. Both one of one.",
-            "price": "$289",
-            "compare_at_price": "$318",
-            "save_text": "SAVE $29",
-            "button_label": "Add both",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "bundle_1",
-        "bundle_2"
-      ],
       "name": "Complete the Look",
       "settings": {
         "eyebrow": "COMPLETE THE LOOK",
