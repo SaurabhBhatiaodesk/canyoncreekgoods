@@ -79,6 +79,10 @@
     --ccg-ink: #211c17;
     --ccg-cream: #fbf8f2;
     --ccg-tan: #7a6d5d;
+    --ccg-header-menu-font-family: 'Barlow Condensed', sans-serif;
+    --ccg-header-menu-font-weight: 500;
+    --ccg-header-menu-letter-spacing: 0.06em;
+    --ccg-header-menu-case: uppercase;
 
     position: sticky;
     top: 0;
@@ -134,19 +138,21 @@
   }
 
   .ccg-header__nav-link {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--ccg-header-menu-font-family);
     font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-weight: var(--ccg-header-menu-font-weight);
+    letter-spacing: var(--ccg-header-menu-letter-spacing);
+    text-transform: var(--ccg-header-menu-case);
     color: var(--ccg-ink);
     text-decoration: none;
+    text-underline-offset: 4px;
     padding-bottom: 4px;
     border-bottom: 1px solid transparent;
   }
 
   .ccg-header__nav-link:hover {
     border-bottom-color: var(--ccg-tan);
+    text-decoration: underline;
   }
 
   .ccg-header__nav-link--active {
@@ -163,18 +169,20 @@
     position: relative;
     display: flex;
     align-items: center;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--ccg-header-menu-font-family);
     font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-weight: var(--ccg-header-menu-font-weight);
+    letter-spacing: var(--ccg-header-menu-letter-spacing);
+    text-transform: var(--ccg-header-menu-case);
     color: var(--ccg-ink);
     text-decoration: none;
+    text-underline-offset: 4px;
     white-space: nowrap;
   }
 
   .ccg-header__action:hover {
     color: var(--ccg-tan);
+    text-decoration: underline;
   }
 
   .ccg-header__action-icon {
