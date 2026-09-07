@@ -36,6 +36,7 @@
           "type": "tile",
           "settings": {
             "collection": "denim-duster-jackets",
+            "image_hover": "shopify://shop_images/DSC-6136.jpg",
             "title": "Wool Cowls",
             "subtitle": "24 pieces · from $59",
             "link": ""
@@ -45,6 +46,7 @@
           "type": "tile",
           "settings": {
             "collection": "patched-denim-jackets",
+            "image_hover": "shopify://shop_images/DSC-6229.jpg",
             "title": "Sling Bags",
             "subtitle": "Pairs with the cowls",
             "link": ""
@@ -209,6 +211,7 @@
       "settings": {
         "eyebrow": "OUT THE DOOR IN 1–2 DAYS",
         "heading": "Ready to ride out",
+        "image_ratio": "portrait",
         "background_color": "#f8f5ee",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 96,
