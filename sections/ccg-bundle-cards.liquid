@@ -146,62 +146,63 @@
     if (!cards.length) return;
 
     var money = function (cents) {
-      if (typeof cents !== 'number') return null;
       return '$' + (cents / 100).toFixed(2);
-    };
-
-    // Bundler stores amounts as either cents (integer) or dollars (decimal);
-    // normalize by assuming values >= 1000 are already cents, else dollars.
-    var toCents = function (value) {
-      if (typeof value !== 'number') return null;
-      return value > 1000 ? Math.round(value) : Math.round(value * 100);
     };
 
     var norm = function (str) {
       return (str || '').toString().trim().toLowerCase();
     };
 
-    function applyBundle(card, bundle) {
+    function fetchProduct(handle) {
+      return fetch('/products/' + handle + '.js', { credentials: 'same-origin' }).then(function (r) {
+        if (!r.ok) throw new Error('Failed to fetch product: ' + handle);
+        return r.json();
+      });
+    }
+
+    function applyBundleProducts(card, bundle, products) {
+      var regularCents = 0;
+      products.forEach(function (p) {
+        regularCents += p.price;
+      });
+
+      var discountPercent = parseFloat(bundle.percentage_value) || 0;
+      var fixedAmount = parseFloat(bundle.fixed_amount_value) || 0;
+      var priceCents = regularCents;
+      if (bundle.discount_type === 'percentage' && discountPercent > 0) {
+        priceCents = Math.round(regularCents * (100 - discountPercent) / 100);
+      } else if (bundle.discount_type === 'fixed_amount' && fixedAmount > 0) {
+        priceCents = Math.max(regularCents - Math.round(fixedAmount * 100), 0);
+      }
+      var saveCents = regularCents - priceCents;
+
       var priceEl = card.querySelector('.ccg-bundle-card__price-now');
       var compareEl = card.querySelector('.ccg-bundle-card__price-was');
       var saveEl = card.querySelector('.ccg-bundle-card__save');
 
-      var priceCandidates = [
-        bundle.discounted_price, bundle.final_price, bundle.price,
-        bundle.bundle_price, bundle.discountedPrice
-      ];
-      var compareCandidates = [
-        bundle.original_price, bundle.compare_at_price, bundle.regular_price,
-        bundle.originalPrice, bundle.total_price
-      ];
-
-      var priceCents = null;
-      for (var i = 0; i < priceCandidates.length; i++) {
-        priceCents = toCents(priceCandidates[i]);
-        if (priceCents !== null) break;
-      }
-      var compareCents = null;
-      for (var j = 0; j < compareCandidates.length; j++) {
-        compareCents = toCents(compareCandidates[j]);
-        if (compareCents !== null) break;
+      if (priceEl) priceEl.textContent = money(priceCents);
+      if (saveCents > 0) {
+        if (compareEl) { compareEl.textContent = money(regularCents); compareEl.style.display = ''; }
+        if (saveEl) { saveEl.textContent = 'Save ' + money(saveCents); saveEl.style.display = ''; }
+      } else {
+        if (compareEl) compareEl.style.display = 'none';
+        if (saveEl) saveEl.style.display = 'none';
       }
 
-      if (priceCents !== null && priceEl) {
-        priceEl.textContent = money(priceCents);
-      }
-      if (compareCents !== null && compareEl) {
-        if (priceCents !== null && compareCents > priceCents) {
-          compareEl.textContent = money(compareCents);
-          compareEl.style.display = '';
-          if (saveEl) {
-            saveEl.textContent = 'Save ' + money(compareCents - priceCents);
-            saveEl.style.display = '';
-          }
-        } else {
-          compareEl.style.display = 'none';
-          if (saveEl) saveEl.style.display = 'none';
+      var imgSlots = card.querySelectorAll('.ccg-bundle-card__img');
+      products.forEach(function (p, i) {
+        if (!imgSlots[i]) return;
+        var primary = imgSlots[i].querySelector('.ccg-bundle-card__photo--primary');
+        var secondary = imgSlots[i].querySelector('.ccg-bundle-card__photo--secondary');
+        if (primary && primary.tagName === 'IMG' && p.featured_image) {
+          primary.src = p.featured_image;
+          primary.removeAttribute('srcset');
         }
-      }
+        if (secondary && secondary.tagName === 'IMG' && p.images && p.images[1]) {
+          secondary.src = p.images[1];
+          secondary.removeAttribute('srcset');
+        }
+      });
     }
 
     function matchAndApply(bundles) {
@@ -210,10 +211,23 @@
       cards.forEach(function (card) {
         var title = norm(card.getAttribute('data-bundler-title'));
         var match = bundles.find(function (b) {
-          var bTitle = norm(b.title || b.name || b.bundle_title);
-          return bTitle && (bTitle === title || bTitle.indexOf(title) !== -1 || title.indexOf(bTitle) !== -1);
+          var bName = norm(b.name);
+          return bName && (bName === title || bName.indexOf(title) !== -1 || title.indexOf(bName) !== -1);
         });
-        if (match) applyBundle(card, match);
+        if (!match || !match.products) return;
+
+        var handles = Object.values(match.products)
+          .map(function (p) { return p.handle; })
+          .filter(Boolean);
+        if (!handles.length) return;
+
+        Promise.all(handles.map(fetchProduct))
+          .then(function (products) {
+            applyBundleProducts(card, match, products);
+          })
+          .catch(function (e) {
+            console.warn('[ccg-bundles] Failed to fetch bundle products:', e);
+          });
       });
     }
 
