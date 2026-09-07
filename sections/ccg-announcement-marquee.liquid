@@ -1,0 +1,152 @@
+{%- liquid
+  assign items = section.blocks
+-%}
+
+<div class="ccg-marquee" style="--ccg-marquee-bg: {{ section.settings.background_color }}; --ccg-marquee-color: {{ section.settings.text_color }}; --ccg-marquee-dot: {{ section.settings.dot_color }}; --ccg-marquee-speed: {{ section.settings.speed }}s;">
+  <div class="ccg-marquee__track">
+    <div class="ccg-marquee__group">
+      {%- for block in items -%}
+        {%- if block.settings.text != blank -%}
+          <span class="ccg-marquee__item" {{ block.shopify_attributes }}>
+            <span class="ccg-marquee__text">{{ block.settings.text }}</span>
+            <span class="ccg-marquee__dot" aria-hidden="true"></span>
+          </span>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    <div class="ccg-marquee__group" aria-hidden="true">
+      {%- for block in items -%}
+        {%- if block.settings.text != blank -%}
+          <span class="ccg-marquee__item">
+            <span class="ccg-marquee__text">{{ block.settings.text }}</span>
+            <span class="ccg-marquee__dot"></span>
+          </span>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .ccg-marquee {
+    background: var(--ccg-marquee-bg, #f8f5ee);
+    overflow: hidden;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(33, 28, 23, 0.14);
+  }
+
+  .ccg-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: ccg-marquee-scroll var(--ccg-marquee-speed, 40s) linear infinite;
+  }
+
+  .ccg-marquee__group {
+    display: flex;
+    flex: none;
+  }
+
+  .ccg-marquee__item {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    padding: 0 26px;
+    flex-shrink: 0;
+  }
+
+  .ccg-marquee__text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: var(--ccg-marquee-color, #5c5145);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ccg-marquee__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ccg-marquee-dot, #b98a52);
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ccg-marquee__track {
+      animation: none;
+    }
+  }
+
+  @keyframes ccg-marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Announcement Marquee",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f5ee"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#5c5145"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#b98a52"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed (seconds per loop)",
+      "min": 15,
+      "max": 80,
+      "step": 5,
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Announcement Marquee",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Free shipping, no minimum" } },
+        { "type": "item", "settings": { "text": "Hand cut in Snowflake, Arizona" } },
+        { "type": "item", "settings": { "text": "One of one — never made twice" } },
+        { "type": "item", "settings": { "text": "Premium US-milled wool" } },
+        { "type": "item", "settings": { "text": "Melissa answers her own email" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

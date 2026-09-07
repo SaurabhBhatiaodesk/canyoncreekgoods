@@ -13,7 +13,7 @@
   "sections": {
     "header_ccg": {
       "type": "ccg-header",
-      "name": "Header",
+      "name": "CCG Header (bison logo)",
       "settings": {
         "logo_text": "Canyon Creek Goods",
         "menu": "header-menu",
