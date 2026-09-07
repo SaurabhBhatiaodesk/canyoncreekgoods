@@ -69,7 +69,12 @@
           {{ block.settings.bundler_shortcode }}
         </div>
       {%- else -%}
-      <div class="ccg-bundle-card" {{ block.shopify_attributes }}>
+      <div
+        class="ccg-bundle-card"
+        data-bundler-card
+        data-bundler-title="{{ card_title | escape }}"
+        {{ block.shopify_attributes }}
+      >
         <div class="ccg-bundle-card__media">
           <span class="ccg-bundle-card__img{% if card_image_1_hover != blank %} ccg-bundle-card__img--has-alt{% endif %}">
             {%- if card_image_1 != blank -%}
@@ -132,6 +137,108 @@
   </div>
   </div>
 </div>
+
+<script>
+  (function () {
+    var section = document.currentScript.closest('.ccg-bundles');
+    if (!section) return;
+    var cards = section.querySelectorAll('[data-bundler-card]');
+    if (!cards.length) return;
+
+    var money = function (cents) {
+      if (typeof cents !== 'number') return null;
+      return '$' + (cents / 100).toFixed(2);
+    };
+
+    // Bundler stores amounts as either cents (integer) or dollars (decimal);
+    // normalize by assuming values >= 1000 are already cents, else dollars.
+    var toCents = function (value) {
+      if (typeof value !== 'number') return null;
+      return value > 1000 ? Math.round(value) : Math.round(value * 100);
+    };
+
+    var norm = function (str) {
+      return (str || '').toString().trim().toLowerCase();
+    };
+
+    function applyBundle(card, bundle) {
+      var priceEl = card.querySelector('.ccg-bundle-card__price-now');
+      var compareEl = card.querySelector('.ccg-bundle-card__price-was');
+      var saveEl = card.querySelector('.ccg-bundle-card__save');
+
+      var priceCandidates = [
+        bundle.discounted_price, bundle.final_price, bundle.price,
+        bundle.bundle_price, bundle.discountedPrice
+      ];
+      var compareCandidates = [
+        bundle.original_price, bundle.compare_at_price, bundle.regular_price,
+        bundle.originalPrice, bundle.total_price
+      ];
+
+      var priceCents = null;
+      for (var i = 0; i < priceCandidates.length; i++) {
+        priceCents = toCents(priceCandidates[i]);
+        if (priceCents !== null) break;
+      }
+      var compareCents = null;
+      for (var j = 0; j < compareCandidates.length; j++) {
+        compareCents = toCents(compareCandidates[j]);
+        if (compareCents !== null) break;
+      }
+
+      if (priceCents !== null && priceEl) {
+        priceEl.textContent = money(priceCents);
+      }
+      if (compareCents !== null && compareEl) {
+        if (priceCents !== null && compareCents > priceCents) {
+          compareEl.textContent = money(compareCents);
+          compareEl.style.display = '';
+          if (saveEl) {
+            saveEl.textContent = 'Save ' + money(compareCents - priceCents);
+            saveEl.style.display = '';
+          }
+        } else {
+          compareEl.style.display = 'none';
+          if (saveEl) saveEl.style.display = 'none';
+        }
+      }
+    }
+
+    function matchAndApply(bundles) {
+      if (!Array.isArray(bundles)) return;
+      window.__ccgBundlerData = bundles; // for debugging in the console
+      cards.forEach(function (card) {
+        var title = norm(card.getAttribute('data-bundler-title'));
+        var match = bundles.find(function (b) {
+          var bTitle = norm(b.title || b.name || b.bundle_title);
+          return bTitle && (bTitle === title || bTitle.indexOf(title) !== -1 || title.indexOf(bTitle) !== -1);
+        });
+        if (match) applyBundle(card, match);
+      });
+    }
+
+    var attempts = 0;
+    (function waitForBundler() {
+      attempts++;
+      if (window.bndlr && typeof window.bndlr.getBundles === 'function') {
+        try {
+          var result = window.bndlr.getBundles();
+          if (result && typeof result.then === 'function') {
+            result.then(matchAndApply).catch(function () {});
+          } else {
+            matchAndApply(result);
+          }
+        } catch (e) {
+          console.warn('[ccg-bundles] Bundler getBundles() failed:', e);
+        }
+        return;
+      }
+      if (attempts < 25) {
+        setTimeout(waitForBundler, 200);
+      }
+    })();
+  })();
+</script>
 
 {% stylesheet %}
   .ccg-bundles {
