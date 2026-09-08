@@ -16,63 +16,99 @@
 -%}
 
 {%- capture ccg_rec_cards -%}
-  {% recommendations product: product, intent: 'related', limit: section.settings.product_limit %}
-    {%- if recommendations.performed -%}
-      {%- for rec_product in recommendations.products -%}
-        {%- liquid
-          assign badge = rec_product.metafields.custom.custom_product_tag.value
-          assign second_image = rec_product.images[1]
-        -%}
-        <a href="{{ rec_product.url }}" class="ccg-seller-card">
-          <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
-            {%- if rec_product.featured_image != blank -%}
-              {{
-                rec_product.featured_image
-                | image_url: width: 800
-                | image_tag: widths: '300, 500, 800', alt: rec_product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
-              }}
-            {%- else -%}
-              {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
-            {%- endif -%}
-            {%- if second_image != blank -%}
-              {{
-                second_image
-                | image_url: width: 800
-                | image_tag: widths: '300, 500, 800', alt: rec_product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
-              }}
-            {%- endif -%}
-            {%- if badge != blank -%}
-              <span class="ccg-seller-card__badge">{{ badge }}</span>
-            {%- endif -%}
-          </span>
-          <span class="ccg-seller-card__meta">
-            <span class="ccg-seller-card__title">{{ rec_product.title }}</span>
-            <span class="ccg-seller-card__price">{{ rec_product.price | money }}</span>
-          </span>
-        </a>
-      {%- endfor -%}
-    {%- endif -%}
-  {% endrecommendations %}
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    {%- for rec_product in recommendations.products -%}
+      {%- liquid
+        assign badge = rec_product.metafields.custom.custom_product_tag.value
+        assign second_image = rec_product.images[1]
+      -%}
+      <a href="{{ rec_product.url }}" class="ccg-seller-card">
+        <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
+          {%- if rec_product.featured_image != blank -%}
+            {{
+              rec_product.featured_image
+              | image_url: width: 800
+              | image_tag: widths: '300, 500, 800', alt: rec_product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
+            }}
+          {%- else -%}
+            {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+          {%- endif -%}
+          {%- if second_image != blank -%}
+            {{
+              second_image
+              | image_url: width: 800
+              | image_tag: widths: '300, 500, 800', alt: rec_product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
+            }}
+          {%- endif -%}
+          {%- if badge != blank -%}
+            <span class="ccg-seller-card__badge">{{ badge }}</span>
+          {%- endif -%}
+        </span>
+        <span class="ccg-seller-card__meta">
+          <span class="ccg-seller-card__title">{{ rec_product.title }}</span>
+          <span class="ccg-seller-card__price">{{ rec_product.price | money }}</span>
+        </span>
+      </a>
+    {%- endfor -%}
+  {%- endif -%}
 {%- endcapture -%}
 
-{%- if ccg_rec_cards != blank -%}
-  <div class="ccg-sellers section" style="--ccg-sellers-ratio: {{ ccg_sellers_ratio }};">
-    <div class="ccg-sellers__inner">
-      <div class="ccg-sellers__head">
-        {%- if section.settings.heading != blank -%}
-          <h2 class="ccg-sellers__heading">{{ section.settings.heading }}</h2>
-        {%- endif -%}
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="ccg-sellers__note">{{ section.settings.eyebrow }}</p>
-        {%- endif -%}
-      </div>
+<div
+  class="ccg-sellers section"
+  data-ccg-pdp-recommendations="{{ section.id }}"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.product_limit }}&intent=related"
+  style="--ccg-sellers-ratio: {{ ccg_sellers_ratio }};"
+  {% if ccg_rec_cards == blank %}hidden{% endif %}
+>
+  <div class="ccg-sellers__inner">
+    <div class="ccg-sellers__head">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="ccg-sellers__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ccg-sellers__note">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+    </div>
 
-      <div class="ccg-sellers__grid">
-        {{ ccg_rec_cards }}
-      </div>
+    <div class="ccg-sellers__grid" data-ccg-pdp-recommendations-content>
+      {{ ccg_rec_cards }}
     </div>
   </div>
-{%- endif -%}
+</div>
+
+<script>
+  (function () {
+    var section = document.querySelector('[data-ccg-pdp-recommendations="{{ section.id }}"]');
+    if (!section || section.getAttribute('data-ccg-pdp-recommendations-loaded') === 'true') return;
+
+    var url = section.getAttribute('data-url');
+    var target = section.querySelector('[data-ccg-pdp-recommendations-content]');
+    if (!url || !target) return;
+
+    section.setAttribute('data-ccg-pdp-recommendations-loaded', 'true');
+
+    fetch(url, { credentials: 'same-origin' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('Failed to load recommendations');
+        return response.text();
+      })
+      .then(function (text) {
+        var html = document.createElement('div');
+        html.innerHTML = text;
+        var source = html.querySelector('[data-ccg-pdp-recommendations-content]');
+
+        if (source && source.innerHTML.trim().length) {
+          target.innerHTML = source.innerHTML;
+          section.hidden = false;
+        } else if (window.Shopify && window.Shopify.designMode) {
+          section.hidden = false;
+        }
+      })
+      .catch(function (error) {
+        console.warn('[ccg-pdp-recommendations] Failed to render recommendations:', error);
+      });
+  })();
+</script>
 
 {% stylesheet %}
   .ccg-sellers {
