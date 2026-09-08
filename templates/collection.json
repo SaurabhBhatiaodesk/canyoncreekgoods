@@ -249,7 +249,7 @@
       "name": "CCG Collection Grid",
       "settings": {
         "columns": "3",
-        "image_ratio": "portrait",
+        "image_ratio": "square",
         "products_per_page": 24,
         "quick_price_filter": 70,
         "low_stock_threshold": 3,
