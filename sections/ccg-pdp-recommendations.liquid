@@ -1,3 +1,4 @@
+<div class="ccg-top-border"></div>
 {% render 'ccg-section-spacing' %}
 
 {%- liquid
@@ -155,6 +156,11 @@
     display: flex;
     flex-direction: column;
     gap: 34px;
+  }
+  .ccg-top-border {
+    width: 100%;
+    height: {{ section.settings.border_width }}px;
+    background: {{ section.settings.border_color }};
   }
 
   .ccg-sellers__head {
@@ -343,6 +349,26 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "header",
+      "content": "Top Border"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#d8d0c4"
+    },
     {
       "type": "paragraph",
       "content": "Uses Shopify's own product recommendation engine for the current product - same visual design as Ready to Ride Out. Section hides itself automatically if Shopify has no recommendations for this product."
