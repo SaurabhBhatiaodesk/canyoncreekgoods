@@ -1,0 +1,137 @@
+<div
+  class="ccg-question-cta"
+  style="
+    --ccg-question-cta-ink: {{ block.settings.text_color }};
+    --ccg-question-cta-tan: {{ block.settings.note_color }};
+    --ccg-question-cta-border: {{ block.settings.border_color }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.button_label != blank -%}
+    <a class="ccg-question-cta__button" href="{{ block.settings.button_link | default: '/pages/contact' }}">
+      {{ block.settings.button_label }}
+    </a>
+  {%- endif -%}
+
+  {%- if block.settings.note != blank -%}
+    <p class="ccg-question-cta__note">{{ block.settings.note }}</p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .ccg-question-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .ccg-question-cta__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 72px;
+    border: 1px solid var(--ccg-question-cta-border);
+    color: var(--ccg-question-cta-ink);
+    background: transparent;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .ccg-question-cta__button:hover,
+  .ccg-question-cta__button:focus {
+    background: var(--ccg-question-cta-ink);
+    border-color: var(--ccg-question-cta-ink);
+    color: var(--ccg-cream);
+  }
+
+  .ccg-question-cta__note {
+    margin: 0;
+    color: var(--ccg-question-cta-tan);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-question-cta {
+      gap: 14px;
+    }
+
+    .ccg-question-cta__button {
+      min-height: 58px;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+    }
+
+    .ccg-question-cta__note {
+      font-size: 15px;
+      letter-spacing: 0.14em;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Question CTA",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Ask Melissa A Question"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note",
+      "default": "Last one · Ships in 1-2 days"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Button text color",
+      "default": "#211c17"
+    },
+    {
+      "type": "color",
+      "id": "note_color",
+      "label": "Note color",
+      "default": "#8a5a32"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#8f877b"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Question CTA",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

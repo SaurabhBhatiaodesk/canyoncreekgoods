@@ -285,6 +285,19 @@
               },
               "block_order": []
             },
+            "question_cta_ccg": {
+              "type": "ccg-question-cta",
+              "name": "CCG Question CTA",
+              "settings": {
+                "button_label": "Ask Melissa A Question",
+                "button_link": "/pages/contact",
+                "note": "Last one · Ships in 1-2 days",
+                "text_color": "#211c17",
+                "note_color": "#8a5a32",
+                "border_color": "#8f877b"
+              },
+              "blocks": {}
+            },
             "text_aEtTtq": {
               "type": "text",
               "name": "t:names.product_description",
@@ -317,6 +330,7 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "question_cta_ccg",
             "text_aEtTtq"
           ]
         }
