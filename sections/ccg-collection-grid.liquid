@@ -105,49 +105,51 @@
             endif
           -%}
           <div class="ccg-seller-card">
-            <a href="{{ product.url }}" class="ccg-seller-card__media-link">
-              <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
-                {%- if product.featured_image != blank -%}
-                  {{
-                    product.featured_image
-                    | image_url: width: 800
-                    | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
-                  }}
-                {%- else -%}
-                  {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
-                {%- endif -%}
-                {%- if second_image != blank -%}
-                  {{
-                    second_image
-                    | image_url: width: 800
-                    | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
-                  }}
-                {%- endif -%}
-                {%- if badge != blank -%}
-                  <span class="ccg-seller-card__badge">{{ badge }}</span>
-                {%- endif -%}
-              </span>
-            </a>
+            <div class="ccg-seller-card__media-wrap">
+              <a href="{{ product.url }}" class="ccg-seller-card__media-link">
+                <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
+                  {%- if product.featured_image != blank -%}
+                    {{
+                      product.featured_image
+                      | image_url: width: 800
+                      | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
+                    }}
+                  {%- else -%}
+                    {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+                  {%- endif -%}
+                  {%- if second_image != blank -%}
+                    {{
+                      second_image
+                      | image_url: width: 800
+                      | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
+                    }}
+                  {%- endif -%}
+                  {%- if badge != blank -%}
+                    <span class="ccg-seller-card__badge">{{ badge }}</span>
+                  {%- endif -%}
+                </span>
+              </a>
 
-            {%- if product.available -%}
-              <div class="ccg-seller-card__quickadd" data-quick-add data-product-url="{{ product.url }}">
-                <button type="button" class="ccg-seller-card__quickadd-btn" data-quick-add-btn>
-                  <span data-quick-add-label>Quick add</span>
-                </button>
-                {%- if product.has_only_default_variant -%}
-                  <input type="hidden" data-quick-add-variant value="{{ product.selected_or_first_available_variant.id }}">
-                  <span class="ccg-seller-card__quickadd-variant">{{ product.selected_or_first_available_variant.title }}</span>
-                {%- else -%}
-                  <select class="ccg-seller-card__quickadd-select" data-quick-add-select aria-label="Select size for {{ product.title }}">
-                    {%- for variant in product.variants -%}
-                      <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
-                        {{ variant.title }}{% unless variant.available %} - Sold out{% endunless %}
-                      </option>
-                    {%- endfor -%}
-                  </select>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
+              {%- if product.available -%}
+                <div class="ccg-seller-card__quickadd" data-quick-add data-product-url="{{ product.url }}">
+                  <button type="button" class="ccg-seller-card__quickadd-btn" data-quick-add-btn>
+                    <span data-quick-add-label>Quick add</span>
+                  </button>
+                  {%- if product.has_only_default_variant -%}
+                    <input type="hidden" data-quick-add-variant value="{{ product.selected_or_first_available_variant.id }}">
+                    <span class="ccg-seller-card__quickadd-variant">{{ product.selected_or_first_available_variant.title }}</span>
+                  {%- else -%}
+                    <select class="ccg-seller-card__quickadd-select" data-quick-add-select aria-label="Select size for {{ product.title }}">
+                      {%- for variant in product.variants -%}
+                        <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                          {{ variant.title }}{% unless variant.available %} - Sold out{% endunless %}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
 
             <a href="{{ product.url }}" class="ccg-seller-card__meta">
               <span class="ccg-seller-card__title">{{ product.title }}</span>
