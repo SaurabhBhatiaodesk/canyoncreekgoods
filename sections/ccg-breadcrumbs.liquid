@@ -7,16 +7,11 @@
     background: {{ section.settings.background_color }};
     border-top: 1px solid {{ section.settings.border_color }};
     padding-block: {{ section.settings.desktop_padding_top }}px {{ section.settings.desktop_padding_bottom }}px;
-    border-top: 1px solid {{ section.settings.border_color }};
   }
   
   @media screen and (max-width: 749px) {
-    #shopify-section-{{ section.id }} {
-      padding-block: {{ section.settings.mobile_padding_top }}px {{ section.settings.mobile_padding_bottom }}px;
-    }
-
     #shopify-section-{{ section.id }} .ccg-breadcrumbs {
-      padding-block: 0;
+      padding-block: {{ section.settings.mobile_padding_top }}px {{ section.settings.mobile_padding_bottom }}px;
     }
   }
 {% endstyle %}
@@ -24,7 +19,7 @@
 {%- unless template.name == 'index' or template.name == 'cart' or template.name == 'list-collections' or template.name == '404' -%}
   {%- assign breadcrumb_collection = collection -%}
   <nav
-    class="ccg-breadcrumbs "
+    class="ccg-breadcrumbs"
     role="navigation"
     aria-label="Breadcrumbs"
     style="
