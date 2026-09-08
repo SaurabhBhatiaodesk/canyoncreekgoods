@@ -198,6 +198,31 @@
       return '$' + (cents / 100).toFixed(2);
     };
 
+    var isTouch = window.matchMedia('(hover: none)').matches;
+
+    if (isTouch) {
+      section.addEventListener('click', function (event) {
+        var mediaLink = event.target.closest('.ccg-seller-card__media-link');
+        if (!mediaLink) return;
+
+        var card = mediaLink.closest('.ccg-seller-card');
+        if (!card || card.classList.contains('is-quickadd-active')) return;
+
+        event.preventDefault();
+        section.querySelectorAll('.ccg-seller-card.is-quickadd-active').forEach(function (c) {
+          c.classList.remove('is-quickadd-active');
+        });
+        card.classList.add('is-quickadd-active');
+      });
+
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('.ccg-seller-card')) return;
+        section.querySelectorAll('.ccg-seller-card.is-quickadd-active').forEach(function (c) {
+          c.classList.remove('is-quickadd-active');
+        });
+      });
+    }
+
     section.addEventListener('click', function (event) {
       var btn = event.target.closest('[data-quick-add-btn]');
       if (!btn) return;
@@ -295,15 +320,24 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     border-bottom: 1px solid var(--ccg-hairline);
     padding-bottom: 20px;
   }
 
   .ccg-collection__filters {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    flex: 1 1 auto;
+    min-width: 0;
     gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .ccg-collection__filters::-webkit-scrollbar {
+    display: none;
   }
 
   .ccg-collection__pill {
@@ -336,6 +370,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-shrink: 0;
     font-family: 'Barlow Condensed', sans-serif;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -473,7 +508,8 @@
   }
 
   .ccg-seller-card:hover .ccg-seller-card__quickadd,
-  .ccg-seller-card:focus-within .ccg-seller-card__quickadd {
+  .ccg-seller-card:focus-within .ccg-seller-card__quickadd,
+  .ccg-seller-card.is-quickadd-active .ccg-seller-card__quickadd {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -580,13 +616,18 @@
 
   @media screen and (max-width: 749px) {
     .ccg-collection__toolbar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 14px;
+      gap: 12px;
     }
 
     .ccg-collection__filters {
       gap: 8px;
+      margin: 0 -20px;
+      padding: 0 20px;
+    }
+
+    .ccg-collection__meta {
+      gap: 12px;
+      font-size: 12px;
     }
 
     .ccg-collection__pill {
@@ -602,18 +643,12 @@
       gap: 8px;
     }
 
-    .ccg-seller-card__quickadd {
-      position: static;
-      opacity: 1;
-      transform: none;
-      pointer-events: auto;
-      background: transparent;
-      border-top: none;
-      padding: 4px 0 0;
-    }
-
     .ccg-seller-card__meta {
       gap: 2px;
+    }
+
+    .ccg-seller-card__stock {
+      display: none;
     }
 
     .ccg-seller-card__title {
