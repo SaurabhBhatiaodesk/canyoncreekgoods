@@ -146,5 +146,7 @@ body {
     display: none !important;
   }
 
-  
+  .product-information__grid .product-details{
+    margin-top:50px;
+  }
 }
