@@ -1,4 +1,10 @@
 {% style %}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.background_color }};
+    border-top: 1px solid {{ section.settings.border_color }};
+    border-bottom: 1px solid {{ section.settings.border_color }};
+  }
+
   @media screen and (max-width: 749px) {
     #shopify-section-{{ section.id }} .ccg-breadcrumbs {
       padding-block: var(--ccg-breadcrumb-mobile-padding-top) var(--ccg-breadcrumb-mobile-padding-bottom);
