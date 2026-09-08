@@ -9,6 +9,23 @@
  */
 {
   "sections": {
+    "pdp_breadcrumbs_ccg": {
+      "type": "ccg-breadcrumbs",
+      "name": "CCG Breadcrumbs",
+      "settings": {
+        "home_label": "Home",
+        "shop_label": "Shop",
+        "shop_url": "/collections/all",
+        "background_color": "#f8f5ee",
+        "text_color": "#211c17",
+        "muted_color": "#8a5a32",
+        "separator_color": "#8a5a32",
+        "desktop_padding_top": 28,
+        "desktop_padding_bottom": 8,
+        "mobile_padding_top": 20,
+        "mobile_padding_bottom": 4
+      }
+    },
     "main": {
       "type": "product-information",
       "blocks": {
@@ -358,6 +375,7 @@
     }
   },
   "order": [
+    "pdp_breadcrumbs_ccg",
     "main",
     "pdp_bundle_ccg",
     "pdp_recommendations_ccg"

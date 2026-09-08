@@ -1,0 +1,266 @@
+{% render 'ccg-section-spacing' %}
+
+{%- unless template.name == 'index' or template.name == 'cart' or template.name == 'list-collections' or template.name == '404' -%}
+  {%- liquid
+    assign breadcrumb_collection = collection
+    if breadcrumb_collection == blank and product != blank
+      assign breadcrumb_collection = product.collections.first
+    endif
+  -%}
+
+  <nav
+    class="ccg-breadcrumbs section"
+    role="navigation"
+    aria-label="Breadcrumbs"
+    style="
+      --ccg-breadcrumb-ink: {{ section.settings.text_color }};
+      --ccg-breadcrumb-muted: {{ section.settings.muted_color }};
+      --ccg-breadcrumb-separator: {{ section.settings.separator_color }};
+    "
+  >
+    <ol class="ccg-breadcrumbs__list">
+      <li class="ccg-breadcrumbs__item">
+        <a class="ccg-breadcrumbs__link" href="{{ routes.root_url }}">{{ section.settings.home_label }}</a>
+      </li>
+
+      {%- case template.name -%}
+        {%- when 'product' -%}
+          {%- if section.settings.shop_label != blank -%}
+            <li class="ccg-breadcrumbs__item">
+              <a class="ccg-breadcrumbs__link" href="{{ section.settings.shop_url | default: routes.all_products_collection_url }}">
+                {{ section.settings.shop_label }}
+              </a>
+            </li>
+          {%- endif -%}
+          {%- if breadcrumb_collection != blank -%}
+            <li class="ccg-breadcrumbs__item">
+              <a class="ccg-breadcrumbs__link" href="{{ breadcrumb_collection.url }}">{{ breadcrumb_collection.title }}</a>
+            </li>
+          {%- endif -%}
+          <li class="ccg-breadcrumbs__item">
+            <a class="ccg-breadcrumbs__link" href="{{ product.url }}" aria-current="page">{{ product.title }}</a>
+          </li>
+
+        {%- when 'collection' -%}
+          {%- if current_tags -%}
+            <li class="ccg-breadcrumbs__item">
+              <a class="ccg-breadcrumbs__link" href="{{ collection.url }}">{{ collection.title }}</a>
+            </li>
+            <li class="ccg-breadcrumbs__item">
+              {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: '+' }}{%- endcapture -%}
+              <a class="ccg-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: ' + ' }}</a>
+            </li>
+          {%- else -%}
+            <li class="ccg-breadcrumbs__item">
+              <a class="ccg-breadcrumbs__link" href="{{ collection.url }}" aria-current="page">{{ collection.title }}</a>
+            </li>
+          {%- endif -%}
+
+        {%- when 'page' -%}
+          <li class="ccg-breadcrumbs__item">
+            <a class="ccg-breadcrumbs__link" href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
+          </li>
+
+        {%- when 'blog' -%}
+          {%- if current_tags -%}
+            <li class="ccg-breadcrumbs__item">
+              <a class="ccg-breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
+            </li>
+            <li class="ccg-breadcrumbs__item">
+              {%- capture tag_url -%}{{ blog.url }}/tagged/{{ current_tags | join: '+' }}{%- endcapture -%}
+              <a class="ccg-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: ' + ' }}</a>
+            </li>
+          {%- else -%}
+            <li class="ccg-breadcrumbs__item">
+              <a class="ccg-breadcrumbs__link" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</a>
+            </li>
+          {%- endif -%}
+
+        {%- when 'article' -%}
+          <li class="ccg-breadcrumbs__item">
+            <a class="ccg-breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
+          </li>
+          <li class="ccg-breadcrumbs__item">
+            <a class="ccg-breadcrumbs__link" href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
+          </li>
+
+        {%- else -%}
+          <li class="ccg-breadcrumbs__item">
+            <a class="ccg-breadcrumbs__link" href="{{ request.path }}" aria-current="page">{{ page_title }}</a>
+          </li>
+      {%- endcase -%}
+    </ol>
+  </nav>
+{%- endunless -%}
+
+{% stylesheet %}
+  .ccg-breadcrumbs {
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .ccg-breadcrumbs__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ccg-breadcrumbs__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .ccg-breadcrumbs__item:not(:last-child)::after {
+    content: '·';
+    color: var(--ccg-breadcrumb-separator);
+  }
+
+  .ccg-breadcrumbs__link {
+    color: var(--ccg-breadcrumb-muted);
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .ccg-breadcrumbs__link:hover,
+  .ccg-breadcrumbs__link:focus {
+    color: var(--ccg-breadcrumb-ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .ccg-breadcrumbs__link[aria-current='page'] {
+    color: var(--ccg-breadcrumb-muted);
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-breadcrumbs__list {
+      gap: 6px;
+    }
+
+    .ccg-breadcrumbs__item {
+      gap: 6px;
+    }
+
+    .ccg-breadcrumbs__link {
+      font-size: 13px;
+      letter-spacing: 0.14em;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Breadcrumbs",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home label",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop label",
+      "default": "Shop"
+    },
+    {
+      "type": "url",
+      "id": "shop_url",
+      "label": "Shop link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f5ee"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Hover color",
+      "default": "#211c17"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Text color",
+      "default": "#8a5a32"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator color",
+      "default": "#8a5a32"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Breadcrumbs",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}
