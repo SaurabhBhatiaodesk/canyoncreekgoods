@@ -45,6 +45,15 @@
       });
     }
 
+    function getBundleItemLabel(product) {
+      var text = ((product.type || '') + ' ' + (product.title || '')).toLowerCase();
+      if (text.indexOf('sling') !== -1 || text.indexOf('bag') !== -1) return 'sling';
+      if (text.indexOf('cowl') !== -1 || text.indexOf('scarf') !== -1) return 'cowl';
+      if (text.indexOf('stocking') !== -1) return 'stocking';
+      if (text.indexOf('jacket') !== -1 || text.indexOf('duster') !== -1 || text.indexOf('outerwear') !== -1) return 'jacket';
+      return 'piece';
+    }
+
     function buildCard(bundle, products, currentHandle) {
       var regularCents = 0;
       products.forEach(function (p) { regularCents += p.price; });
@@ -62,9 +71,19 @@
       var otherProducts = products.filter(function (p) { return p.handle !== currentHandle; });
       var title = bundle.name || products.map(function (p) { return p.title; }).join(' + ');
 
+      var headingItem = 'set';
+      if (otherProducts.length === 1) {
+        headingItem = getBundleItemLabel(otherProducts[0]);
+      } else if (otherProducts.length > 1) {
+        var labels = otherProducts.map(getBundleItemLabel).filter(function (label, index, arr) {
+          return arr.indexOf(label) === index;
+        });
+        headingItem = labels.length === 1 ? labels[0] + ' set' : 'set';
+      }
+
       var headingText = otherProducts.length
-        ? 'Add the matching ' + otherProducts.map(function (p) { return p.title; }).join(' + ')
-        : title;
+        ? 'Add the matching ' + headingItem
+        : 'Complete the look';
       if (discountPercent > 0) {
         headingText += ', save ' + discountPercent + '%';
       } else if (saveCents > 0) {
@@ -294,6 +313,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-width: 760px;
   }
 
   .ccg-pdp-bundle__eyebrow {
@@ -310,7 +330,8 @@
     margin: 0;
     font-family: 'Rye', serif;
     font-weight: 400;
-    font-size: 30px;
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1.12;
     color: var(--ccg-ink);
   }
 
