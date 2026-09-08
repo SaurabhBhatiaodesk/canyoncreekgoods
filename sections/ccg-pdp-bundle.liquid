@@ -163,11 +163,11 @@
           });
       });
       actions.appendChild(button);
-      body.appendChild(actions);
 
       card.innerHTML = '';
       card.appendChild(media);
       card.appendChild(body);
+      card.appendChild(actions);
       section.hidden = false;
     }
 
@@ -406,7 +406,8 @@
   }
 
   .ccg-pdp-bundle__actions {
-    margin-top: 8px;
+    flex-shrink: 0;
+    margin-left: auto;
   }
 
   .ccg-pdp-bundle__btn {
