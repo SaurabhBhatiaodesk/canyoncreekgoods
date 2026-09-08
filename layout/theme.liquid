@@ -207,15 +207,24 @@
       (function () {
         function initActiveHeader() {
           const header = document.querySelector('#header-component');
+          const pageWrapper = document.querySelector('.page-wrapper');
 
           if (!header) return;
 
           function updateHeader() {
-            header.classList.toggle('active-header', window.scrollY > 20);
+            const scrollTop = Math.max(
+              window.scrollY || 0,
+              document.documentElement.scrollTop || 0,
+              document.body.scrollTop || 0,
+              pageWrapper?.scrollTop || 0
+            );
+
+            header.classList.toggle('active-header', scrollTop > 20);
           }
 
           updateHeader();
           window.addEventListener('scroll', updateHeader, { passive: true });
+          pageWrapper?.addEventListener('scroll', updateHeader, { passive: true });
           window.addEventListener('pageshow', updateHeader);
         }
 
