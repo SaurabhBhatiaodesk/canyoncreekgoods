@@ -61,7 +61,7 @@
             "slideshow_controls_style": "counter",
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "right",
-            "thumbnail_width": 44,
+            "thumbnail_width": 88,
             "thumbnail_radius": 0,
             "aspect_ratio": "1/1.25",
             "constrain_to_viewport": true,
@@ -188,7 +188,8 @@
                   "type": "ccg-product-kicker",
                   "name": "CCG Product Kicker",
                   "settings": {
-                    "text": "One of one · Never made again",
+                    "separator": "·",
+                    "fallback_text": "One of one · Never made again",
                     "alignment": "left",
                     "text_color": "#8a5a32"
                   },

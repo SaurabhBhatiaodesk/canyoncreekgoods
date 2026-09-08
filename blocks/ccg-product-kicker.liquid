@@ -1,10 +1,33 @@
-{%- if block.settings.text != blank -%}
+{%- liquid
+  assign product_resource = closest.product
+  assign kicker_text = ''
+
+  if product_resource != blank
+    for tag in product_resource.tags limit: 2
+      assign clean_tag = tag | strip
+
+      if clean_tag != blank
+        if kicker_text != blank
+          assign kicker_text = kicker_text | append: ' ' | append: block.settings.separator | append: ' '
+        endif
+
+        assign kicker_text = kicker_text | append: clean_tag
+      endif
+    endfor
+  endif
+
+  if kicker_text == blank
+    assign kicker_text = block.settings.fallback_text
+  endif
+-%}
+
+{%- if kicker_text != blank -%}
   <p
     class="ccg-product-kicker ccg-product-kicker--{{ block.settings.alignment }}"
     style="--ccg-product-kicker-color: {{ block.settings.text_color }};"
     {{ block.shopify_attributes }}
   >
-    {{ block.settings.text }}
+    {{ kicker_text }}
   </p>
 {%- endif -%}
 
@@ -47,9 +70,19 @@
   "tag": null,
   "settings": [
     {
+      "type": "paragraph",
+      "content": "Shows the first two tags from the current product. Fallback text appears only when the product has no tags."
+    },
+    {
       "type": "text",
-      "id": "text",
-      "label": "Text",
+      "id": "separator",
+      "label": "Tag separator",
+      "default": "·"
+    },
+    {
+      "type": "text",
+      "id": "fallback_text",
+      "label": "Fallback text",
       "default": "One of one · Never made again"
     },
     {
