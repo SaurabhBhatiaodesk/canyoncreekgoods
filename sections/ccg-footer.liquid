@@ -206,7 +206,7 @@
   .ccg-footer__social {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 10px;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 17px;
     letter-spacing: 0.12em;
@@ -218,6 +218,14 @@
     position: relative;
     color: #c4a177;
     text-decoration: none;
+  }
+
+
+  .ccg-footer__social a + a::before {
+    content: '·';
+    display: inline-block;
+    margin-right: 10px;
+    color: #c4a177;
   }
 
 
@@ -364,8 +372,12 @@
     }
 
     .ccg-footer__social{
-      gap: 9px;
+      gap: 7px;
       font-size: 14px;
+    }
+
+    .ccg-footer__social a + a::before {
+      margin-right: 7px;
     }
     .ccg-footer__bottom {
       gap: 7px;
