@@ -14,14 +14,15 @@
       "name": "CCG Breadcrumbs",
       "settings": {
         "home_label": "Home",
-        "shop_label": "",
+        "shop_label": "Shop",
         "shop_url": "/collections/all",
         "background_color": "#f8f5ee",
         "text_color": "#211c17",
         "muted_color": "#8a5a32",
         "separator_color": "#8a5a32",
-        "desktop_padding_top": 28,
-        "desktop_padding_bottom": 8,
+        "border_color": "#d8d0c4",
+        "desktop_padding_top": 24,
+        "desktop_padding_bottom": 14,
         "mobile_padding_top": 20,
         "mobile_padding_bottom": 4
       }

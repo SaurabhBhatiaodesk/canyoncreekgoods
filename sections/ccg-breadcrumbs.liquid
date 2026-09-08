@@ -16,6 +16,7 @@
       --ccg-breadcrumb-ink: {{ section.settings.text_color }};
       --ccg-breadcrumb-muted: {{ section.settings.muted_color }};
       --ccg-breadcrumb-separator: {{ section.settings.separator_color }};
+      --ccg-breadcrumb-border: {{ section.settings.border_color }};
     "
   >
     <ol class="ccg-breadcrumbs__list">
@@ -96,6 +97,7 @@
 {% stylesheet %}
   .ccg-breadcrumbs {
     font-family: 'Barlow Condensed', sans-serif;
+    border-top: 1px solid var(--ccg-breadcrumb-border);
   }
 
   .ccg-breadcrumbs__list {
@@ -122,7 +124,7 @@
 
   .ccg-breadcrumbs__link {
     color: var(--ccg-breadcrumb-muted);
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.2;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -176,7 +178,7 @@
       "type": "text",
       "id": "shop_label",
       "label": "Shop label",
-      "default": ""
+      "default": "Shop"
     },
     {
       "type": "url",
@@ -212,6 +214,12 @@
       "default": "#8a5a32"
     },
     {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#d8d0c4"
+    },
+    {
       "type": "header",
       "content": "Section padding"
     },
@@ -223,7 +231,7 @@
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 28
+      "default": 24
     },
     {
       "type": "range",
@@ -233,7 +241,7 @@
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 8
+      "default": 14
     },
     {
       "type": "range",
