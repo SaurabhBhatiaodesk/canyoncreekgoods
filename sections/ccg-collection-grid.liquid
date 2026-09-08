@@ -1,0 +1,522 @@
+{% render 'ccg-section-spacing' %}
+
+{%- liquid
+  case section.settings.image_ratio
+    when 'square'
+      assign ccg_grid_ratio = '1 / 1'
+    when 'portrait'
+      assign ccg_grid_ratio = '3 / 4'
+    when 'landscape'
+      assign ccg_grid_ratio = '4 / 3'
+    when 'wide'
+      assign ccg_grid_ratio = '16 / 9'
+    else
+      assign ccg_grid_ratio = '3 / 4'
+  endcase
+-%}
+
+<div class="ccg-collection section" style="--ccg-collection-ratio: {{ ccg_grid_ratio }}; --ccg-collection-columns: {{ section.settings.columns }};">
+  <div class="ccg-collection__inner">
+
+    <div class="ccg-collection__toolbar">
+      <div class="ccg-collection__filters">
+        <a
+          href="{{ collection.url }}"
+          class="ccg-collection__pill{% if current_tags == blank and collection.current_vendor == blank and collection.current_type == blank %} ccg-collection__pill--active{% endif %}"
+        >
+          All {{ collection.title }}
+        </a>
+
+        {%- for filter in collection.filters -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- unless filter.max_value.value -%}
+              <a
+                href="{{ collection.url }}?{{ filter.max_value.param_name }}={{ section.settings.quick_price_filter }}"
+                class="ccg-collection__pill"
+              >
+                Under {{ section.settings.quick_price_filter | times: 100 | money_without_trailing_zeros }}
+              </a>
+            {%- endunless -%}
+          {%- else -%}
+            {%- for value in filter.values -%}
+              {%- if value.count > 0 -%}
+                {%- assign value_url = value.url_to_add -%}
+                {%- if value.active -%}
+                  {%- assign value_url = value.url_to_remove -%}
+                {%- endif -%}
+                <a
+                  href="{{ value_url }}"
+                  class="ccg-collection__pill{% if value.active %} ccg-collection__pill--active{% endif %}"
+                >
+                  {{ value.label }}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="ccg-collection__meta">
+        <span class="ccg-collection__count">{{ collection.products_count }} pieces</span>
+        <span class="ccg-collection__sort">
+          <label for="CcgCollectionSort">Sort:</label>
+          <select id="CcgCollectionSort" onchange="if(this.value) window.location.href=this.value;">
+            {%- for option in collection.sort_options -%}
+              <option
+                value="{{ collection.url }}?{% if request.design_mode == false %}{% endif %}sort_by={{ option.value }}"
+                {% if collection.sort_by == option.value or collection.default_sort_by == option.value and collection.sort_by == blank %}selected{% endif %}
+              >
+                {{ option.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </span>
+      </div>
+    </div>
+
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      <div class="ccg-collection__grid">
+        {%- for product in collection.products -%}
+          {%- liquid
+            assign badge = product.metafields.custom.custom_product_tag.value
+            assign second_image = product.images[1]
+            assign avail_variant = product.selected_or_first_available_variant
+            assign stock_text = ''
+            if avail_variant.inventory_management == 'shopify' and avail_variant.inventory_policy == 'deny' and avail_variant.inventory_quantity > 0 and avail_variant.inventory_quantity <= section.settings.low_stock_threshold
+              if avail_variant.inventory_quantity == 1
+                assign stock_text = 'Last one'
+              else
+                assign stock_text = avail_variant.inventory_quantity | append: ' left'
+              endif
+            endif
+          -%}
+          <a href="{{ product.url }}" class="ccg-seller-card">
+            <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
+              {%- if product.featured_image != blank -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 800
+                  | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
+                }}
+              {%- else -%}
+                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+              {%- endif -%}
+              {%- if second_image != blank -%}
+                {{
+                  second_image
+                  | image_url: width: 800
+                  | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
+                }}
+              {%- endif -%}
+              {%- if badge != blank -%}
+                <span class="ccg-seller-card__badge">{{ badge }}</span>
+              {%- endif -%}
+            </span>
+            <span class="ccg-seller-card__meta">
+              <span class="ccg-seller-card__title">{{ product.title }}</span>
+              <span class="ccg-seller-card__price">{{ product.price | money }}</span>
+              {%- if stock_text != blank -%}
+                <span class="ccg-seller-card__stock">{{ stock_text }}</span>
+              {%- endif -%}
+            </span>
+          </a>
+        {%- else -%}
+          <p class="ccg-collection__empty">No products found. Try a different filter.</p>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="ccg-collection__pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="ccg-collection__page-link">← Prev</a>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="ccg-collection__page-link">{{ part.title }}</a>
+            {%- else -%}
+              <span class="ccg-collection__page-link ccg-collection__page-link--current">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="ccg-collection__page-link">Next →</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .ccg-collection {
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-collection__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .ccg-collection__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--ccg-hairline);
+    padding-bottom: 20px;
+  }
+
+  .ccg-collection__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .ccg-collection__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 18px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    text-decoration: none;
+    border: 1px solid var(--ccg-hairline);
+    background: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .ccg-collection__pill:hover {
+    border-color: var(--ccg-ink);
+  }
+
+  .ccg-collection__pill--active {
+    background: var(--ccg-ink);
+    color: var(--ccg-cream);
+    border-color: var(--ccg-ink);
+  }
+
+  .ccg-collection__meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ccg-stone);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .ccg-collection__sort {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ccg-collection__sort select {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ccg-collection__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--ccg-collection-columns, 3), 1fr);
+    gap: 28px 24px;
+  }
+
+  .ccg-collection__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--ccg-stone);
+    padding: 60px 0;
+  }
+
+  .ccg-seller-card {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    text-decoration: none;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-seller-card__media {
+    position: relative;
+    display: block;
+    aspect-ratio: var(--ccg-collection-ratio, 3 / 4);
+    overflow: hidden;
+    background: var(--ccg-sand);
+  }
+
+  .ccg-seller-card__media img,
+  .ccg-seller-card__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .ccg-seller-card:hover .ccg-seller-card__media img {
+    transform: scale(1.04);
+  }
+
+  .ccg-seller-card__media--has-alt .ccg-seller-card__img {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+  }
+
+  .ccg-seller-card__media--has-alt .ccg-seller-card__img--secondary {
+    opacity: 0;
+  }
+
+  .ccg-seller-card:hover .ccg-seller-card__media--has-alt .ccg-seller-card__img--primary {
+    opacity: 0;
+  }
+
+  .ccg-seller-card:hover .ccg-seller-card__media--has-alt .ccg-seller-card__img--secondary {
+    opacity: 1;
+  }
+
+  .ccg-seller-card__badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    background: var(--ccg-cream-soft);
+    color: var(--ccg-ink);
+    padding: 5px 11px;
+    text-transform: uppercase;
+  }
+
+  .ccg-seller-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ccg-seller-card__title {
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--ccg-ink);
+  }
+
+  .ccg-seller-card__price {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    color: var(--ccg-stone);
+  }
+
+  .ccg-seller-card__stock {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ccg-tan);
+  }
+
+  .ccg-collection__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding-top: 24px;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ccg-collection__page-link {
+    color: var(--ccg-ink);
+    text-decoration: none;
+    padding: 6px 4px;
+  }
+
+  .ccg-collection__page-link--current {
+    color: var(--ccg-tan);
+    border-bottom: 1px solid var(--ccg-tan);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ccg-collection__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-collection__toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .ccg-collection__filters {
+      gap: 8px;
+    }
+
+    .ccg-collection__pill {
+      padding: 7px 14px;
+      font-size: 13px;
+    }
+
+    .ccg-collection__grid {
+      gap: 14px;
+    }
+
+    .ccg-seller-card {
+      gap: 8px;
+    }
+
+    .ccg-seller-card__meta {
+      gap: 2px;
+    }
+
+    .ccg-seller-card__title {
+      font-size: 15px;
+      line-height: 1.3;
+    }
+
+    .ccg-seller-card__price {
+      font-size: 14px;
+    }
+
+    .ccg-seller-card__badge {
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Collection Grid",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Replaces the stock collection grid. Product cards use the same design as Ready to Ride Out. Filters and sorting use Shopify's real filter/sort data (Search & Discovery app), so whatever filter options are configured for this collection show automatically as pills."
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "portrait", "label": "Portrait (3:4)" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "quick_price_filter",
+      "label": "Quick price filter pill (\"Under $X\")",
+      "min": 20,
+      "max": 300,
+      "step": 10,
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "label": "Show \"X left\" when stock is at or below",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f5ee"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Collection Grid"
+    }
+  ]
+}
+{% endschema %}

@@ -244,6 +244,22 @@
         "overlay_opacity": 0.5
       }
     },
+    "ccg_collection_grid_ccg": {
+      "type": "ccg-collection-grid",
+      "name": "CCG Collection Grid",
+      "settings": {
+        "columns": "3",
+        "image_ratio": "portrait",
+        "products_per_page": 24,
+        "quick_price_filter": 70,
+        "low_stock_threshold": 3,
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 32,
+        "desktop_padding_bottom": 80,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 56
+      }
+    },
     "ccg_direct_to_maker_XVTbNt": {
       "type": "ccg-direct-to-maker",
       "name": "CCG Direct to Maker",
@@ -267,6 +283,7 @@
     "section",
     "main",
     "ccg_image_banner_text_CtyxP9",
+    "ccg_collection_grid_ccg",
     "ccg_direct_to_maker_XVTbNt"
   ]
 }
