@@ -10,26 +10,24 @@
 
     <div class="ccg-image-banner__overlay"></div>
 
-    <div class="section">
-        <div class="ccg-image-banner__content">
-        {% if section.settings.eyebrow != blank %}
-            <p class="ccg-image-banner__eyebrow">
-            {{ section.settings.eyebrow }}
-            </p>
-        {% endif %}
+    <div class="ccg-image-banner__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="ccg-image-banner__eyebrow">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
 
-        {% if section.settings.heading != blank %}
-            <h1 class="ccg-image-banner__heading">
-            {{ section.settings.heading }}
-            </h1>
-        {% endif %}
+      {% if section.settings.heading != blank %}
+        <h1 class="ccg-image-banner__heading">
+          {{ section.settings.heading }}
+        </h1>
+      {% endif %}
 
-        {% if section.settings.description != blank %}
-            <div class="ccg-image-banner__description">
-            {{ section.settings.description }}
-            </div>
-        {% endif %}
+      {% if section.settings.description != blank %}
+        <div class="ccg-image-banner__description">
+          {{ section.settings.description }}
         </div>
+      {% endif %}
     </div>
   </div>
 </section>
