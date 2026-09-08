@@ -11,6 +11,98 @@
   {% render 'variant-main-picker', product_resource: product_resource, section: section, product: product %}
 {% endunless %}
 
+{% stylesheet %}
+  .product-details .variant-picker {
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .product-details .variant-option--buttons {
+    gap: 12px;
+  }
+
+  .product-details .variant-option--equal-width-buttons {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .product-details .variant-option--buttons legend,
+  .product-details .variant-option--dropdowns > label,
+  .product-details .variant-option[data-testid='variant-option-single'] {
+    margin-block-end: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+  }
+
+  .product-details .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+    min-width: 120px;
+    min-height: 52px;
+    padding: 0 24px;
+    border: 1px solid #b9b0a4;
+    border-radius: 0;
+    background: transparent;
+    color: var(--ccg-tan);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .product-details .variant-option__button-label:not(.variant-option__button-label--has-swatch)::before,
+  .product-details .variant-option__button-label:not(.variant-option__button-label--has-swatch)::after {
+    border-radius: 0;
+  }
+
+  .product-details .variant-option__button-label__pill {
+    border-radius: 0;
+  }
+
+  .product-details .variant-option__button-label:has(:checked):not(.variant-option__button-label--has-swatch) {
+    border-color: var(--ccg-ink);
+    background: var(--ccg-ink);
+    color: var(--ccg-cream);
+  }
+
+  .product-details .variant-option__button-label:has(:checked):not(.variant-option__button-label--has-swatch)::before {
+    border-color: var(--ccg-ink);
+  }
+
+  .product-details .variant-option__button-label:has(:checked):not(.variant-option__button-label--has-swatch) .variant-option__button-label__pill {
+    background: var(--ccg-ink);
+  }
+
+  .product-details .variant-option__button-label__text {
+    text-align: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-details .variant-option--buttons {
+      gap: 10px;
+    }
+
+    .product-details .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+      min-width: 92px;
+      min-height: 46px;
+      padding: 0 18px;
+      font-size: 17px;
+      letter-spacing: 0.14em;
+    }
+
+    .product-details .variant-option--buttons legend,
+    .product-details .variant-option--dropdowns > label,
+    .product-details .variant-option[data-testid='variant-option-single'] {
+      font-size: 16px;
+      letter-spacing: 0.16em;
+    }
+  }
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "t:names.product_variant_picker",
@@ -50,7 +142,6 @@
       "type": "color",
       "id": "option_label_text_color",
       "label": "t:settings.text_color",
-      "placeholder": "t:settings.default",
       "alpha": true
     },
     {
