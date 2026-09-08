@@ -41,6 +41,7 @@
           All {{ collection.title }}
         </a>
 
+        {%- assign ccg_category_pill_count = 0 -%}
         {%- for filter in collection.filters -%}
           {%- if filter.type == 'price_range' -%}
             {%- unless filter.max_value.value -%}
@@ -52,8 +53,12 @@
               </a>
             {%- endunless -%}
           {%- else -%}
+            {%- assign ccg_is_availability = false -%}
+            {%- if filter.label contains 'vailability' -%}
+              {%- assign ccg_is_availability = true -%}
+            {%- endif -%}
             {%- for value in filter.values -%}
-              {%- if value.count > 0 -%}
+              {%- if value.count > 0 and ccg_is_availability or value.count > 0 and value.active or value.count > 0 and ccg_category_pill_count < section.settings.max_category_filters -%}
                 {%- assign value_url = value.url_to_add -%}
                 {%- if value.active -%}
                   {%- assign value_url = value.url_to_remove -%}
@@ -64,6 +69,9 @@
                 >
                   {{ value.label }}
                 </a>
+                {%- unless ccg_is_availability -%}
+                  {%- assign ccg_category_pill_count = ccg_category_pill_count | plus: 1 -%}
+                {%- endunless -%}
               {%- endif -%}
             {%- endfor -%}
           {%- endif -%}
@@ -684,6 +692,16 @@
       "max": 300,
       "step": 10,
       "default": 70
+    },
+    {
+      "type": "range",
+      "id": "max_category_filters",
+      "label": "Max category/type filter pills shown",
+      "info": "Availability and price pills always show in full. This caps only type/tag-style pills (e.g. Coats & Jackets, Hats) so the bar doesn't get too crowded. A currently active pill always stays visible even past this cap.",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "default": 5
     },
     {
       "type": "range",
