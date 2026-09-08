@@ -9,20 +9,19 @@
  */
 {
   "sections": {
-    "pdp_breadcrumbs_ccg": {
+    "ccg_breadcrumbs_GhijgB": {
       "type": "ccg-breadcrumbs",
       "name": "CCG Breadcrumbs",
       "settings": {
         "home_label": "Home",
-        "shop_label": "",
-        "shop_url": "/collections/all",
+        "shop_label": "Shop",
+        "shop_url": "",
         "background_color": "#f8f5ee",
         "text_color": "#211c17",
-        "muted_color": "#8a5a32",
-        "separator_color": "#8a5a32",
-        "border_color": "#d8d0c4",
-        "desktop_padding_top": 24,
-        "desktop_padding_bottom": 14,
+        "muted_color": "#5C5145",
+        "separator_color": "#5C5145",
+        "desktop_padding_top": 20,
+        "desktop_padding_bottom": 20,
         "mobile_padding_top": 20,
         "mobile_padding_bottom": 4
       }
@@ -58,12 +57,12 @@
             "image_gap": 4,
             "large_first_image": false,
             "icons_style": "arrow",
-            "slideshow_controls_style": "counter",
-            "slideshow_mobile_controls_style": "dots",
-            "thumbnail_position": "right",
-            "thumbnail_width": 88,
+            "slideshow_controls_style": "thumbnails",
+            "slideshow_mobile_controls_style": "thumbnails",
+            "thumbnail_position": "bottom",
+            "thumbnail_width": 140,
             "thumbnail_radius": 0,
-            "aspect_ratio": "1/1.25",
+            "aspect_ratio": "1",
             "constrain_to_viewport": true,
             "media_fit": "contain",
             "media_radius": 0,
@@ -99,8 +98,8 @@
             "border_opacity": 100,
             "border_color": "",
             "border_radius": 0,
-            "padding-block-start": 24,
-            "padding-block-end": 24,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -145,19 +144,22 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "text_xrnftG": {
+                "ccg_product_kicker_YqX4Pe": {
+                  "type": "ccg-product-kicker",
+                  "name": "CCG Product Kicker",
+                  "settings": {
+                    "separator": "·",
+                    "fallback_text": "One of one · Never made again",
+                    "alignment": "left",
+                    "text_color": "#8a5a32"
+                  },
+                  "blocks": {}
+                },
+                "ccg_product_title_zpLDcf": {
                   "type": "ccg-product-title",
                   "name": "CCG Product Title",
                   "settings": {
                     "text_color": "#211c17"
-                  },
-                  "blocks": {}
-                },
-                "meta_description_ccg": {
-                  "type": "ccg-meta-description",
-                  "name": "CCG Meta Description",
-                  "settings": {
-                    "text_color": "#7a6d5d"
                   },
                   "blocks": {}
                 },
@@ -184,44 +186,28 @@
                   },
                   "blocks": {}
                 },
-                "product_kicker_ccg": {
-                  "type": "ccg-product-kicker",
-                  "name": "CCG Product Kicker",
+                "ccg_meta_description_UeB76X": {
+                  "type": "ccg-meta-description",
+                  "name": "CCG Meta Description",
                   "settings": {
-                    "separator": "·",
-                    "fallback_text": "One of one · Never made again",
-                    "alignment": "left",
-                    "text_color": "#8a5a32"
+                    "text_color": "#5c5145"
                   },
                   "blocks": {}
                 }
               },
               "block_order": [
-                "text_xrnftG",
-                "meta_description_ccg",
+                "ccg_product_kicker_YqX4Pe",
+                "ccg_product_title_zpLDcf",
                 "price_tVjtKg",
-                "product_kicker_ccg"
+                "ccg_meta_description_UeB76X"
               ]
-            },
-            "divider_VJhene": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "divider_color": "{{ settings.color_palette.color2 }}",
-                "width_percent": 100,
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
             },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
                 "variant_style": "buttons",
                 "show_swatches": false,
-                "option_label_text_color": "",
+                "option_label_text_color": "#211c17",
                 "variant_style_class": "default",
                 "custom_variant_background": "{{ settings.color_palette.background }}",
                 "custom_variant_text": "{{ settings.color_palette.foreground }}",
@@ -267,6 +253,7 @@
               "blocks": {
                 "quantity": {
                   "type": "quantity",
+                  "disabled": true,
                   "static": true,
                   "settings": {
                     "input_style": "default",
@@ -291,6 +278,7 @@
                 },
                 "accelerated-checkout": {
                   "type": "accelerated-checkout",
+                  "disabled": true,
                   "static": true,
                   "settings": {},
                   "blocks": {}
@@ -298,12 +286,12 @@
               },
               "block_order": []
             },
-            "question_cta_ccg": {
+            "ccg_question_cta_tMHHTd": {
               "type": "ccg-question-cta",
               "name": "CCG Question CTA",
               "settings": {
                 "button_label": "Ask Melissa A Question",
-                "button_link": "/pages/contact",
+                "button_link": "shopify://pages/contact",
                 "note": "Last one · Ships in 1-2 days",
                 "text_color": "#211c17",
                 "note_color": "#8a5a32",
@@ -319,14 +307,14 @@
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
-                "text_color": "",
+                "text_color": "#5c5145",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -340,10 +328,9 @@
           },
           "block_order": [
             "group_icgrde",
-            "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "question_cta_ccg",
+            "ccg_question_cta_tMHHTd",
             "text_aEtTtq"
           ]
         }
@@ -354,13 +341,13 @@
       "settings": {
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
-        "equal_columns": false,
+        "equal_columns": true,
         "limit_details_width": false,
         "gap": 48,
         "enable_sticky_add_to_cart": true,
         "background_color": "#f8f5ee",
         "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-end": 70
       }
     },
     "pdp_bundle_ccg": {
@@ -394,7 +381,7 @@
     }
   },
   "order": [
-    "pdp_breadcrumbs_ccg",
+    "ccg_breadcrumbs_GhijgB",
     "main",
     "pdp_bundle_ccg",
     "pdp_recommendations_ccg"
