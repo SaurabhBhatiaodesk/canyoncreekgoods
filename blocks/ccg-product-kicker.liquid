@@ -1,0 +1,75 @@
+{%- if block.settings.text != blank -%}
+  <p
+    class="ccg-product-kicker ccg-product-kicker--{{ block.settings.alignment }}"
+    style="--ccg-product-kicker-color: {{ block.settings.text_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.text }}
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .ccg-product-kicker {
+    width: 100%;
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ccg-product-kicker-color);
+  }
+
+  .ccg-product-kicker--left {
+    text-align: left;
+  }
+
+  .ccg-product-kicker--center {
+    text-align: center;
+  }
+
+  .ccg-product-kicker--right {
+    text-align: right;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-product-kicker {
+      font-size: 15px;
+      letter-spacing: 0.15em;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Product Kicker",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "One of one · Never made again"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "Alignment",
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#8a5a32"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Product Kicker",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

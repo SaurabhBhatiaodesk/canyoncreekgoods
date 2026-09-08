@@ -183,12 +183,23 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {}
+                },
+                "product_kicker_ccg": {
+                  "type": "ccg-product-kicker",
+                  "name": "CCG Product Kicker",
+                  "settings": {
+                    "text": "One of one · Never made again",
+                    "alignment": "left",
+                    "text_color": "#8a5a32"
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "text_xrnftG",
                 "meta_description_ccg",
-                "price_tVjtKg"
+                "price_tVjtKg",
+                "product_kicker_ccg"
               ]
             },
             "divider_VJhene": {
