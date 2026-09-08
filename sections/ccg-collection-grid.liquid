@@ -226,22 +226,11 @@
         .then(function () {
           if (label) label.textContent = 'Added ✓';
           document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
-          return fetch('/cart.js', { credentials: 'same-origin' });
-        })
-        .then(function (r) { return r && r.json && r.json(); })
-        .then(function (cart) {
-          if (!cart) return;
-          var countEls = document.querySelectorAll('.ccg-header__cart-count');
-          countEls.forEach(function (el) {
-            el.textContent = cart.item_count;
-            el.style.display = cart.item_count > 0 ? '' : 'none';
-          });
+          window.location.href = '/cart';
         })
         .catch(function (err) {
           if (label) label.textContent = 'Sold out';
           console.warn('[ccg-collection] Quick add failed:', err);
-        })
-        .finally(function () {
           setTimeout(function () {
             btn.disabled = false;
             if (label) label.textContent = 'Quick add';
