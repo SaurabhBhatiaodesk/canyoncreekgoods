@@ -1,0 +1,56 @@
+{%- liquid
+  assign title_text = closest.product.title
+  if title_text == blank
+    assign title_text = 'Product title'
+  endif
+-%}
+
+<div
+  class="ccg-product-title"
+  style="--ccg-product-title-color: {{ block.settings.text_color }};"
+  {{ block.shopify_attributes }}
+>
+  <h1 class="ccg-product-title__heading">{{ title_text }}</h1>
+</div>
+
+{% stylesheet %}
+  .ccg-product-title {
+    width: 100%;
+  }
+
+  .ccg-product-title__heading {
+    font-family: 'Rye', serif;
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.18;
+    margin: 0;
+    color: var(--ccg-product-title-color);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-product-title__heading {
+      font-size: 28px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Product Title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#211c17"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Product Title",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

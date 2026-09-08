@@ -1,0 +1,53 @@
+{%- liquid
+  assign meta_text = page_description | strip
+  if meta_text == blank and closest.product != blank
+    assign meta_text = closest.product.description | strip_html | strip | truncate: 180
+  endif
+-%}
+
+{%- if meta_text != blank -%}
+  <div
+    class="ccg-meta-description"
+    style="--ccg-meta-description-color: {{ block.settings.text_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {{ meta_text }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .ccg-meta-description {
+    max-width: 560px;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ccg-meta-description-color);
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-meta-description {
+      font-size: 15px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Meta Description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#7a6d5d"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Meta Description",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
