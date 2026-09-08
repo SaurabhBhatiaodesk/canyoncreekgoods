@@ -17,7 +17,7 @@
 
 {%- capture ccg_rec_cards -%}
   {%- if recommendations.performed and recommendations.products_count > 0 -%}
-    {%- for rec_product in recommendations.products -%}
+    {%- for rec_product in recommendations.products limit: section.settings.product_limit -%}
       {%- liquid
         assign badge = rec_product.metafields.custom.custom_product_tag.value
         assign second_image = rec_product.images[1]
@@ -49,6 +49,42 @@
           <span class="ccg-seller-card__price">{{ rec_product.price | money }}</span>
         </span>
       </a>
+    {%- endfor -%}
+  {%- elsif recommendations.performed -%}
+    {%- for rec_product in collections.all.products limit: section.settings.product_limit -%}
+      {%- if rec_product.id != product.id -%}
+        {%- liquid
+          assign badge = rec_product.metafields.custom.custom_product_tag.value
+          assign second_image = rec_product.images[1]
+        -%}
+        <a href="{{ rec_product.url }}" class="ccg-seller-card">
+          <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
+            {%- if rec_product.featured_image != blank -%}
+              {{
+                rec_product.featured_image
+                | image_url: width: 800
+                | image_tag: widths: '300, 500, 800', alt: rec_product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
+              }}
+            {%- else -%}
+              {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+            {%- endif -%}
+            {%- if second_image != blank -%}
+              {{
+                second_image
+                | image_url: width: 800
+                | image_tag: widths: '300, 500, 800', alt: rec_product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
+              }}
+            {%- endif -%}
+            {%- if badge != blank -%}
+              <span class="ccg-seller-card__badge">{{ badge }}</span>
+            {%- endif -%}
+          </span>
+          <span class="ccg-seller-card__meta">
+            <span class="ccg-seller-card__title">{{ rec_product.title }}</span>
+            <span class="ccg-seller-card__price">{{ rec_product.price | money }}</span>
+          </span>
+        </a>
+      {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
 {%- endcapture -%}
@@ -389,6 +425,7 @@
   "presets": [
     {
       "name": "CCG Recommended product",
+      "category": "Products"
     }
   ]
 }
