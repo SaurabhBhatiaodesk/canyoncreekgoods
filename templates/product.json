@@ -343,7 +343,7 @@
     },
     "pdp_recommendations_ccg": {
       "type": "ccg-pdp-recommendations",
-      "name": "Recommendations (PDP)",
+      "name": "CCG Recommended products",
       "settings": {
         "eyebrow": "YOU MAY ALSO LIKE",
         "heading": "Complete your kit",
