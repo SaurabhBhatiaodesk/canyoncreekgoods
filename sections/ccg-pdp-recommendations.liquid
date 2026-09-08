@@ -147,6 +147,15 @@
   })();
 </script>
 
+
+<style>
+   .ccg-top-border {
+    width: 100%;
+    height: {{ section.settings.border_width }}px;
+    background: {{ section.settings.border_color }};
+  }
+</style>
+
 {% stylesheet %}
   .ccg-sellers {
     font-family: 'Karla', system-ui, sans-serif;
@@ -157,11 +166,7 @@
     flex-direction: column;
     gap: 34px;
   }
-  .ccg-top-border {
-    width: 100%;
-    height: {{ section.settings.border_width }}px;
-    background: {{ section.settings.border_color }};
-  }
+ 
 
   .ccg-sellers__head {
     display: flex;
