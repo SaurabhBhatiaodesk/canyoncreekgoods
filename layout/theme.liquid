@@ -201,5 +201,21 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const header = document.querySelector('header-component');
+
+        if (!header) return;
+
+        function updateHeader() {
+          header.classList.toggle('active-header', window.scrollY > 20);
+        }
+
+        updateHeader();
+        window.addEventListener('scroll', updateHeader, { passive: true });
+      });
+    </script>
   </body>
 </html>
