@@ -1,5 +1,5 @@
 <div class="ccg-top-border"></div>
-{% render 'ccg-section-spacing' %}
+
 
 {%- liquid
   case section.settings.image_ratio
@@ -89,26 +89,29 @@
     {%- endfor -%}
   {%- endif -%}
 {%- endcapture -%}
+<div class="custom-recomemmed-product">
+  <div
+    class="ccg-sellers section"
+    data-ccg-pdp-recommendations="{{ section.id }}"
+    data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.product_limit }}&intent=related"
+    style="--ccg-sellers-ratio: {{ ccg_sellers_ratio }};"
+    {% if ccg_rec_cards == blank %}
+      hidden
+    {% endif %}
+  >
+    <div class="ccg-sellers__inner">
+      <div class="ccg-sellers__head">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ccg-sellers__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ccg-sellers__note">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+      </div>
 
-<div
-  class="ccg-sellers section"
-  data-ccg-pdp-recommendations="{{ section.id }}"
-  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.product_limit }}&intent=related"
-  style="--ccg-sellers-ratio: {{ ccg_sellers_ratio }};"
-  {% if ccg_rec_cards == blank %}hidden{% endif %}
->
-  <div class="ccg-sellers__inner">
-    <div class="ccg-sellers__head">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="ccg-sellers__heading">{{ section.settings.heading }}</h2>
-      {%- endif -%}
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="ccg-sellers__note">{{ section.settings.eyebrow }}</p>
-      {%- endif -%}
-    </div>
-
-    <div class="ccg-sellers__grid" data-ccg-pdp-recommendations-content>
-      {{ ccg_rec_cards }}
+      <div class="ccg-sellers__grid" data-ccg-pdp-recommendations-content>
+        {{ ccg_rec_cards }}
+      </div>
     </div>
   </div>
 </div>
@@ -154,9 +157,20 @@
     height: {{ section.settings.border_width }}px;
     background: {{ section.settings.border_color }};
   }
+   .custom-recomemmed-product{
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.desktop_padding_top }}px;
+    padding-bottom: {{ section.settings.desktop_padding_bottom }}px;
+  }
+
+  .custom-recomemmed-product{
+    padding-top: {{ section.settings.mobile_padding_top }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
 </style>
 
 {% stylesheet %}
+ 
   .ccg-sellers {
     font-family: 'Karla', system-ui, sans-serif;
   }
@@ -166,7 +180,6 @@
     flex-direction: column;
     gap: 34px;
   }
- 
 
   .ccg-sellers__head {
     display: flex;
@@ -185,23 +198,23 @@
     color: var(--ccg-ink);
   }
   .ccg-sellers__note {
-      margin: 0;
-      font-family: Barlow Condensed,sans-serif;
-      font-weight: 400;
-      text-transform: uppercase;
-      white-space: nowrap;
-      font-size: 18px;
-      letter-spacing: 0.12em;
-      color: rgb(138, 90, 50);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(138, 90, 50, 0.5);
-      padding-bottom: 3px;
+    margin: 0;
+    font-family: Barlow Condensed, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    color: rgb(138, 90, 50);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(138, 90, 50, 0.5);
+    padding-bottom: 3px;
   }
-  .ccg-sellers__note a{
+  .ccg-sellers__note a {
     text-decoration: none;
     color: rgb(138, 90, 50);
   }
-  .ccg-sellers__note a:hover{
+  .ccg-sellers__note a:hover {
     color: rgb(138, 90, 50) !important;
   }
 
@@ -301,7 +314,7 @@
     .ccg-sellers__inner {
       gap: 24px;
     }
-
+    
     .ccg-sellers__head {
       flex-direction: column;
       align-items: flex-start;
