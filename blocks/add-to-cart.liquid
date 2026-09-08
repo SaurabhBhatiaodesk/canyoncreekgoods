@@ -12,6 +12,11 @@
   assign scoped_class = block.settings.style_class | append: '--' | append: block.id
   assign class = 'add-to-cart-button ' | append: block.settings.style_class | append: ' ' | append: scoped_class
   assign id = 'BuyButtons-ProductSubmitButton-' | append: block.id
+  assign ccg_add_to_cart_text = add_to_cart_text
+  if can_add_to_cart and closest.product != blank
+    assign ccg_variant_price = closest.product.selected_or_first_available_variant.price | money_without_trailing_zeros
+    assign ccg_add_to_cart_text = add_to_cart_text | append: ' · ' | append: ccg_variant_price
+  endif
 %}
 {% render 'button-custom-styles', block_settings: block.settings, block_id: block.id %}
 {% render 'add-to-cart-button-styles' %}
@@ -25,12 +30,44 @@
     id: id,
     class: class,
     can_add_to_cart: can_add_to_cart,
-    show_icon: can_add_to_cart,
+    show_icon: false,
     product: closest.product,
-    add_to_cart_text: add_to_cart_text,
+    add_to_cart_text: ccg_add_to_cart_text,
     data_testid: 'standalone-add-to-cart'
   %}
 </span>
+
+{% stylesheet %}
+  .product-details .add-to-cart-button {
+    width: 100%;
+    min-height: 64px;
+    height: auto;
+    background: rgb(33, 28, 23);
+    color: rgb(248, 245, 238);
+    border: 1px solid rgb(33, 28, 23);
+    border-radius: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 19px 0;
+    text-align: center;
+  }
+
+  .product-details .add-to-cart-button:hover,
+  .product-details .add-to-cart-button:focus {
+    background: transparent;
+    color: rgb(33, 28, 23);
+    border-color: rgb(33, 28, 23);
+  }
+
+  .product-details .add-to-cart-button:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
