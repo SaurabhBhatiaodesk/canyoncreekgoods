@@ -1,0 +1,232 @@
+<section class="ccg-image-banner">
+
+  <div class="ccg-image-banner__media">
+
+    {% if section.settings.image != blank %}
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          class: 'ccg-image-banner__image'
+      }}
+    {% endif %}
+
+    <div class="ccg-image-banner__overlay"></div>
+
+
+    <div class="ccg-image-banner__content">
+
+      {% if section.settings.eyebrow != blank %}
+        <p class="ccg-image-banner__eyebrow">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
+
+
+      {% if section.settings.heading != blank %}
+        <h1 class="ccg-image-banner__heading">
+          {{ section.settings.heading }}
+        </h1>
+      {% endif %}
+
+
+      {% if section.settings.description != blank %}
+        <div class="ccg-image-banner__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+{% stylesheet %}
+
+.ccg-image-banner{
+  width:100%;
+}
+
+
+.ccg-image-banner__media{
+  position:relative;
+  min-height:650px;
+  overflow:hidden;
+}
+
+
+.ccg-image-banner__image{
+  width:100%;
+  height:100%;
+  min-height:650px;
+  object-fit:cover;
+  display:block;
+}
+
+
+.ccg-image-banner__overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,{{ section.settings.overlay_opacity }});
+}
+
+
+
+.ccg-image-banner__content{
+  position:absolute;
+  left:58px;
+  top:50%;
+  transform:translateY(-50%);
+  max-width:720px;
+  color:white;
+  z-index:2;
+}
+
+
+
+.ccg-image-banner__eyebrow{
+  margin:0 0 20px;
+
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+  color:#fff;
+}
+
+
+
+.ccg-image-banner__heading{
+
+  margin:0 0 20px;
+
+  font-family:'Rye',serif;
+  font-weight:400;
+
+  font-size:64px;
+  line-height:1.1;
+
+  color:#fff;
+
+}
+
+
+
+.ccg-image-banner__description,
+.ccg-image-banner__description p{
+
+  margin:0;
+
+  max-width:650px;
+
+  font-family:'Karla',sans-serif;
+
+  font-size:22px;
+
+  line-height:1.6;
+
+  color:#fff;
+
+}
+
+
+
+@media(max-width:749px){
+
+.ccg-image-banner__media,
+.ccg-image-banner__image{
+min-height:500px;
+}
+
+
+.ccg-image-banner__content{
+
+left:25px;
+right:25px;
+
+}
+
+
+.ccg-image-banner__heading{
+font-size:38px;
+}
+
+
+.ccg-image-banner__description,
+.ccg-image-banner__description p{
+
+font-size:17px;
+
+}
+
+
+.ccg-image-banner__eyebrow{
+
+font-size:12px;
+
+}
+
+}
+
+{% endstylesheet %}
+
+
+
+{% schema %}
+{
+"name":"CCG Image Banner Text",
+
+"settings":[
+
+{
+"type":"image_picker",
+"id":"image",
+"label":"Banner Image"
+},
+
+{
+"type":"text",
+"id":"eyebrow",
+"label":"Eyebrow",
+"default":"SHOP - WOOL COWLS"
+},
+
+{
+"type":"text",
+"id":"heading",
+"label":"Heading",
+"default":"Wool Cowls"
+},
+
+{
+"type":"richtext",
+"id":"description",
+"label":"Description",
+"default":"<p>Hand cut one at a time from premium American wool. Each cowl comes from a single blanket run, so when it sells it is gone for good.</p>"
+},
+
+{
+"type":"range",
+"id":"overlay_opacity",
+"label":"Image overlay",
+"min":0,
+"max":0.8,
+"step":0.1,
+"default":0.45
+}
+
+],
+
+"presets":[
+{
+"name":"CCG Image Banner Text"
+}
+]
+
+}
+{% endschema %}
