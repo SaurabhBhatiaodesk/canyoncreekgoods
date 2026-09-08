@@ -200,37 +200,43 @@
 
     var filtersEl = section.querySelector('.ccg-collection__filters');
     if (filtersEl) {
+      var isPointerDown = false;
       var isDragging = false;
-      var dragMoved = false;
       var dragStartX = 0;
       var dragStartScroll = 0;
 
       filtersEl.addEventListener('mousedown', function (event) {
-        isDragging = true;
-        dragMoved = false;
+        isPointerDown = true;
+        isDragging = false;
         dragStartX = event.pageX;
         dragStartScroll = filtersEl.scrollLeft;
-        filtersEl.classList.add('is-dragging');
       });
 
       window.addEventListener('mousemove', function (event) {
-        if (!isDragging) return;
+        if (!isPointerDown) return;
         var delta = event.pageX - dragStartX;
-        if (Math.abs(delta) > 4) dragMoved = true;
-        filtersEl.scrollLeft = dragStartScroll - delta;
+        if (!isDragging && Math.abs(delta) > 4) {
+          isDragging = true;
+          filtersEl.classList.add('is-dragging');
+        }
+        if (isDragging) {
+          event.preventDefault();
+          filtersEl.scrollLeft = dragStartScroll - delta;
+        }
       });
 
       window.addEventListener('mouseup', function () {
-        if (!isDragging) return;
-        isDragging = false;
-        filtersEl.classList.remove('is-dragging');
+        isPointerDown = false;
+        if (isDragging) {
+          filtersEl.classList.remove('is-dragging');
+          setTimeout(function () { isDragging = false; }, 0);
+        }
       });
 
       filtersEl.addEventListener('click', function (event) {
-        if (dragMoved) {
+        if (isDragging) {
           event.preventDefault();
           event.stopPropagation();
-          dragMoved = false;
         }
       }, true);
     }
@@ -677,13 +683,22 @@
 
     .ccg-collection__filters {
       gap: 8px;
-      margin: 0 -20px;
-      padding: 0 20px;
     }
 
     .ccg-collection__meta {
-      gap: 12px;
-      font-size: 12px;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .ccg-collection__count {
+      display: none;
+    }
+
+    .ccg-collection__sort select {
+      max-width: 120px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .ccg-collection__pill {
