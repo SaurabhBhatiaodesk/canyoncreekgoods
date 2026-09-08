@@ -90,62 +90,181 @@
               endif
             endif
           -%}
-          <a href="{{ product.url }}" class="ccg-seller-card">
-            <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
-              {%- if product.featured_image != blank -%}
-                {{
-                  product.featured_image
-                  | image_url: width: 800
-                  | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
-                }}
-              {%- else -%}
-                {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
-              {%- endif -%}
-              {%- if second_image != blank -%}
-                {{
-                  second_image
-                  | image_url: width: 800
-                  | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
-                }}
-              {%- endif -%}
-              {%- if badge != blank -%}
-                <span class="ccg-seller-card__badge">{{ badge }}</span>
-              {%- endif -%}
-            </span>
-            <span class="ccg-seller-card__meta">
+          <div class="ccg-seller-card">
+            <a href="{{ product.url }}" class="ccg-seller-card__media-link">
+              <span class="ccg-seller-card__media{% if second_image != blank %} ccg-seller-card__media--has-alt{% endif %}">
+                {%- if product.featured_image != blank -%}
+                  {{
+                    product.featured_image
+                    | image_url: width: 800
+                    | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--primary'
+                  }}
+                {%- else -%}
+                  {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder' }}
+                {%- endif -%}
+                {%- if second_image != blank -%}
+                  {{
+                    second_image
+                    | image_url: width: 800
+                    | image_tag: widths: '300, 500, 800', alt: product.title, class: 'ccg-seller-card__img ccg-seller-card__img--secondary'
+                  }}
+                {%- endif -%}
+                {%- if badge != blank -%}
+                  <span class="ccg-seller-card__badge">{{ badge }}</span>
+                {%- endif -%}
+              </span>
+            </a>
+
+            {%- if product.available -%}
+              <div class="ccg-seller-card__quickadd" data-quick-add data-product-url="{{ product.url }}">
+                <button type="button" class="ccg-seller-card__quickadd-btn" data-quick-add-btn>
+                  <span data-quick-add-label>Quick add</span>
+                </button>
+                {%- if product.has_only_default_variant -%}
+                  <input type="hidden" data-quick-add-variant value="{{ product.selected_or_first_available_variant.id }}">
+                  <span class="ccg-seller-card__quickadd-variant">{{ product.selected_or_first_available_variant.title }}</span>
+                {%- else -%}
+                  <select class="ccg-seller-card__quickadd-select" data-quick-add-select aria-label="Select size for {{ product.title }}">
+                    {%- for variant in product.variants -%}
+                      <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                        {{ variant.title }}{% unless variant.available %} - Sold out{% endunless %}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            <a href="{{ product.url }}" class="ccg-seller-card__meta">
               <span class="ccg-seller-card__title">{{ product.title }}</span>
               <span class="ccg-seller-card__price">{{ product.price | money }}</span>
               {%- if stock_text != blank -%}
                 <span class="ccg-seller-card__stock">{{ stock_text }}</span>
               {%- endif -%}
-            </span>
-          </a>
+            </a>
+          </div>
         {%- else -%}
           <p class="ccg-collection__empty">No products found. Try a different filter.</p>
         {%- endfor -%}
       </div>
 
-      {%- if paginate.pages > 1 -%}
-        <nav class="ccg-collection__pagination" aria-label="Pagination">
-          {%- if paginate.previous -%}
-            <a href="{{ paginate.previous.url }}" class="ccg-collection__page-link">← Prev</a>
-          {%- endif -%}
-          {%- for part in paginate.parts -%}
-            {%- if part.is_link -%}
-              <a href="{{ part.url }}" class="ccg-collection__page-link">{{ part.title }}</a>
-            {%- else -%}
-              <span class="ccg-collection__page-link ccg-collection__page-link--current">{{ part.title }}</span>
-            {%- endif -%}
-          {%- endfor -%}
-          {%- if paginate.next -%}
-            <a href="{{ paginate.next.url }}" class="ccg-collection__page-link">Next →</a>
-          {%- endif -%}
-        </nav>
+      {%- if paginate.next -%}
+        <div class="ccg-collection__load-more">
+          <button
+            type="button"
+            class="ccg-collection__load-more-btn"
+            data-load-more-btn
+            data-next-url="{{ paginate.next.url }}"
+          >
+            Load more
+          </button>
+        </div>
       {%- endif -%}
     {%- endpaginate -%}
 
   </div>
 </div>
+
+<script>
+  (function () {
+    var section = document.currentScript.previousElementSibling;
+    if (!section) return;
+
+    var money = function (cents) {
+      return '$' + (cents / 100).toFixed(2);
+    };
+
+    section.addEventListener('click', function (event) {
+      var btn = event.target.closest('[data-quick-add-btn]');
+      if (!btn) return;
+      event.preventDefault();
+
+      var wrap = btn.closest('[data-quick-add]');
+      var select = wrap.querySelector('[data-quick-add-select]');
+      var hidden = wrap.querySelector('[data-quick-add-variant]');
+      var variantId = select ? select.value : (hidden ? hidden.value : null);
+      var label = btn.querySelector('[data-quick-add-label]');
+      if (!variantId) return;
+
+      btn.disabled = true;
+      if (label) label.textContent = 'Adding…';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
+      })
+        .then(function (r) {
+          if (!r.ok) return r.json().then(function (e) { throw new Error(e.description || 'Could not add to cart'); });
+          return r.json();
+        })
+        .then(function () {
+          if (label) label.textContent = 'Added ✓';
+          document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+          return fetch('/cart.js', { credentials: 'same-origin' });
+        })
+        .then(function (r) { return r && r.json && r.json(); })
+        .then(function (cart) {
+          if (!cart) return;
+          var countEls = document.querySelectorAll('.ccg-header__cart-count');
+          countEls.forEach(function (el) {
+            el.textContent = cart.item_count;
+            el.style.display = cart.item_count > 0 ? '' : 'none';
+          });
+        })
+        .catch(function (err) {
+          if (label) label.textContent = 'Sold out';
+          console.warn('[ccg-collection] Quick add failed:', err);
+        })
+        .finally(function () {
+          setTimeout(function () {
+            btn.disabled = false;
+            if (label) label.textContent = 'Quick add';
+          }, 1800);
+        });
+    });
+
+    var loadMoreBtn = section.querySelector('[data-load-more-btn]');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', function () {
+        var url = loadMoreBtn.getAttribute('data-next-url');
+        if (!url) return;
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = 'Loading…';
+
+        fetch(url, { credentials: 'same-origin' })
+          .then(function (r) { return r.text(); })
+          .then(function (html) {
+            var doc = document.createElement('div');
+            doc.innerHTML = html;
+
+            var newGrid = doc.querySelector('.ccg-collection__grid');
+            var currentGrid = section.querySelector('.ccg-collection__grid');
+            if (newGrid && currentGrid) {
+              Array.prototype.slice.call(newGrid.children).forEach(function (child) {
+                currentGrid.appendChild(child);
+              });
+            }
+
+            var newLoadMoreBtn = doc.querySelector('[data-load-more-btn]');
+            if (newLoadMoreBtn) {
+              loadMoreBtn.setAttribute('data-next-url', newLoadMoreBtn.getAttribute('data-next-url'));
+              loadMoreBtn.disabled = false;
+              loadMoreBtn.textContent = 'Load more';
+            } else {
+              loadMoreBtn.parentElement.remove();
+            }
+          })
+          .catch(function (err) {
+            console.warn('[ccg-collection] Load more failed:', err);
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = 'Load more';
+          });
+      });
+    }
+  })();
+</script>
 
 {% stylesheet %}
   .ccg-collection {
@@ -244,11 +363,16 @@
   }
 
   .ccg-seller-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 13px;
-    text-decoration: none;
     color: var(--ccg-ink);
+  }
+
+  .ccg-seller-card__media-link {
+    display: block;
+    text-decoration: none;
   }
 
   .ccg-seller-card__media {
@@ -308,6 +432,72 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ccg-seller-card__quickadd {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(251, 249, 244, 0.92);
+    border-top: 1px solid var(--ccg-hairline);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+  }
+
+  .ccg-seller-card:hover .ccg-seller-card__quickadd,
+  .ccg-seller-card:focus-within .ccg-seller-card__quickadd {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .ccg-seller-card__quickadd-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ccg-ink);
+    background: transparent;
+    border: none;
+    padding: 6px 0;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .ccg-seller-card__quickadd-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .ccg-seller-card__quickadd-variant {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ccg-stone);
+    white-space: nowrap;
+  }
+
+  .ccg-seller-card__quickadd-select {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--ccg-ink);
+    background: transparent;
+    border: 1px solid var(--ccg-hairline);
+    padding: 4px 6px;
+    max-width: 55%;
   }
 
   .ccg-seller-card__title {
@@ -331,26 +521,37 @@
     color: var(--ccg-tan);
   }
 
-  .ccg-collection__pagination {
+  .ccg-collection__load-more {
     display: flex;
     justify-content: center;
+    padding-top: 12px;
+  }
+
+  .ccg-collection__load-more-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 16px;
-    padding-top: 24px;
+    justify-content: center;
+    padding: 14px 40px;
     font-family: 'Barlow Condensed', sans-serif;
-    letter-spacing: 0.08em;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-  }
-
-  .ccg-collection__page-link {
     color: var(--ccg-ink);
-    text-decoration: none;
-    padding: 6px 4px;
+    background: transparent;
+    border: 1px solid var(--ccg-ink);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  .ccg-collection__page-link--current {
-    color: var(--ccg-tan);
-    border-bottom: 1px solid var(--ccg-tan);
+  .ccg-collection__load-more-btn:hover {
+    background: var(--ccg-ink);
+    color: var(--ccg-cream);
+  }
+
+  .ccg-collection__load-more-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
   }
 
   @media screen and (max-width: 989px) {
@@ -381,6 +582,16 @@
 
     .ccg-seller-card {
       gap: 8px;
+    }
+
+    .ccg-seller-card__quickadd {
+      position: static;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+      background: transparent;
+      border-top: none;
+      padding: 4px 0 0;
     }
 
     .ccg-seller-card__meta {
