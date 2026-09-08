@@ -385,6 +385,10 @@
     color: var(--ccg-ink);
   }
 
+  .ccg-seller-card__media-wrap {
+    position: relative;
+  }
+
   .ccg-seller-card__media-link {
     display: block;
     text-decoration: none;
@@ -455,13 +459,15 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 20px;
     display: flex;
+    width: calc(100% - 40px);
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+    margin: 0 auto;
     padding: 10px 12px;
-    background: rgba(251, 249, 244, 0.92);
+    background: #fbf9f4eb;
     border-top: 1px solid var(--ccg-hairline);
     opacity: 0;
     transform: translateY(6px);
