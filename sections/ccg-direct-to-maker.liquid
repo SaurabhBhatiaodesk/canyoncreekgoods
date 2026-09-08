@@ -12,6 +12,29 @@
       {%- if section.settings.description != blank -%}
         <div class="ccg-dtm__description">{{ section.settings.description }}</div>
       {%- endif -%}
+
+
+      {% if section.blocks.size > 0 %}
+        <div class="ccg-dtm__list">
+
+          {% for block in section.blocks %}
+            <div class="ccg-dtm__list-item" {{ block.shopify_attributes }}>
+
+              <span class="ccg-dtm__number">
+                {{ forloop.index | prepend: '0' }}
+              </span>
+
+              <span class="ccg-dtm__text">
+                {{ block.settings.text }}
+              </span>
+
+            </div>
+          {% endfor %}
+
+        </div>
+      {% endif %}
+
+
       {%- if section.settings.button_label != blank -%}
         <a href="{{ section.settings.button_link | default: '#' }}" class="ccg-dtm__link">{{ section.settings.button_label }}</a>
       {%- endif -%}
@@ -125,6 +148,41 @@
     border-color: var(--ccg-tan);
   }
 
+
+
+  .ccg-dtm__list{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  margin-top:10px;
+}
+
+
+.ccg-dtm__list-item{
+  display:flex;
+  align-items:flex-start;
+  gap:28px;
+}
+
+
+.ccg-dtm__number{
+  font-family:'Cormorant Garamond', serif;
+  font-size:24px;
+  color:var(--ccg-tan);
+  line-height:1;
+  min-width:30px;
+}
+
+
+.ccg-dtm__text{
+  font-family:'Karla', sans-serif;
+  font-size:18px;
+  line-height:1.5;
+  color:var(--ccg-muted);
+  letter-spacing:.04em;
+}
+
+
   @media screen and (max-width: 989px) {
     .ccg-dtm__content {
       padding: 64px 40px;
@@ -159,6 +217,19 @@
     }
     .ccg-dtm {
        padding-bottom: 50px;
+    }
+
+
+    .ccg-dtm__list-item{
+      gap:18px;
+    }
+
+    .ccg-dtm__number{
+      font-size:20px;
+    }
+
+    .ccg-dtm__text{
+      font-size:15px;
     }
   }
 {% endstylesheet %}
@@ -262,6 +333,20 @@
       "step": 4,
       "unit": "px",
       "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "list_item",
+      "name": "List Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Pulled up over the ears for early feeding, jacket collar over the top."
+        }
+      ]
     }
   ],
   "presets": [
