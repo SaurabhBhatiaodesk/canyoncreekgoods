@@ -1,13 +1,13 @@
 {% style %}
-  #shopify-section-{{ section.id }} {
+  #shopify-section-{{ section.id }} .ccg-breadcrumbs {
     background: {{ section.settings.background_color }};
     border-top: 1px solid {{ section.settings.border_color }};
-    border-bottom: 1px solid {{ section.settings.border_color }};
+    padding-block: {{ section.settings.desktop_padding_top }}px {{ section.settings.desktop_padding_bottom }}px;
   }
-
+  
   @media screen and (max-width: 749px) {
     #shopify-section-{{ section.id }} .ccg-breadcrumbs {
-      padding-block: var(--ccg-breadcrumb-mobile-padding-top) var(--ccg-breadcrumb-mobile-padding-bottom);
+      padding-block: {{ section.settings.mobile_padding_top }}px {{ section.settings.mobile_padding_bottom }}px;
     }
   }
 {% endstyle %}
@@ -16,95 +16,89 @@
   {%- assign breadcrumb_collection = collection -%}
 
   <nav
-    class="ccg-breadcrumbs section"
+    class="ccg-breadcrumbs "
     role="navigation"
     aria-label="Breadcrumbs"
     style="
       --ccg-breadcrumb-ink: {{ section.settings.text_color }};
       --ccg-breadcrumb-muted: {{ section.settings.muted_color }};
       --ccg-breadcrumb-separator: {{ section.settings.separator_color }};
-      --ccg-breadcrumb-border: {{ section.settings.border_color }};
-      --ccg-breadcrumb-bg: {{ section.settings.background_color }};
-      --ccg-breadcrumb-mobile-padding-top: {{ section.settings.mobile_padding_top }}px;
-      --ccg-breadcrumb-mobile-padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
-      background: var(--ccg-breadcrumb-bg);
-      border-top: 1px solid var(--ccg-breadcrumb-border);
-      border-bottom: 1px solid var(--ccg-breadcrumb-border);
-      padding-block: {{ section.settings.desktop_padding_top }}px {{ section.settings.desktop_padding_bottom }}px;
     "
   >
-    <ol class="ccg-breadcrumbs__list">
-      <li class="ccg-breadcrumbs__item">
-        <a class="ccg-breadcrumbs__link" href="{{ routes.root_url }}">{{ section.settings.home_label }}</a>
-      </li>
+    <div class="section">
+      <ol class="ccg-breadcrumbs__list">
+        <li class="ccg-breadcrumbs__item">
+          <a class="ccg-breadcrumbs__link" href="{{ routes.root_url }}">{{ section.settings.home_label }}</a>
+        </li>
 
-      {%- case template.name -%}
-        {%- when 'product' -%}
-          {%- if section.settings.shop_label != blank -%}
+        {%- case template.name -%}
+          {%- when 'product' -%}
+            {%- if section.settings.shop_label != blank -%}
+              <li class="ccg-breadcrumbs__item">
+                <a class="ccg-breadcrumbs__link" href="{{ section.settings.shop_url | default: routes.all_products_collection_url }}">
+                  {{ section.settings.shop_label }}
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if breadcrumb_collection != blank -%}
+              <li class="ccg-breadcrumbs__item">
+                <a class="ccg-breadcrumbs__link" href="{{ breadcrumb_collection.url }}">{{ breadcrumb_collection.title }}</a>
+              </li>
+            {%- endif -%}
             <li class="ccg-breadcrumbs__item">
-              <a class="ccg-breadcrumbs__link" href="{{ section.settings.shop_url | default: routes.all_products_collection_url }}">
-                {{ section.settings.shop_label }}
-              </a>
+              <a class="ccg-breadcrumbs__link" href="{{ product.url }}" aria-current="page">{{ product.title }}</a>
             </li>
-          {%- endif -%}
-          {%- if breadcrumb_collection != blank -%}
-            <li class="ccg-breadcrumbs__item">
-              <a class="ccg-breadcrumbs__link" href="{{ breadcrumb_collection.url }}">{{ breadcrumb_collection.title }}</a>
-            </li>
-          {%- endif -%}
-          <li class="ccg-breadcrumbs__item">
-            <a class="ccg-breadcrumbs__link" href="{{ product.url }}" aria-current="page">{{ product.title }}</a>
-          </li>
 
-        {%- when 'collection' -%}
-          {%- if current_tags -%}
-            <li class="ccg-breadcrumbs__item">
-              <a class="ccg-breadcrumbs__link" href="{{ collection.url }}">{{ collection.title }}</a>
-            </li>
-            <li class="ccg-breadcrumbs__item">
-              {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: '+' }}{%- endcapture -%}
-              <a class="ccg-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: ' + ' }}</a>
-            </li>
-          {%- else -%}
-            <li class="ccg-breadcrumbs__item">
-              <a class="ccg-breadcrumbs__link" href="{{ collection.url }}" aria-current="page">{{ collection.title }}</a>
-            </li>
-          {%- endif -%}
+          {%- when 'collection' -%}
+            {%- if current_tags -%}
+              <li class="ccg-breadcrumbs__item">
+                <a class="ccg-breadcrumbs__link" href="{{ collection.url }}">{{ collection.title }}</a>
+              </li>
+              <li class="ccg-breadcrumbs__item">
+                {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: '+' }}{%- endcapture -%}
+                <a class="ccg-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: ' + ' }}</a>
+              </li>
+            {%- else -%}
+              <li class="ccg-breadcrumbs__item">
+                <a class="ccg-breadcrumbs__link" href="{{ collection.url }}" aria-current="page">{{ collection.title }}</a>
+              </li>
+            {%- endif -%}
 
-        {%- when 'page' -%}
-          <li class="ccg-breadcrumbs__item">
-            <a class="ccg-breadcrumbs__link" href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
-          </li>
+          {%- when 'page' -%}
+            <li class="ccg-breadcrumbs__item">
+              <a class="ccg-breadcrumbs__link" href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
+            </li>
 
-        {%- when 'blog' -%}
-          {%- if current_tags -%}
+          {%- when 'blog' -%}
+            {%- if current_tags -%}
+              <li class="ccg-breadcrumbs__item">
+                <a class="ccg-breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
+              </li>
+              <li class="ccg-breadcrumbs__item">
+                {%- capture tag_url -%}{{ blog.url }}/tagged/{{ current_tags | join: '+' }}{%- endcapture -%}
+                <a class="ccg-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: ' + ' }}</a>
+              </li>
+            {%- else -%}
+              <li class="ccg-breadcrumbs__item">
+                <a class="ccg-breadcrumbs__link" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</a>
+              </li>
+            {%- endif -%}
+
+          {%- when 'article' -%}
             <li class="ccg-breadcrumbs__item">
               <a class="ccg-breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
             </li>
             <li class="ccg-breadcrumbs__item">
-              {%- capture tag_url -%}{{ blog.url }}/tagged/{{ current_tags | join: '+' }}{%- endcapture -%}
-              <a class="ccg-breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: ' + ' }}</a>
+              <a class="ccg-breadcrumbs__link" href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
             </li>
+
           {%- else -%}
             <li class="ccg-breadcrumbs__item">
-              <a class="ccg-breadcrumbs__link" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</a>
+              <a class="ccg-breadcrumbs__link" href="{{ request.path }}" aria-current="page">{{ page_title }}</a>
             </li>
-          {%- endif -%}
-
-        {%- when 'article' -%}
-          <li class="ccg-breadcrumbs__item">
-            <a class="ccg-breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
-          </li>
-          <li class="ccg-breadcrumbs__item">
-            <a class="ccg-breadcrumbs__link" href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
-          </li>
-
-        {%- else -%}
-          <li class="ccg-breadcrumbs__item">
-            <a class="ccg-breadcrumbs__link" href="{{ request.path }}" aria-current="page">{{ page_title }}</a>
-          </li>
-      {%- endcase -%}
-    </ol>
+        {%- endcase -%}
+      </ol>
+    <div>
   </nav>
 {%- endunless -%}
 
@@ -114,9 +108,6 @@
     width: 100%;
     box-sizing: border-box;
     font-family: 'Barlow Condensed', sans-serif;
-    background: var(--ccg-breadcrumb-bg) !important;
-    border-top: 1px solid var(--ccg-breadcrumb-border) !important;
-    border-bottom: 1px solid var(--ccg-breadcrumb-border) !important;
   }
   .ccg-breadcrumbs__list {
     list-style: none;
