@@ -80,7 +80,9 @@ body {
   text-transform: uppercase;
   color: #211c17;
 }
-
+header-component.header{
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
 .header-section .menu-list__link[aria-current='page'],
 .header-section .menu-list__item[aria-current='page'] {
     padding-bottom: 0;
