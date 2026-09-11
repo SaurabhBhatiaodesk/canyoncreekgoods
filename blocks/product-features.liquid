@@ -1,14 +1,28 @@
-<div class="product-features" {{ block.shopify_attributes }}>
-  <div class="product-features__row">
-    <div class="product-features__label">
-      {{ block.settings.label }}
-    </div>
+{%- liquid
+  assign product_resource = closest.product | default: product
+  assign feature_entries = product_resource.metafields.custom.product_features.value
+-%}
 
-    <div class="product-features__description">
-      {{ block.settings.description }}
-    </div>
+{%- if feature_entries != blank -%}
+  <div class="product-features" {{ block.shopify_attributes }}>
+    {%- for feature in feature_entries -%}
+      {%- assign feature_label = feature.label.value | default: feature.label -%}
+      {%- assign feature_description = feature.description.value | default: feature.description -%}
+
+      {%- if feature_label != blank or feature_description != blank -%}
+        <div class="product-features__row">
+          <div class="product-features__label">
+            {{ feature_label | escape }}
+          </div>
+
+          <div class="product-features__description">
+            {{ feature_description | escape | newline_to_br }}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
   </div>
-</div>
+{%- endif -%}
 
 {% stylesheet %}
   .product-features {
@@ -22,6 +36,10 @@
     border-top: 1px solid rgba(0, 0, 0, 0.12);
   }
 
+  .product-features__row:last-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
   .product-features__label {
     font-size: 16px;
     letter-spacing: 0.18em;
@@ -31,6 +49,10 @@
   .product-features__description {
     font-size: 18px;
     line-height: 1.5;
+  }
+
+  .product-features__description p {
+    margin: 0;
   }
 
   @media screen and (max-width: 749px) {
@@ -55,16 +77,8 @@
   "tag": null,
   "settings": [
     {
-      "type": "text",
-      "id": "label",
-      "label": "Label",
-      "default": "Material"
-    },
-    {
-      "type": "richtext",
-      "id": "description",
-      "label": "Description",
-      "default": "<p>Premium wool blend with a soft, structured feel.</p>"
+      "type": "paragraph",
+      "content": "Shows product metafield custom.product_features. Add Product Features entries to the product to display this block."
     }
   ],
   "presets": [
