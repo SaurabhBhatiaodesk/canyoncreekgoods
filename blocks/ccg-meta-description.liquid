@@ -1,8 +1,5 @@
 {%- liquid
   assign meta_text = page_description | strip
-  if meta_text == blank and closest.product != blank
-    assign meta_text = closest.product.description | strip_html | strip | truncate: 180
-  endif
 -%}
 
 {%- if meta_text != blank -%}
