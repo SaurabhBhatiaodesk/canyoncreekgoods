@@ -1,0 +1,65 @@
+{%- liquid
+  assign product_resource = closest.product | default: product
+  assign feature_entries = product_resource.metafields.custom.product_features.value
+  assign description = product_resource.description
+-%}
+
+{%- if feature_entries == blank and description != blank -%}
+  <div
+    class="ccg-product-description"
+    style="--ccg-product-description-color: {{ block.settings.text_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {{ description }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .ccg-product-description {
+    width: 100%;
+    max-width: 640px;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ccg-product-description-color);
+  }
+
+  .ccg-product-description p {
+    margin: 0 0 14px;
+  }
+
+  .ccg-product-description p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ccg-product-description {
+      font-size: 15px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CCG Product Description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the product description only when the product has no custom.product_features metafield entries."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#5c5145"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CCG Product Description",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
