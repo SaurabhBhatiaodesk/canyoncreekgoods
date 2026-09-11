@@ -1,0 +1,77 @@
+<div class="product-features" {{ block.shopify_attributes }}>
+  <div class="product-features__row">
+    <div class="product-features__label">
+      {{ block.settings.label }}
+    </div>
+
+    <div class="product-features__description">
+      {{ block.settings.description }}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-features {
+    width: 100%;
+  }
+
+  .product-features__row {
+    display: grid;
+    grid-template-columns: 28% 72%;
+    padding: 18px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .product-features__label {
+    font-size: 16px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .product-features__description {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-features__row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .product-features__label {
+      font-size: 14px;
+    }
+
+    .product-features__description {
+      font-size: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product features",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Material"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Premium wool blend with a soft, structured feel.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product features",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
