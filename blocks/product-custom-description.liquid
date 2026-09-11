@@ -1,14 +1,27 @@
-{%- if product.description != blank -%}
+{%- liquid
+
+  assign product_resource = closest.product | default: product
+
+  assign feature_entries = product_resource.metafields.custom.product_features.value
+
+-%}
+
+
+
+{%- if feature_entries == blank and product_resource.description != blank -%}
 
   <div
     class="ccg-product-description"
     style="--ccg-product-description-color: {{ block.settings.text_color }};"
     {{ block.shopify_attributes }}
   >
-    {{ product.description }}
+
+    {{ product_resource.description }}
+
   </div>
 
 {%- endif -%}
+
 
 
 {% stylesheet %}
