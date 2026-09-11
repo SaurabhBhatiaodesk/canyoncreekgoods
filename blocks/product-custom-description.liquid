@@ -1,0 +1,91 @@
+{%- if product.description != blank -%}
+
+  <div
+    class="ccg-product-description"
+    style="--ccg-product-description-color: {{ block.settings.text_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {{ product.description }}
+  </div>
+
+{%- endif -%}
+
+
+{% stylesheet %}
+
+.ccg-product-description {
+
+  max-width: 560px;
+
+  font-family: 'Karla', system-ui, sans-serif;
+
+  font-size: 16px;
+
+  line-height: 1.55;
+
+  color: var(--ccg-product-description-color);
+
+}
+
+
+.ccg-product-description p {
+
+  margin: 0 0 16px;
+
+}
+
+
+.ccg-product-description ul,
+.ccg-product-description ol {
+
+  padding-left: 20px;
+
+  margin-bottom:16px;
+
+}
+
+
+@media screen and (max-width: 749px) {
+
+  .ccg-product-description {
+
+    font-size:15px;
+
+  }
+
+}
+
+{% endstylesheet %}
+
+
+
+{% schema %}
+
+{
+  "name": "Product Description",
+
+  "tag": null,
+
+  "settings": [
+
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#7a6d5d"
+    }
+
+  ],
+
+  "presets": [
+
+    {
+      "name": "Product Description",
+      "category": "Product"
+    }
+
+  ]
+
+}
+
+{% endschema %}
