@@ -246,14 +246,38 @@
                       assign more_attributes = more_attributes | append: ' style="--text-transform: uppercase;"'
                     endif
                   %}
-                  {% render 'overflow-list',
-                    class: 'facets__overflow-list',
-                    children: rendered_filters,
-                    more-attributes: more_attributes,
-                    more-button-attributes: 'aria-haspopup="dialog"',
-                    minimum-items: 2,
-                    data-testid: 'horizontal-filters-overflow-list'
-                  %}
+                  <div
+                    class="facets__filters-scroller"
+                    data-facets-filter-scroller
+                  >
+                    <button
+                      type="button"
+                      class="facets__scroll-button facets__scroll-button--prev"
+                      aria-label="{{ 'actions.previous' | t }}"
+                      data-facets-scroll-prev
+                    >
+                      <span aria-hidden="true">&lsaquo;</span>
+                    </button>
+
+                    {% render 'overflow-list',
+                      class: 'facets__overflow-list',
+                      attributes: 'data-facets-scroll-list',
+                      children: rendered_filters,
+                      more-attributes: more_attributes,
+                      more-button-attributes: 'aria-haspopup="dialog"',
+                      minimum-items: 2,
+                      data-testid: 'horizontal-filters-overflow-list'
+                    %}
+
+                    <button
+                      type="button"
+                      class="facets__scroll-button facets__scroll-button--next"
+                      aria-label="{{ 'actions.next' | t }}"
+                      data-facets-scroll-next
+                    >
+                      <span aria-hidden="true">&rsaquo;</span>
+                    </button>
+                  </div>
                 {% else %}
                   {{ rendered_filters }}
                 {% endif %}
@@ -808,6 +832,72 @@
     }
   }
 
+  .facets__filters-scroller {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .facets__filters-scroller .facets__overflow-list {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .facets__filters-scroller .facets__overflow-list::part(list) {
+    justify-content: flex-start;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+  }
+
+  .facets__filters-scroller .facets__overflow-list::part(overflow) {
+    display: none;
+  }
+
+  .facets__filters-scroller .facets__overflow-list > * {
+    scroll-snap-align: start;
+  }
+
+  .facets__scroll-button {
+    display: none;
+  }
+
+  .facets--horizontal .facets__scroll-button {
+    @media screen and (min-width: 750px) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 44px;
+      width: 44px;
+      height: var(--minimum-touch-target);
+      border: 1px solid rgb(var(--color-foreground-rgb) / 20%);
+      background: transparent;
+      color: var(--color-foreground);
+      cursor: pointer;
+      font: inherit;
+      font-size: 24px;
+      line-height: 1;
+      transition: opacity var(--animation-speed) var(--animation-easing), border-color var(--animation-speed) var(--animation-easing);
+    }
+  }
+
+  .facets--horizontal .facets__scroll-button:hover {
+    @media screen and (min-width: 750px) {
+      border-color: currentcolor;
+    }
+  }
+
+  .facets--horizontal .facets__scroll-button:disabled {
+    @media screen and (min-width: 750px) {
+      opacity: 0.28;
+      cursor: default;
+    }
+  }
+
   /* Facets - Summary */
   .facets__summary {
     --variant-picker-swatch-width: 32px;
@@ -1295,6 +1385,87 @@
     position: absolute;
   }
 {% endstylesheet %}
+
+{% javascript %}
+  function setupFacetFilterScroller(scroller) {
+    if (scroller.dataset.facetsScrollerReady === 'true') return;
+
+    var overflowList = scroller.querySelector('[data-facets-scroll-list]');
+    var prevButton = scroller.querySelector('[data-facets-scroll-prev]');
+    var nextButton = scroller.querySelector('[data-facets-scroll-next]');
+
+    if (!overflowList || !prevButton || !nextButton) return;
+
+    function getTrack() {
+      return overflowList.shadowRoot && overflowList.shadowRoot.querySelector('[part="list"]');
+    }
+
+    function updateButtons() {
+      var track = getTrack();
+      if (!track) return;
+
+      var maxScroll = track.scrollWidth - track.clientWidth;
+      var hasOverflow = maxScroll > 2;
+
+      prevButton.hidden = !hasOverflow;
+      nextButton.hidden = !hasOverflow;
+      prevButton.disabled = !hasOverflow || track.scrollLeft <= 2;
+      nextButton.disabled = !hasOverflow || track.scrollLeft >= maxScroll - 2;
+    }
+
+    function prepareTrack() {
+      if (typeof overflowList.showAll === 'function') {
+        overflowList.showAll();
+      }
+
+      var track = getTrack();
+      if (!track) return false;
+
+      track.addEventListener('scroll', updateButtons, { passive: true });
+      window.addEventListener('resize', updateButtons, { passive: true });
+      updateButtons();
+      scroller.dataset.facetsScrollerReady = 'true';
+
+      return true;
+    }
+
+    function scrollByDirection(direction) {
+      var track = getTrack();
+      if (!track) return;
+
+      track.scrollBy({
+        left: direction * Math.max(track.clientWidth * 0.75, 240),
+        behavior: 'smooth',
+      });
+    }
+
+    prevButton.addEventListener('click', function () {
+      scrollByDirection(-1);
+    });
+
+    nextButton.addEventListener('click', function () {
+      scrollByDirection(1);
+    });
+
+    if (!prepareTrack()) {
+      window.requestAnimationFrame(function () {
+        prepareTrack();
+      });
+    }
+  }
+
+  function setupFacetFilterScrollers() {
+    document.querySelectorAll('[data-facets-filter-scroller]').forEach(setupFacetFilterScroller);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFacetFilterScrollers, { once: true });
+  } else {
+    setupFacetFilterScrollers();
+  }
+
+  document.addEventListener('shopify:section:load', setupFacetFilterScrollers);
+{% endjavascript %}
 
 {% schema %}
 {
