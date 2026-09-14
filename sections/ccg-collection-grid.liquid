@@ -33,49 +33,71 @@
     -%}
 
     <div class="ccg-collection__toolbar">
-      <div class="ccg-collection__filters">
-        <a
-          href="{{ collection.url }}"
-          class="ccg-collection__pill{% unless ccg_any_filter_active %} ccg-collection__pill--active{% endunless %}"
+      <div class="ccg-collection__filters-swiper" data-ccg-filter-swiper>
+        <button
+          type="button"
+          class="ccg-collection__swiper-btn ccg-collection__swiper-btn--prev"
+          aria-label="{{ 'actions.previous' | t }}"
+          data-ccg-filter-prev
+          hidden
         >
-          All {{ collection.title }}
-        </a>
+          <span aria-hidden="true">&lsaquo;</span>
+        </button>
 
-        {%- assign ccg_category_pill_count = 0 -%}
-        {%- for filter in collection.filters -%}
-          {%- if filter.type == 'price_range' -%}
-            {%- unless filter.max_value.value -%}
-              <a
-                href="{{ collection.url }}?{{ filter.max_value.param_name }}={{ section.settings.quick_price_filter }}"
-                class="ccg-collection__pill"
-              >
-                Under {{ section.settings.quick_price_filter | times: 100 | money_without_trailing_zeros }}
-              </a>
-            {%- endunless -%}
-          {%- else -%}
-            {%- assign ccg_is_availability = false -%}
-            {%- if filter.label contains 'vailability' -%}
-              {%- assign ccg_is_availability = true -%}
-            {%- endif -%}
-            {%- for value in filter.values -%}
-              {%- if value.count > 0 and ccg_is_availability or value.count > 0 and value.active or value.count > 0 and ccg_category_pill_count < section.settings.max_category_filters -%}
-                {%- assign value_url = value.url_to_add -%}
-                {%- if value.active -%}
-                  {%- assign value_url = value.url_to_remove -%}
-                {%- endif -%}
+        <div class="ccg-collection__filters" data-ccg-filter-track>
+          <a
+            href="{{ collection.url }}"
+            class="ccg-collection__pill{% unless ccg_any_filter_active %} ccg-collection__pill--active{% endunless %}"
+          >
+            All {{ collection.title }}
+          </a>
+
+          {%- assign ccg_category_pill_count = 0 -%}
+          {%- for filter in collection.filters -%}
+            {%- if filter.type == 'price_range' -%}
+              {%- unless filter.max_value.value -%}
                 <a
-                  href="{{ value_url }}"
-                  class="ccg-collection__pill{% if value.active %} ccg-collection__pill--active{% endif %}"
+                  href="{{ collection.url }}?{{ filter.max_value.param_name }}={{ section.settings.quick_price_filter }}"
+                  class="ccg-collection__pill"
                 >
-                  {{ value.label }}
+                  Under {{ section.settings.quick_price_filter | times: 100 | money_without_trailing_zeros }}
                 </a>
-                {%- unless ccg_is_availability -%}
-                  {%- assign ccg_category_pill_count = ccg_category_pill_count | plus: 1 -%}
-                {%- endunless -%}
+              {%- endunless -%}
+            {%- else -%}
+              {%- assign ccg_is_availability = false -%}
+              {%- if filter.label contains 'vailability' -%}
+                {%- assign ccg_is_availability = true -%}
               {%- endif -%}
-            {%- endfor -%}
-          {%- endif -%}
-        {%- endfor -%}
+              {%- for value in filter.values -%}
+                {%- if value.count > 0 and ccg_is_availability or value.count > 0 and value.active or value.count > 0 and ccg_category_pill_count < section.settings.max_category_filters -%}
+                  {%- assign value_url = value.url_to_add -%}
+                  {%- if value.active -%}
+                    {%- assign value_url = value.url_to_remove -%}
+                  {%- endif -%}
+                  <a
+                    href="{{ value_url }}"
+                    class="ccg-collection__pill{% if value.active %} ccg-collection__pill--active{% endif %}"
+                  >
+                    {{ value.label }}
+                  </a>
+                  {%- unless ccg_is_availability -%}
+                    {%- assign ccg_category_pill_count = ccg_category_pill_count | plus: 1 -%}
+                  {%- endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <button
+          type="button"
+          class="ccg-collection__swiper-btn ccg-collection__swiper-btn--next"
+          aria-label="{{ 'actions.next' | t }}"
+          data-ccg-filter-next
+          hidden
+        >
+          <span aria-hidden="true">&rsaquo;</span>
+        </button>
       </div>
 
       <div class="ccg-collection__meta">
@@ -204,12 +226,46 @@
       return '$' + (cents / 100).toFixed(2);
     };
 
-    var filtersEl = section.querySelector('.ccg-collection__filters');
+    var filterSwiper = section.querySelector('[data-ccg-filter-swiper]');
+    var filtersEl = section.querySelector('[data-ccg-filter-track]');
+    var filterPrev = section.querySelector('[data-ccg-filter-prev]');
+    var filterNext = section.querySelector('[data-ccg-filter-next]');
+
     if (filtersEl) {
       var isPointerDown = false;
       var isDragging = false;
       var dragStartX = 0;
       var dragStartScroll = 0;
+
+      var updateFilterButtons = function () {
+        if (!filterSwiper || !filterPrev || !filterNext) return;
+
+        var maxScroll = filtersEl.scrollWidth - filtersEl.clientWidth;
+        var hasOverflow = maxScroll > 2;
+
+        filterSwiper.classList.toggle('has-overflow', hasOverflow);
+        filterPrev.hidden = !hasOverflow;
+        filterNext.hidden = !hasOverflow;
+        filterPrev.disabled = !hasOverflow || filtersEl.scrollLeft <= 2;
+        filterNext.disabled = !hasOverflow || filtersEl.scrollLeft >= maxScroll - 2;
+      };
+
+      var scrollFilters = function (direction) {
+        filtersEl.scrollBy({
+          left: direction * Math.max(filtersEl.clientWidth * 0.75, 240),
+          behavior: 'smooth'
+        });
+      };
+
+      if (filterPrev && filterNext) {
+        filterPrev.addEventListener('click', function () {
+          scrollFilters(-1);
+        });
+
+        filterNext.addEventListener('click', function () {
+          scrollFilters(1);
+        });
+      }
 
       filtersEl.addEventListener('mousedown', function (event) {
         isPointerDown = true;
@@ -245,6 +301,11 @@
           event.stopPropagation();
         }
       }, true);
+
+      filtersEl.addEventListener('scroll', updateFilterButtons, { passive: true });
+      window.addEventListener('resize', updateFilterButtons, { passive: true });
+      updateFilterButtons();
+      window.requestAnimationFrame(updateFilterButtons);
     }
 
     var isTouch = window.matchMedia('(hover: none)').matches;
@@ -374,6 +435,44 @@
     padding-bottom: 20px;
   }
 
+  .ccg-collection__filters-swiper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .ccg-collection__swiper-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 54px;
+    border: 1px solid var(--ccg-hairline);
+    background: transparent;
+    color: var(--ccg-ink);
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    transition: border-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .ccg-collection__swiper-btn[hidden] {
+    display: none;
+  }
+
+  .ccg-collection__swiper-btn:hover {
+    border-color: var(--ccg-ink);
+  }
+
+  .ccg-collection__swiper-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
   .ccg-collection__filters {
     display: flex;
     flex-wrap: nowrap;
@@ -381,6 +480,8 @@
     min-width: 0;
     gap: 10px;
     overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
     -ms-overflow-style: none;
     cursor: grab;
@@ -415,6 +516,7 @@
       background: transparent;
       transition: background-color .2s ease,color .2s ease,border-color .2s ease;
       white-space: nowrap;
+      scroll-snap-align: start;
   }
 
   .ccg-collection__pill:hover {
@@ -711,6 +813,18 @@
     .ccg-collection__toolbar {
       gap: 12px;
     }
+
+    .ccg-collection__filters-swiper {
+      gap: 8px;
+    }
+
+    .ccg-collection__swiper-btn {
+      flex-basis: 34px;
+      width: 34px;
+      height: 40px;
+      font-size: 22px;
+    }
+
     .ccg-seller-card__quickadd{
       display:none;
     }
