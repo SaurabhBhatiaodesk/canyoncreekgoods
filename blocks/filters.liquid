@@ -247,21 +247,21 @@
                     endif
                   %}
                   <div
-                    class="facets__filters-scroller"
-                    data-facets-filter-scroller
+                    class="facets__filters-swiper swiper"
+                    data-facets-filter-swiper
                   >
                     <button
                       type="button"
-                      class="facets__scroll-button facets__scroll-button--prev"
+                      class="facets__swiper-button facets__swiper-button--prev swiper-button-prev"
                       aria-label="{{ 'actions.previous' | t }}"
-                      data-facets-scroll-prev
+                      data-facets-swiper-prev
                     >
                       <span aria-hidden="true">&lsaquo;</span>
                     </button>
 
                     {% render 'overflow-list',
-                      class: 'facets__overflow-list',
-                      attributes: 'data-facets-scroll-list',
+                      class: 'facets__overflow-list facets__filters-swiper-track swiper-wrapper',
+                      attributes: 'data-facets-swiper-track',
                       children: rendered_filters,
                       more-attributes: more_attributes,
                       more-button-attributes: 'aria-haspopup="dialog"',
@@ -271,9 +271,9 @@
 
                     <button
                       type="button"
-                      class="facets__scroll-button facets__scroll-button--next"
+                      class="facets__swiper-button facets__swiper-button--next swiper-button-next"
                       aria-label="{{ 'actions.next' | t }}"
-                      data-facets-scroll-next
+                      data-facets-swiper-next
                     >
                       <span aria-hidden="true">&rsaquo;</span>
                     </button>
@@ -832,7 +832,7 @@
     }
   }
 
-  .facets__filters-scroller {
+  .facets__filters-swiper {
     display: flex;
     align-items: center;
     gap: var(--gap-xs);
@@ -840,33 +840,39 @@
     min-width: 0;
   }
 
-  .facets__filters-scroller .facets__overflow-list {
+  .facets__filters-swiper .facets__overflow-list {
     flex: 1 1 auto;
     min-width: 0;
   }
 
-  .facets__filters-scroller .facets__overflow-list::part(list) {
+  .facets__filters-swiper .facets__overflow-list::part(list) {
     justify-content: flex-start;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     overflow-y: visible !important;
     scroll-behavior: smooth;
     scroll-snap-type: x proximity;
+    touch-action: pan-y;
+    cursor: grab;
   }
 
-  .facets__filters-scroller .facets__overflow-list::part(overflow) {
+  .facets__filters-swiper .facets__overflow-list::part(list):active {
+    cursor: grabbing;
+  }
+
+  .facets__filters-swiper .facets__overflow-list::part(overflow) {
     display: none;
   }
 
-  .facets__filters-scroller .facets__overflow-list > * {
+  .facets__filters-swiper .facets__overflow-list > * {
     scroll-snap-align: start;
   }
 
-  .facets__scroll-button {
+  .facets__swiper-button {
     display: none;
   }
 
-  .facets--horizontal .facets__scroll-button {
+  .facets--horizontal .facets__swiper-button {
     @media screen and (min-width: 750px) {
       display: inline-flex;
       align-items: center;
@@ -885,13 +891,13 @@
     }
   }
 
-  .facets--horizontal .facets__scroll-button:hover {
+  .facets--horizontal .facets__swiper-button:hover {
     @media screen and (min-width: 750px) {
       border-color: currentcolor;
     }
   }
 
-  .facets--horizontal .facets__scroll-button:disabled {
+  .facets--horizontal .facets__swiper-button:disabled {
     @media screen and (min-width: 750px) {
       opacity: 0.28;
       cursor: default;
@@ -1387,12 +1393,12 @@
 {% endstylesheet %}
 
 {% javascript %}
-  function setupFacetFilterScroller(scroller) {
-    if (scroller.dataset.facetsScrollerReady === 'true') return;
+  function setupFacetFilterSwiper(swiper) {
+    if (swiper.dataset.facetsSwiperReady === 'true') return;
 
-    var overflowList = scroller.querySelector('[data-facets-scroll-list]');
-    var prevButton = scroller.querySelector('[data-facets-scroll-prev]');
-    var nextButton = scroller.querySelector('[data-facets-scroll-next]');
+    var overflowList = swiper.querySelector('[data-facets-swiper-track]');
+    var prevButton = swiper.querySelector('[data-facets-swiper-prev]');
+    var nextButton = swiper.querySelector('[data-facets-swiper-next]');
 
     if (!overflowList || !prevButton || !nextButton) return;
 
@@ -1424,7 +1430,8 @@
       track.addEventListener('scroll', updateButtons, { passive: true });
       window.addEventListener('resize', updateButtons, { passive: true });
       updateButtons();
-      scroller.dataset.facetsScrollerReady = 'true';
+      setupDrag(track);
+      swiper.dataset.facetsSwiperReady = 'true';
 
       return true;
     }
@@ -1447,6 +1454,36 @@
       scrollByDirection(1);
     });
 
+    function setupDrag(track) {
+      var isDragging = false;
+      var startX = 0;
+      var startScrollLeft = 0;
+
+      track.addEventListener('pointerdown', function (event) {
+        if (event.button !== 0) return;
+
+        isDragging = true;
+        startX = event.clientX;
+        startScrollLeft = track.scrollLeft;
+        track.setPointerCapture(event.pointerId);
+      });
+
+      track.addEventListener('pointermove', function (event) {
+        if (!isDragging) return;
+
+        track.scrollLeft = startScrollLeft - (event.clientX - startX);
+      });
+
+      track.addEventListener('pointerup', function (event) {
+        isDragging = false;
+        track.releasePointerCapture(event.pointerId);
+      });
+
+      track.addEventListener('pointercancel', function () {
+        isDragging = false;
+      });
+    }
+
     if (!prepareTrack()) {
       window.requestAnimationFrame(function () {
         prepareTrack();
@@ -1454,17 +1491,17 @@
     }
   }
 
-  function setupFacetFilterScrollers() {
-    document.querySelectorAll('[data-facets-filter-scroller]').forEach(setupFacetFilterScroller);
+  function setupFacetFilterSwipers() {
+    document.querySelectorAll('[data-facets-filter-swiper]').forEach(setupFacetFilterSwiper);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupFacetFilterScrollers, { once: true });
+    document.addEventListener('DOMContentLoaded', setupFacetFilterSwipers, { once: true });
   } else {
-    setupFacetFilterScrollers();
+    setupFacetFilterSwipers();
   }
 
-  document.addEventListener('shopify:section:load', setupFacetFilterScrollers);
+  document.addEventListener('shopify:section:load', setupFacetFilterSwipers);
 {% endjavascript %}
 
 {% schema %}
