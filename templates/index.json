@@ -22,6 +22,8 @@
         "button_2_link": "shopify://pages/about-me",
         "image": "shopify://shop_images/hero-duster-desert.jpg",
         "image_mobile": "shopify://shop_images/20251115_161049.jpg",
+        "desktop_video": "shopify://files/videos/Canyonlands Duster1.mp4",
+        "mobile_video": "shopify://files/videos/Canyonlands Duster1.mp4",
         "background_color": "#f8f5ee",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
