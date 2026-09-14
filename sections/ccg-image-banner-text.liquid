@@ -1,7 +1,49 @@
+{%- liquid
+  assign desktop_video = section.settings.desktop_video
+  assign mobile_video = section.settings.mobile_video
+  assign desktop_image = section.settings.image
+  assign mobile_image = section.settings.mobile_image
+-%}
+
 <section
-  class="ccg-image-banner"
-  style="background-image:url('{{ section.settings.image | image_url: width:2400 }}');"
+  class="ccg-image-banner{% if desktop_video != blank %} ccg-image-banner--has-desktop-video{% endif %}{% if mobile_video != blank %} ccg-image-banner--has-mobile-video{% endif %}{% if mobile_image != blank %} ccg-image-banner--has-mobile-image{% endif %}"
+  style="
+    {% if desktop_image != blank %}
+      --ccg-image-banner-image: url('{{ desktop_image | image_url: width: 2400 }}');
+    {% endif %}
+    {% if mobile_image != blank %}
+      --ccg-image-banner-mobile-image: url('{{ mobile_image | image_url: width: 1200 }}');
+    {% endif %}
+  "
 >
+  {%- if desktop_video != blank or mobile_video != blank -%}
+    <div class="ccg-image-banner__media" aria-hidden="true">
+      {%- if desktop_video != blank -%}
+        {{
+          desktop_video
+          | video_tag:
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            class: 'ccg-image-banner__video ccg-image-banner__video--desktop'
+        }}
+      {%- endif -%}
+
+      {%- if mobile_video != blank -%}
+        {{
+          mobile_video
+          | video_tag:
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            class: 'ccg-image-banner__video ccg-image-banner__video--mobile'
+        }}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
   <div class="ccg-image-banner__overlay"></div>
 
   <div class="section">
@@ -33,12 +75,28 @@
         width: 100%;
         height: 400px;
         min-height: 350px;
+        overflow: hidden;
+        background-image: var(--ccg-image-banner-image);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         display: flex;
         align-items: end;
         padding-bottom: 49px;
+    }
+    .ccg-image-banner__media{
+        position:absolute;
+        inset:0;
+        z-index:0;
+    }
+    .ccg-image-banner__video{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        display:block;
+    }
+    .ccg-image-banner__video--mobile{
+        display:none;
     }
     .ccg-image-banner__overlay{
         position:absolute;
@@ -114,7 +172,17 @@
   .ccg-image-banner{
 
   height:400px;
+  background-image:var(--ccg-image-banner-mobile-image, var(--ccg-image-banner-image));
 
+  }
+
+  .ccg-image-banner--has-mobile-video .ccg-image-banner__video--desktop,
+  .ccg-image-banner--has-mobile-image:not(.ccg-image-banner--has-mobile-video) .ccg-image-banner__video--desktop{
+  display:none;
+  }
+
+  .ccg-image-banner--has-mobile-video .ccg-image-banner__video--mobile{
+  display:block;
   }
 
 
@@ -154,7 +222,25 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Background Image"
+      "label": "Desktop background image"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background image"
+    },
+
+    {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "Desktop background video"
+    },
+
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "Mobile background video"
     },
 
     {
