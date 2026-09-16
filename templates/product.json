@@ -303,13 +303,13 @@
             "product_details_DFbiWd": {
               "type": "product-details",
               "name": "Product details",
-              "disabled": true,
               "settings": {},
               "blocks": {}
             },
             "product_features_prQAn3": {
               "type": "product-features",
               "name": "Product features",
+              "disabled": true,
               "settings": {},
               "blocks": {}
             },
