@@ -67,7 +67,11 @@
         >
 
           {%- if block.settings.heading != blank -%}
-            <p class="ccg-footer__heading">{{ block.settings.heading }}</p>
+            {% if section.settings.seo_layout == 'semantic' %}
+              <h2 class="ccg-footer__heading">{{ block.settings.heading }}</h2>
+            {% else %}
+              <p class="ccg-footer__heading">{{ block.settings.heading }}</p>
+            {% endif %}
           {%- endif -%}
 
           <ul class="ccg-footer__links">
@@ -77,7 +81,7 @@
               {%- for link in block.settings.menu.links -%}
 
                 <li>
-                  <a href="{{ link.url }}">
+                  <a href="{% if section.settings.seo_layout == 'semantic' and link.title == 'Matched Sets' and link.url == '/collections/western-cowls' %}{{ routes.root_url }}#ccg-bundles{% else %}{{ link.url }}{% endif %}">
                     {{ link.title }}
                   </a>
                 </li>
@@ -399,6 +403,17 @@
   "tag": "section",
   "class": "section-wrapper",
   "settings": [
+    {
+      "type": "select",
+      "id": "seo_layout",
+      "label": "Content layout",
+      "options": [
+        { "value": "original", "label": "Layout 1 — Original" },
+        { "value": "semantic", "label": "Layout 2 — SEO links" }
+      ],
+      "default": "original",
+      "info": "Layout 2 uses semantic footer headings and connects Matched Sets to the homepage bundles."
+    },
     {
       "type": "image_picker",
       "id": "logo_image",
