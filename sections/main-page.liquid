@@ -4,7 +4,7 @@
   endif
 %}
 
-{% if section.settings.page_layout == 'policy' %}
+{% if section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' %}
   <section class="ccg-policy">
     <div class="ccg-policy__hero">
       <div class="ccg-policy__container">
@@ -54,7 +54,17 @@
 
     <div class="ccg-policy__body">
       <article class="ccg-policy__content rte">
-        {{ page.content }}
+        {% if section.settings.page_layout == 'faq' %}
+<div class="ccg-faq" data-ccg-faq>{{ page.content }}</div>
+<style>
+#shopify-section-{{ section.id }} .ccg-faq h2{font-size:32px;margin:48px 0 12px}#shopify-section-{{ section.id }} .ccg-faq__item{border-top:1px solid #cfc5b5}#shopify-section-{{ section.id }} .ccg-faq__item:last-child{border-bottom:1px solid #cfc5b5}#shopify-section-{{ section.id }} .ccg-faq__item summary{cursor:pointer;list-style:none;padding:20px 42px 20px 0;font-size:18px;font-weight:700;color:#211c17;position:relative}#shopify-section-{{ section.id }} .ccg-faq__item summary::-webkit-details-marker{display:none}#shopify-section-{{ section.id }} .ccg-faq__item summary:after{content:'+';position:absolute;right:4px;font-size:26px;font-weight:400}#shopify-section-{{ section.id }} .ccg-faq__item[open] summary:after{content:'−'}#shopify-section-{{ section.id }} .ccg-faq__answer{padding:0 42px 20px 0}
+</style>
+<script>
+(()=>{const r=document.querySelector('#shopify-section-{{ section.id }} [data-ccg-faq]');if(!r)return;let d;[...r.children].forEach(e=>{const s=e.tagName==='P'&&e.children.length===1&&e.firstElementChild?.tagName==='STRONG'&&e.textContent.trim()===e.firstElementChild.textContent.trim();if(e.tagName==='H2'){d=null;return}if(s){d=document.createElement('details');d.className='ccg-faq__item';const q=document.createElement('summary'),a=document.createElement('div');q.textContent=e.textContent.trim();a.className='ccg-faq__answer';d.append(q,a);e.replaceWith(d)}else if(d)d.lastElementChild.append(e)})})();
+</script>
+{% else %}
+{{ page.content }}
+{% endif %}
       </article>
     </div>
 
@@ -462,6 +472,10 @@
         {
           "value": "policy",
           "label": "Layout 2 — Branded policy"
+        },
+        {
+          "value": "faq",
+          "label": "Layout 3 — FAQ accordion"
         }
       ],
       "default": "original"
@@ -475,105 +489,105 @@
       "id": "policy_eyebrow",
       "label": "Eyebrow",
       "default": "Shipping & delivery",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "richtext",
       "id": "policy_intro",
       "label": "Introduction",
       "default": "<p>Handmade in Arizona and packed with care. Here is everything you need to know about processing, delivery, and getting your order home.</p>",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "checkbox",
       "id": "show_policy_highlights",
       "label": "Show quick facts",
       "default": true,
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "highlight_1_label",
       "label": "Quick fact 1 heading",
       "default": "Ready to ship",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "highlight_1_text",
       "label": "Quick fact 1 text",
       "default": "Leaves the studio in 1–3 business days",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "highlight_2_label",
       "label": "Quick fact 2 heading",
       "default": "Made to order",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "highlight_2_text",
       "label": "Quick fact 2 text",
       "default": "Created by hand in approximately 1–2 weeks",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "highlight_3_label",
       "label": "Quick fact 3 heading",
       "default": "US shipping",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "highlight_3_text",
       "label": "Quick fact 3 text",
       "default": "Free sitewide with tracking included",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "checkbox",
       "id": "show_contact_cta",
       "label": "Show contact callout",
       "default": true,
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "contact_eyebrow",
       "label": "Contact eyebrow",
       "default": "Need a hand?",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "contact_heading",
       "label": "Contact heading",
       "default": "Questions about your order?",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "textarea",
       "id": "contact_text",
       "label": "Contact text",
       "default": "Send Melissa a note before ordering if you are working toward a special date or need help choosing a shipping option.",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "contact_email",
       "label": "Contact email",
       "default": "canyoncreekgoods@gmail.com",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "text",
       "id": "contact_button",
       "label": "Contact button",
       "default": "Email Melissa",
-      "visible_if": "{{ section.settings.page_layout == 'policy' }}"
+      "visible_if": "{{ section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' }}"
     },
     {
       "type": "header",
