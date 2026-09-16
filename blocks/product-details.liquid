@@ -1,125 +1,48 @@
 {% liquid
   assign product_resource = closest.product | default: product
-  assign material = product_resource.metafields.custom.material.value
-  assign lining = product_resource.metafields.custom.lining.value
-  assign dimensions = product_resource.metafields.custom.dimensions.value
-  assign care = product_resource.metafields.custom.care.value
-  assign made = product_resource.metafields.custom.made.value
+  assign feature_entries = product_resource.metafields.custom.product_features.value
 %}
 
-{% if material != blank or lining != blank or dimensions != blank or care != blank or made != blank %}
+{% if feature_entries != blank %}
   <div class="ccg-product-details" {{ block.shopify_attributes }}>
-    {% if material != blank %}
-      <div class="ccg-product-details__row">
-        <div class="ccg-product-details__label">{{ block.settings.material_label | escape }}</div>
-        <div class="ccg-product-details__value">{{ material | escape }}</div>
-      </div>
-    {% endif %}
-    {% if lining != blank %}
-      <div class="ccg-product-details__row">
-        <div class="ccg-product-details__label">{{ block.settings.lining_label | escape }}</div>
-        <div class="ccg-product-details__value">{{ lining | escape }}</div>
-      </div>
-    {% endif %}
-    {% if dimensions != blank %}
-      <div class="ccg-product-details__row">
-        <div class="ccg-product-details__label">{{ block.settings.dimensions_label | escape }}</div>
-        <div class="ccg-product-details__value">{{ dimensions | escape }}</div>
-      </div>
-    {% endif %}
-    {% if care != blank %}
-      <div class="ccg-product-details__row">
-        <div class="ccg-product-details__label">{{ block.settings.care_label | escape }}</div>
-        <div class="ccg-product-details__value">{{ care | escape }}</div>
-      </div>
-    {% endif %}
-    {% if made != blank %}
-      <div class="ccg-product-details__row">
-        <div class="ccg-product-details__label">{{ block.settings.made_label | escape }}</div>
-        <div class="ccg-product-details__value">{{ made | escape }}</div>
-      </div>
-    {% endif %}
+    {% for feature_entry in feature_entries %}
+      {% assign packed_description = feature_entry.description.value | default: feature_entry.description %}
+      {% if packed_description contains '||' %}
+        {% assign feature_rows = packed_description | split: '||' %}
+        {% for feature_row in feature_rows %}
+          {% assign feature_parts = feature_row | split: '|' %}
+          {% assign feature_label = feature_parts[0] | strip %}
+          {% assign feature_value = feature_parts[1] | strip %}
+          {% if feature_value != blank %}
+            <div class="ccg-product-details__row">
+              <span class="ccg-product-details__label">{{ feature_label }}</span>
+              <span class="ccg-product-details__value">{{ feature_value }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% elsif feature_entry.label != blank and packed_description != blank %}
+        <div class="ccg-product-details__row">
+          <span class="ccg-product-details__label">{{ feature_entry.label.value | default: feature_entry.label }}</span>
+          <span class="ccg-product-details__value">{{ packed_description }}</span>
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 {% endif %}
 
 {% stylesheet %}
-  .ccg-product-details {
-    width: 100%;
-    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.14);
-  }
-
-  .ccg-product-details__row {
-    display: grid;
-    grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
-    gap: 24px;
-    align-items: start;
-    padding: 20px 0;
-    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.14);
-  }
-
-  .ccg-product-details__label {
-    color: rgb(var(--color-foreground-rgb) / 0.58);
-    font-family: var(--font-body--family);
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
-    line-height: 1.4;
-    text-transform: uppercase;
-  }
-
-  .ccg-product-details__value {
-    color: rgb(var(--color-foreground-rgb));
-    font-size: var(--font-paragraph--size);
-    line-height: 1.55;
-  }
-
-  @media screen and (max-width: 749px) {
-    .ccg-product-details__row {
-      grid-template-columns: 100px minmax(0, 1fr);
-      gap: 16px;
-      padding: 16px 0;
-    }
-  }
+  .ccg-product-details { width: 100%; margin-top: 1.5rem; border-top: 1px solid rgba(var(--color-foreground-rgb), 0.16); }
+  .ccg-product-details__row { display: grid; grid-template-columns: minmax(8rem, 0.36fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; padding: 1.25rem 0; border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.16); }
+  .ccg-product-details__label { color: rgba(var(--color-foreground-rgb), 0.62); font-size: 0.82rem; letter-spacing: 0.15em; line-height: 1.5; text-transform: uppercase; }
+  .ccg-product-details__value { color: rgb(var(--color-foreground-rgb)); line-height: 1.55; }
+  @media screen and (max-width: 749px) { .ccg-product-details__row { grid-template-columns: minmax(6rem, 0.34fr) minmax(0, 1fr); gap: 1rem; padding: 1rem 0; } }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Product details",
-  "settings": [
-    {
-      "type": "text",
-      "id": "material_label",
-      "label": "Material label",
-      "default": "Material"
-    },
-    {
-      "type": "text",
-      "id": "lining_label",
-      "label": "Lining label",
-      "default": "Lining"
-    },
-    {
-      "type": "text",
-      "id": "dimensions_label",
-      "label": "Dimensions label",
-      "default": "Dimensions"
-    },
-    {
-      "type": "text",
-      "id": "care_label",
-      "label": "Care label",
-      "default": "Care"
-    },
-    {
-      "type": "text",
-      "id": "made_label",
-      "label": "Made label",
-      "default": "Made"
-    }
-  ],
-  "presets": [
-    {
-      "name": "Product details"
-    }
-  ]
+  "name": "Product features",
+  "tag": null,
+  "settings": [],
+  "presets": [{ "name": "Product features" }]
 }
 {% endschema %}
