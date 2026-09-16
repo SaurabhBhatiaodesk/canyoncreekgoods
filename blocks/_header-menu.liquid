@@ -48,7 +48,7 @@
             {% for link in block_settings.menu.links %}
               <li>
                 <a
-                  href="{{ link.url }}"
+                  href="{% if section.settings.seo_heading_layout == 'seo' and link.handle == 'bundles' and link.url == '#' %}{{ routes.root_url }}#ccg-bundles{% else %}{{ link.url }}{% endif %}"
                   id="MenuItem-{{ link.handle }}"
                   class="menu-list__item"
                   {% if link.current %}
@@ -104,7 +104,7 @@
             <span class="menu-list__trigger">
           {%- endif -%}
           <a
-            href="{{ link.url }}"
+            href="{% if section.settings.seo_heading_layout == 'seo' and link.handle == 'bundles' and link.url == '#' %}{{ routes.root_url }}#ccg-bundles{% else %}{{ link.url }}{% endif %}"
             data-skip-node-update="true"
             class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
             {% if link.current %}
