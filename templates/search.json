@@ -42,6 +42,7 @@
         }
       },
       "settings": {
+        "heading_layout": "semantic",
         "alignment": "flex-start",
         "background_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 40,
@@ -158,6 +159,7 @@
         }
       },
       "settings": {
+        "heading_layout": "semantic",
         "layout_type": "grid",
         "product_card_size": "medium",
         "mobile_product_card_size": "small",
