@@ -267,6 +267,8 @@
       "name": "CCG Direct to Maker",
       "settings": {
         "image": "shopify://shop_images/c5fa9890-28a1-48c7-b637-1abc497799b2.jpg",
+        "media_layout": "descriptive",
+        "image_alt": "Rolls of fabric with colorful geometric and bison patterns on display.",
         "media_position": "right",
         "eyebrow": "Not sure which one",
         "heading": "Send me a photo of your favourite jacket",
