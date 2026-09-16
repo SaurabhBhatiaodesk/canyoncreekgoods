@@ -1,9 +1,10 @@
 {% liquid
-  assign material = closest.product.metafields.custom.material.value
-  assign lining = closest.product.metafields.custom.lining.value
-  assign dimensions = closest.product.metafields.custom.dimensions.value
-  assign care = closest.product.metafields.custom.care.value
-  assign made = closest.product.metafields.custom.made.value
+  assign product_resource = closest.product | default: product
+  assign material = product_resource.metafields.custom.material.value
+  assign lining = product_resource.metafields.custom.lining.value
+  assign dimensions = product_resource.metafields.custom.dimensions.value
+  assign care = product_resource.metafields.custom.care.value
+  assign made = product_resource.metafields.custom.made.value
 %}
 
 {% if material != blank or lining != blank or dimensions != blank or care != blank or made != blank %}
