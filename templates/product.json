@@ -18,13 +18,13 @@
         "shop_url": "",
         "background_color": "#f8f5ee",
         "text_color": "#211c17",
-        "muted_color": "#7A6D5D",
-        "separator_color": "#7A6D5D",
-        "border_color": "#7A6D5D",
+        "muted_color": "#7a6d5d",
+        "separator_color": "#7a6d5d",
+        "border_color": "{{ settings.color_palette.color2 }}",
         "desktop_padding_top": 20,
         "desktop_padding_bottom": 20,
         "mobile_padding_top": 20,
-        "mobile_padding_bottom": 4
+        "mobile_padding_bottom": 20
       }
     },
     "main": {
@@ -300,11 +300,30 @@
               },
               "blocks": {}
             },
-            "text_aEtTtq": {
-              "type": "ccg-product-description",
-              "name": "CCG Product Description",
+            "product_details_DFbiWd": {
+              "type": "product-details",
+              "name": "Product details",
               "settings": {
-                "text_color": "#5c5145"
+                "material_label": "Material",
+                "lining_label": "Lining",
+                "dimensions_label": "Dimensions",
+                "care_label": "Care",
+                "made_label": "Made"
+              },
+              "blocks": {}
+            },
+            "product_features_prQAn3": {
+              "type": "product-features",
+              "name": "Product features",
+              "disabled": true,
+              "settings": {},
+              "blocks": {}
+            },
+            "product_custom_description_aGPLBH": {
+              "type": "product-custom-description",
+              "name": "Product Description",
+              "settings": {
+                "text_color": "#7a6d5d"
               },
               "blocks": {}
             }
@@ -314,7 +333,9 @@
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "ccg_question_cta_tMHHTd",
-            "text_aEtTtq"
+            "product_details_DFbiWd",
+            "product_features_prQAn3",
+            "product_custom_description_aGPLBH"
           ]
         }
       },
@@ -347,16 +368,63 @@
         "mobile_padding_bottom": 40
       }
     },
+    "ccg_direct_to_maker_eLiTma": {
+      "type": "ccg-direct-to-maker",
+      "blocks": {
+        "list_item_XfDqhz": {
+          "type": "list_item",
+          "settings": {
+            "text": "Pulled up over the ears for early feeding, jacket collar over the top."
+          }
+        },
+        "list_item_f6zYjV": {
+          "type": "list_item",
+          "settings": {
+            "text": "Folded once and worn flat, so the pattern reads across your chest."
+          }
+        },
+        "list_item_KngCRA": {
+          "type": "list_item",
+          "settings": {
+            "text": "Open and loose over a tee in shoulder season, sleeves pushed up."
+          }
+        }
+      },
+      "block_order": [
+        "list_item_XfDqhz",
+        "list_item_f6zYjV",
+        "list_item_KngCRA"
+      ],
+      "custom_css": [],
+      "name": "CCG Direct to Maker",
+      "settings": {
+        "image": "shopify://shop_images/7394d76a-f545-4a07-996c-3315089d0bd3.jpg",
+        "media_position": "right",
+        "eyebrow": "How to wear it",
+        "heading": "Three ways, no styling degree needed",
+        "description": "",
+        "button_label": "",
+        "button_link": "",
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 0,
+        "desktop_padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
+      }
+    },
     "pdp_recommendations_ccg": {
       "type": "ccg-pdp-recommendations",
+      "custom_css": [],
       "name": "CCG Recommended product",
       "settings": {
-        "eyebrow": "YOU MAY ALSO LIKE",
-        "heading": "Complete your kit",
+        "border_width": 1,
+        "border_color": "#d8d0c4",
+        "eyebrow": "<a href=\"/collections/denim-dusters\" title=\"Denim & Dusters\">All wool cowls →</a>",
+        "heading": "More from this run",
         "image_ratio": "portrait",
         "product_limit": 4,
         "background_color": "#f8f5ee",
-        "desktop_padding_top": 64,
+        "desktop_padding_top": 76,
         "desktop_padding_bottom": 64,
         "mobile_padding_top": 40,
         "mobile_padding_bottom": 40
@@ -367,6 +435,7 @@
     "ccg_breadcrumbs_GhijgB",
     "main",
     "pdp_bundle_ccg",
+    "ccg_direct_to_maker_eLiTma",
     "pdp_recommendations_ccg"
   ]
 }
