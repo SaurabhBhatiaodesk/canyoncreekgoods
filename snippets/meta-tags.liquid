@@ -27,10 +27,19 @@
         assign seo_description = product.description | strip_html | strip_newlines | strip | truncate: 160
       when 'collection'
         assign seo_description = collection.description | strip_html | strip_newlines | strip | truncate: 160
+        if seo_description == blank
+          if collection.handle == 'all'
+            assign seo_description = 'Browse all Canyon Creek Goods products, including wool cowls, sling bags, denim outerwear, sweatshirts and western accessories.'
+          else
+            assign seo_description = 'Explore the ' | append: collection.title | append: ' collection at ' | append: shop.name | append: '. View product details and current availability.'
+          endif
+        endif
       when 'page'
         assign seo_description = page.content | strip_html | strip_newlines | strip | truncate: 160
       when 'article'
         assign seo_description = article.excerpt_or_content | strip_html | strip_newlines | strip | truncate: 160
+      when 'blog'
+        assign seo_description = 'Read ' | append: blog.title | append: ' from ' | append: shop.name | append: '.'
       when 'list-collections'
         assign seo_description = 'Explore Canyon Creek Goods collections, including wool cowls, sling bags, denim outerwear, sweatshirts and western accessories.'
       when 'search'
