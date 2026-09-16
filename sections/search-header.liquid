@@ -24,7 +24,11 @@
     {% endif %}
 
     {% capture heading_text %}
-      <h3>{{ heading_text }}</h3>
+      {% if section.settings.heading_layout == 'semantic' %}
+        <h1>{{ heading_text }}</h1>
+      {% else %}
+        <h3>{{ heading_text }}</h3>
+      {% endif %}
     {% endcapture %}
 
     {% content_for 'block', id: 'heading', type: '_heading', text: heading_text %}
@@ -36,6 +40,16 @@
 {
   "name": "t:names.search",
   "settings": [
+    {
+      "type": "select",
+      "id": "heading_layout",
+      "label": "Heading layout",
+      "options": [
+        { "value": "original", "label": "Layout 1 — Original" },
+        { "value": "semantic", "label": "Layout 2 — Page heading" }
+      ],
+      "default": "original"
+    },
     {
       "type": "select",
       "id": "alignment",
