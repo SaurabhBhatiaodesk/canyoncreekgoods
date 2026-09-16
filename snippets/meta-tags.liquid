@@ -21,6 +21,12 @@
 {%- liquid
   assign seo_title = page_title | default: shop.name
   assign seo_description = page_description
+  case request.page_type
+    when 'list-collections'
+      assign seo_description = 'Explore Canyon Creek Goods collections, including wool cowls, sling bags, denim outerwear, sweatshirts and western accessories.'
+    when 'search'
+      assign seo_description = 'Search Canyon Creek Goods products, collections and pages.'
+  endcase
   if seo_description == blank
     case request.page_type
       when 'product'
