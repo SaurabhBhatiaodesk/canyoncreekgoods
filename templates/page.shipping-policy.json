@@ -51,11 +51,13 @@
         "page-content"
       ],
       "custom_css": [
-        "h2 {font-size: 32px;}",
-        ".ccg-policy,.ccg-policy__body {background: #ede7dc;}",
-        ".ccg-policy__body {padding-top: 52px; padding-bottom: 60px;}",
-        ".ccg-policy__content li {background: transparent; border: 0; padding: 8px 0 8px 28px;}",
-        ".ccg-policy__content li + li {margin-top: 4px;}"
+        "h2 {font-size: 32px; }",
+        ".ccg-policy,.ccg-policy__body {background:#ede7dc; }",
+        ".ccg-policy__body {padding-top:52px; padding-bottom:60px; }",
+        ".ccg-policy__content {max-width:1040px; }",
+        ".ccg-policy__content li {background:transparent; border:0; padding:8px 0 8px 28px; position:relative; }",
+        ".ccg-policy__content li::before {left:0; top:14px; }",
+        " .ccg-policy__content li + li {margin-top:4px; }"
       ],
       "settings": {
         "page_layout": "policy",
