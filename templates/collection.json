@@ -249,6 +249,7 @@
       "type": "ccg-collection-grid",
       "name": "CCG Collection Grid",
       "settings": {
+        "grid_layout": "pagination",
         "columns": "3",
         "image_ratio": "square",
         "products_per_page": 24,
