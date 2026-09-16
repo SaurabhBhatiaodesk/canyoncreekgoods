@@ -241,7 +241,8 @@
         "eyebrow": "Shop · Wool Cowls",
         "heading": "Wool Cowls",
         "description": "<p>Hand cut one at a time from premium American wool. Each cowl comes from a single blanket run, so when it sells it is gone for good.</p>",
-        "overlay_opacity": 0.5
+        "overlay_opacity": 0.5,
+        "content_layout": "collection"
       }
     },
     "ccg_collection_grid_ccg": {

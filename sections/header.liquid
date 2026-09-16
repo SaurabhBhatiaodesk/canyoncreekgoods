@@ -384,7 +384,11 @@
     class="header__underlay header__underlay-open"
   ></div>
   {%- if request.page_type == 'index' -%}
-    <h1 class="visually-hidden">{{ shop.name }}</h1>
+    {% if section.settings.seo_heading_layout == 'seo' %}
+      <span class="visually-hidden">{{ shop.name | escape }}</span>
+    {% else %}
+      <h1 class="visually-hidden">{{ shop.name }}</h1>
+    {% endif %}
   {%- endif -%}
   {% for row in rows %}
     {% liquid
@@ -1253,6 +1257,17 @@
   "tag": "header",
   "class": "header-section",
   "settings": [
+    {
+      "type": "select",
+      "id": "seo_heading_layout",
+      "label": "Heading layout",
+      "options": [
+        { "value": "original", "label": "Layout 1 — Original" },
+        { "value": "seo", "label": "Layout 2 — Page heading" }
+      ],
+      "default": "original",
+      "info": "Layout 2 leaves the homepage H1 to the main hero heading."
+    },
     {
       "type": "header",
       "content": "t:content.logo"
