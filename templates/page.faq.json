@@ -51,17 +51,16 @@
         "page-content"
       ],
       "custom_css": [
-        "h2 {font-size: 32px;}",
         ".ccg-policy,.ccg-policy__body {background: #ede7dc;}",
-        ".ccg-policy__body {padding-top: 52px; padding-bottom: 60px;}",
+        ".ccg-policy__body {padding: 52px 0 60px;}",
         ".ccg-policy__content {max-width: 1040px;}",
-        ".ccg-policy__content li {background: transparent; border: 0; padding: 8px 0 8px 28px; position: relative;}",
-        ".ccg-policy__content li::before {left: 0; top: 14px;}",
-        ".ccg-policy__content li + li {margin-top: 4px;}"
+        ".ccg-policy__content h2 {font-size: 32px;}",
+        ".ccg-policy__content p:has(> strong:only-child) {margin: 28px 0 8px; font-size: 18px; color: #211c17;}",
+        ".ccg-policy__content p + h2 {margin-top: 48px;}"
       ],
       "settings": {
-        "page_layout": "policy",
-        "policy_eyebrow": "Shipping & delivery",
+        "page_layout": "faq",
+        "policy_eyebrow": "Common questions",
         "policy_intro": "",
         "show_policy_highlights": false,
         "highlight_1_label": "Ready to ship",
