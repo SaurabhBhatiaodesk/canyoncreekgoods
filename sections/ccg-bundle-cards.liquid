@@ -1,6 +1,6 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-bundles section">
+<div class="ccg-bundles section"{% if section.settings.seo_layout == 'linked' %} id="ccg-bundles" style="scroll-margin-top: 6rem;"{% endif %}>
   <div class="ccg-bundles__inner">
   <div class="ccg-bundles__head">
     <div class="ccg-bundles__head-text">
@@ -453,6 +453,17 @@
   "tag": "section",
   "class": "section-wrapper",
   "settings": [
+    {
+      "type": "select",
+      "id": "seo_layout",
+      "label": "Content layout",
+      "options": [
+        { "value": "original", "label": "Layout 1 — Original" },
+        { "value": "linked", "label": "Layout 2 — Linked bundles" }
+      ],
+      "default": "original",
+      "info": "Layout 2 adds a destination for the Bundles navigation links."
+    },
     {
       "type": "paragraph",
       "content": "Cards (products, images, price, discount) always come live from the Bundler app — nothing below sets a product, image or price. Nothing shows on the storefront until you add at least one \"Bundle\" block below with its Bundle ID."
