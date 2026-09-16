@@ -7,7 +7,27 @@
   <div class="ccg-product-details" {{ block.shopify_attributes }}>
     {% for feature_entry in feature_entries %}
       {% assign packed_description = feature_entry.description.value | default: feature_entry.description %}
-      {% if packed_description contains '||' %}
+      {% liquid
+        assign feature_keys = 'material,lining,dimensions,care,made' | split: ','
+        assign has_structured_features = false
+        for feature_key in feature_keys
+          if feature_entry[feature_key].value != blank
+            assign has_structured_features = true
+            break
+          endif
+        endfor
+      %}
+      {% if has_structured_features %}
+        {% for feature_key in feature_keys %}
+          {% assign feature_value = feature_entry[feature_key].value | strip %}
+          {% if feature_value != blank %}
+            <div class="ccg-product-details__row">
+              <span class="ccg-product-details__label">{{ feature_key | capitalize }}</span>
+              <span class="ccg-product-details__value">{{ feature_value | escape | newline_to_br }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% elsif packed_description contains '||' %}
         {% assign feature_rows = packed_description | split: '||' %}
         {% for feature_row in feature_rows %}
           {% assign feature_parts = feature_row | split: '|' %}
