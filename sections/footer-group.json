@@ -66,7 +66,7 @@
           "settings": {
             "heading": "Shop",
             "menu": "shop",
-            "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim\nSweatshirts | /collections/sweatshirts\nMatched Sets | /collections/matched-sets"
+            "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim-dusters\nSweatshirts | /collections/western-sweatshirts\nMatched Sets | /#ccg-bundles"
           }
         },
         "column_help": {
@@ -74,7 +74,7 @@
           "settings": {
             "heading": "Help",
             "menu": "help",
-            "links": "Shipping Policy | /policies/shipping-policy\nReturns & Exchanges | /policies/refund-policy\nCare Instructions | /pages/care-instructions\nFAQs | /pages/faqs\nTerms & Privacy | /policies/terms-of-service"
+            "links": "Shipping Policy | /pages/shipping-policy\nReturns & Exchanges | /pages/return-exchange-policy\nCare Instructions | /pages/care-instructions-for-woolen-goods\nFAQs | /pages/faqs\nTerms & Privacy | /pages/terms-conditions"
           }
         },
         "column_canyon_creek": {
@@ -82,7 +82,7 @@
           "settings": {
             "heading": "Canyon Creek",
             "menu": "canyon-creek",
-            "links": "About Melissa | /pages/about-melissa\nUpcoming Shows | /pages/shows\nHow To Wear Your Cowl | /pages/how-to-wear-it\nContact | /pages/contact"
+            "links": "About Melissa | /pages/about-me\nUpcoming Shows | /pages/upcoming-shows\nHow To Wear Your Cowl | /pages/how-to-put-on-our-cowl-scarf\nContact | /pages/contact"
           }
         }
       },
@@ -97,10 +97,10 @@
         "logo_text": "Canyon Creek Goods",
         "logo_width": 90,
         "tagline": "Handmade modern western outerwear and accessories. One pair of hands, Snowflake, Arizona, since 2020.",
-        "instagram_url": "https://www.instagram.com/",
-        "facebook_url": "https://www.facebook.com/",
-        "tiktok_url": "https://www.tiktok.com/",
-        "pinterest_url": "https://www.pinterest.com/",
+        "instagram_url": "",
+        "facebook_url": "",
+        "tiktok_url": "",
+        "pinterest_url": "",
         "background_color": "#211c17",
         "heading_color": "#c89457",
         "link_color": "#ddd3c4",
@@ -114,7 +114,8 @@
         "desktop_padding_top": 72,
         "desktop_padding_bottom": 32,
         "mobile_padding_top": 48,
-        "mobile_padding_bottom": 28
+        "mobile_padding_bottom": 28,
+        "seo_layout": "semantic"
       }
     },
     "footer_m9NzUG": {
