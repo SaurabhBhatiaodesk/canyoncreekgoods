@@ -403,7 +403,9 @@
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
         "mobile_padding_top": 0,
-        "mobile_padding_bottom": 0
+        "mobile_padding_bottom": 0,
+        "media_layout": "descriptive",
+        "image_alt": "Woman wearing a long denim coat and wide-brimmed hat beside a saddled brown horse."
       }
     },
     "pdp_recommendations_ccg": {
