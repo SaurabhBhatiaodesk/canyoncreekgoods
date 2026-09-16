@@ -17,7 +17,7 @@
         "heading": "Forged for the untamed.",
         "description": "<p>Heirloom-quality wool cowls, sling bags and denim, hand cut one at a time from premium American wool. No two pieces alike.</p>",
         "button_1_label": "Shop the cowls",
-        "button_1_link": "shopify://collections/all",
+        "button_1_link": "shopify://collections/wool-cowls",
         "button_2_label": "Meet the maker",
         "button_2_link": "shopify://pages/about-me",
         "image": "shopify://shop_images/hero-duster-desert.jpg",
@@ -142,7 +142,8 @@
         "desktop_padding_top": 96,
         "desktop_padding_bottom": 96,
         "mobile_padding_top": 56,
-        "mobile_padding_bottom": 56
+        "mobile_padding_bottom": 56,
+        "seo_layout": "linked"
       }
     },
     "best_sellers_ccg": {
