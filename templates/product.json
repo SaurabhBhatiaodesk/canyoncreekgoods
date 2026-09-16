@@ -303,19 +303,13 @@
             "product_details_DFbiWd": {
               "type": "product-details",
               "name": "Product details",
-              "settings": {
-                "material_label": "Material",
-                "lining_label": "Lining",
-                "dimensions_label": "Dimensions",
-                "care_label": "Care",
-                "made_label": "Made"
-              },
+              "disabled": true,
+              "settings": {},
               "blocks": {}
             },
             "product_features_prQAn3": {
               "type": "product-features",
               "name": "Product features",
-              "disabled": true,
               "settings": {},
               "blocks": {}
             },
