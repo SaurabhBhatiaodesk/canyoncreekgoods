@@ -188,7 +188,11 @@
             </div>
 
             <a href="{{ product.url }}" class="ccg-seller-card__meta">
-              <span class="ccg-seller-card__title">{{ product.title }}</span>
+              {%- if section.settings.grid_layout == 'pagination' -%}
+                <h2 class="ccg-seller-card__title ccg-seller-card__heading">{{ product.title | escape }}</h2>
+              {%- else -%}
+                <span class="ccg-seller-card__title">{{ product.title }}</span>
+              {%- endif -%}
               <span class="ccg-seller-card__price">{{ product.price | money }}</span>
               {%- if stock_text != blank -%}
                 <span class="ccg-seller-card__stock">{{ stock_text }}</span>
@@ -200,7 +204,17 @@
         {%- endfor -%}
       </div>
 
-      {%- if paginate.next -%}
+      {%- if section.settings.grid_layout == 'pagination' and paginate.pages > 1 -%}
+        <nav class="ccg-collection__pagination" aria-label="Collection pagination">
+          {%- if paginate.previous -%}
+            <a class="ccg-collection__load-more-btn" href="{{ paginate.previous.url }}" rel="prev">Previous</a>
+          {%- endif -%}
+          <span aria-current="page">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+          {%- if paginate.next -%}
+            <a class="ccg-collection__load-more-btn" href="{{ paginate.next.url }}" rel="next">Next</a>
+          {%- endif -%}
+        </nav>
+      {%- elsif paginate.next -%}
         <div class="ccg-collection__load-more">
           <button
             type="button"
@@ -415,6 +429,9 @@
 </script>
 
 {% stylesheet %}
+  .ccg-collection__pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; padding-top: 12px; }
+  .ccg-collection__pagination a { text-decoration: none; }
+  .ccg-seller-card__heading { margin: 0; font-family: inherit; font-weight: inherit; }
   .ccg-collection {
     font-family: 'Karla', system-ui, sans-serif;
   }
@@ -911,6 +928,16 @@
   "tag": "section",
   "class": "section-wrapper",
   "settings": [
+    {
+      "type": "select",
+      "id": "grid_layout",
+      "label": "Grid layout",
+      "options": [
+        { "value": "original", "label": "Layout 1 — Original load more" },
+        { "value": "pagination", "label": "Layout 2 — Linked pagination" }
+      ],
+      "default": "original"
+    },
     {
       "type": "paragraph",
       "content": "Replaces the stock collection grid. Product cards use the same design as Ready to Ride Out. Filters and sorting use Shopify's real filter/sort data (Search & Discovery app), so whatever filter options are configured for this collection show automatically as pills."
