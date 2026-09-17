@@ -145,7 +145,15 @@
         "desktop_padding_bottom": 96,
         "mobile_padding_top": 56,
         "mobile_padding_bottom": 56,
-        "seo_layout": "linked"
+        "seo_layout": "linked",
+        "bundle_layout": "custom",
+        "custom_heading": "Make it your own",
+        "custom_description": "Choose your favorite pieces. Mix patterns, colors and textures to create your own pairing.",
+        "custom_cart_enabled": false,
+        "custom_dusters": "denim-duster-jackets",
+        "custom_jackets": "patched-denim-jackets",
+        "custom_slings": "sling-bags",
+        "custom_cowls": "wool-cowls"
       }
     },
     "best_sellers_ccg": {
