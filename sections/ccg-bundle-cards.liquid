@@ -1,13 +1,26 @@
 {% if section.settings.bundle_layout == 'custom' %}
 {% render 'ccg-section-spacing' %}
 {%- assign bundle_groups = 'dusters,jackets,slings,cowls' | split: ',' -%}
-<ccg-mix-match class="ccg-mix section" id="ccg-bundles" data-current-product="{{ product.id }}" data-current-variant="{{ product.selected_or_first_available_variant.id }}" data-cart-enabled="{{ section.settings.custom_cart_enabled }}" data-add-url="{{ routes.cart_add_url }}.js" data-cart-url="{{ routes.cart_url }}" data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}">
+<ccg-mix-match
+  class="ccg-mix section"
+  id="ccg-bundles"
+  data-current-product="{{ product.id }}"
+  data-current-variant="{{ product.selected_or_first_available_variant.id }}"
+  data-cart-enabled="{{ section.settings.custom_cart_enabled }}"
+  data-add-url="{{ routes.cart_add_url }}.js"
+  data-cart-url="{{ routes.cart_url }}"
+  data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}"
+  data-discount-dusters="{{ section.settings.custom_discount_dusters }}"
+  data-discount-jackets="{{ section.settings.custom_discount_jackets }}"
+  data-discount-slings="{{ section.settings.custom_discount_slings }}"
+  data-discount-cowls="{{ section.settings.custom_discount_cowls }}"
+>
   <div class="ccg-mix__inner">
     <p class="ccg-mix__eyebrow">COMPLETE THE LOOK</p>
     <h2>{{ section.settings.custom_heading | escape }}</h2>
     <p>{{ section.settings.custom_description | escape }}</p>
     {% unless section.settings.custom_cart_enabled %}
-      <p class="ccg-mix__notice">Preview only — adding pairs is paused until the checkout discount rules are connected. Regular prices are shown.</p>
+      <p class="ccg-mix__notice">Add to cart is currently disabled in this section's settings.</p>
     {% endunless %}
     <form>
       <label for="BundleType-{{ section.id }}">Choose your pairing</label>
@@ -31,8 +44,10 @@
         {% endfor %}
       </div>
       <div class="ccg-mix__summary">
-        <p>Pair subtotal: <strong data-total>Choose two items</strong></p>
-        <p class="ccg-mix__small">Prices shown before discounts. Any eligible savings will be shown in your cart.</p>
+        <p>Pair subtotal: <strong data-subtotal>Choose two items</strong></p>
+        <p data-savings-row hidden>Bundle savings (<span data-discount-percent>0</span>%): <strong data-savings></strong></p>
+        <p data-total-row hidden>Bundle total: <strong data-total></strong></p>
+        <p class="ccg-mix__small">The selected bundle and savings are attached to both cart items when added.</p>
         <button type="submit" disabled>Add pair to cart</button>
         <p data-status role="status" aria-live="polite"></p>
       </div>
@@ -99,6 +114,18 @@ if (!customElements.get('ccg-mix-match')) {
       this.status = this.querySelector('[data-status]');
       this.type = this.querySelector('[data-pair-type]');
       this.money = new Intl.NumberFormat(document.documentElement.lang || 'en', {style:'currency', currency:this.dataset.currency});
+      this.discounts = {
+        dusters: Number(this.dataset.discountDusters || 0),
+        jackets: Number(this.dataset.discountJackets || 0),
+        slings: Number(this.dataset.discountSlings || 0),
+        cowls: Number(this.dataset.discountCowls || 0)
+      };
+      this.bundleNames = {
+        dusters: 'The Canyon Creek Layering Set — Duster + Cowl',
+        jackets: 'The Western Winter Set — Denim Jacket + Cowl',
+        slings: 'Sling Bag + Cowl',
+        cowls: 'Pick any two cowls'
+      };
       this.type.addEventListener('change', () => this.populate());
       this.slots.forEach(slot => {
         slot.querySelector('[data-product]').addEventListener('change', () => this.populateVariants(slot));
@@ -183,7 +210,31 @@ if (!customElements.get('ccg-mix-match')) {
           error = 'Only one of this option is available. Please choose a different second cowl.';
         }
       }
-      this.querySelector('[data-total]').textContent = selected.every(item => item.variant) ? this.money.format(selected.reduce((sum,item) => sum + Number(item.variant.price), 0) / 100) : 'Choose two items';
+      const allSelected = selected.every(item => item.variant);
+      const subtotalEl = this.querySelector('[data-subtotal]');
+      const savingsRow = this.querySelector('[data-savings-row]');
+      const savingsEl = this.querySelector('[data-savings]');
+      const discountPercentEl = this.querySelector('[data-discount-percent]');
+      const totalRow = this.querySelector('[data-total-row]');
+      const totalEl = this.querySelector('[data-total]');
+      const discountPercent = Math.max(0, Number(this.discounts[this.type.value] || 0));
+
+      if (allSelected) {
+        const regularCents = selected.reduce((sum,item) => sum + Number(item.variant.price), 0);
+        const savingsCents = Math.round(regularCents * discountPercent / 100);
+        const discountedCents = Math.max(regularCents - savingsCents, 0);
+
+        subtotalEl.textContent = this.money.format(regularCents / 100);
+        discountPercentEl.textContent = discountPercent;
+        savingsEl.textContent = '-' + this.money.format(savingsCents / 100);
+        totalEl.textContent = this.money.format(discountedCents / 100);
+        savingsRow.hidden = discountPercent <= 0;
+        totalRow.hidden = false;
+      } else {
+        subtotalEl.textContent = 'Choose two items';
+        savingsRow.hidden = true;
+        totalRow.hidden = true;
+      }
       this.button.disabled = !valid || this.busy || this.dataset.cartEnabled !== 'true';
       if (!this.busy) this.status.textContent = error;
     }
@@ -196,10 +247,22 @@ if (!customElements.get('ccg-mix-match')) {
       this.slots.forEach(slot => slot.disabled = true);
       this.status.textContent = 'Adding your pair…';
       const items = [];
+      const bundleType = this.type.value;
+      const bundleName = this.bundleNames[bundleType] || 'Custom bundle';
+      const discountPercent = Math.max(0, Number(this.discounts[bundleType] || 0));
+      const bundleKey = 'ccg-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+
       this.selected().forEach(({variant}) => {
-        const existing = items.find(item => item.id === variant.id);
-        if (existing) existing.quantity += 1;
-        else items.push({id:variant.id, quantity:1});
+        items.push({
+          id: variant.id,
+          quantity: 1,
+          properties: {
+            '_CCG Bundle Key': bundleKey,
+            '_CCG Bundle Type': bundleType,
+            'Bundle': bundleName,
+            'Bundle savings': discountPercent + '%'
+          }
+        });
       });
       try {
         const response = await fetch(this.dataset.addUrl, {method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify({items})});
@@ -706,8 +769,52 @@ if (!customElements.get('ccg-mix-match')) {
       "type": "checkbox",
       "id": "custom_cart_enabled",
       "label": "Enable adding custom pairs to cart",
-      "default": false,
-      "info": "Leave off until the matching checkout discount rules are installed and verified. This setting does not create discounts."
+      "default": true,
+      "info": "Adds both selected variants to cart and attaches the bundle name, bundle key and configured savings."
+    },
+    {
+      "type": "header",
+      "content": "Layout 2 — Bundle discounts"
+    },
+    {
+      "type": "range",
+      "id": "custom_discount_dusters",
+      "label": "Duster + Cowl discount",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "custom_discount_jackets",
+      "label": "Denim Jacket + Cowl discount",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "custom_discount_slings",
+      "label": "Sling Bag + Cowl discount",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "custom_discount_cowls",
+      "label": "Any 2 Cowls discount",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 10
     },
     {
       "type": "collection",
