@@ -137,7 +137,7 @@
       ],
       "name": "Complete the Look",
       "settings": {
-        "bundle_layout": "original",
+        "bundle_layout": "custom",
         "custom_heading": "Make it your own",
         "custom_description": "Choose your favorite pieces. Mix patterns, colors and textures to create your own pairing.",
         "custom_cart_enabled": false,
