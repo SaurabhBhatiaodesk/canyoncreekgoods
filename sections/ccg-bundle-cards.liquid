@@ -1,7 +1,7 @@
 {% if section.settings.bundle_layout == 'custom' %}
 {% render 'ccg-section-spacing' %}
 {%- assign bundle_groups = 'dusters,jackets,slings,cowls' | split: ',' -%}
-<ccg-mix-match class="ccg-mix section" id="ccg-bundles" data-cart-enabled="{{ section.settings.custom_cart_enabled }}" data-add-url="{{ routes.cart_add_url }}.js" data-cart-url="{{ routes.cart_url }}" data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}">
+<ccg-mix-match class="ccg-mix section" id="ccg-bundles" data-current-product="{{ product.id }}" data-current-variant="{{ product.selected_or_first_available_variant.id }}" data-cart-enabled="{{ section.settings.custom_cart_enabled }}" data-add-url="{{ routes.cart_add_url }}.js" data-cart-url="{{ routes.cart_url }}" data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}">
   <div class="ccg-mix__inner">
     <p class="ccg-mix__eyebrow">COMPLETE THE LOOK</p>
     <h2>{{ section.settings.custom_heading | escape }}</h2>
@@ -105,7 +105,17 @@ if (!customElements.get('ccg-mix-match')) {
         slot.querySelector('[data-variant]').addEventListener('change', () => this.update());
       });
       this.form.addEventListener('submit', event => { event.preventDefault(); this.addPair(); });
+      const currentGroup = Array.from(this.groups).find(([,products]) => products.some(item => item.id === this.dataset.currentProduct));
+      if (currentGroup) this.type.value = currentGroup[0];
       this.populate();
+      if (currentGroup) {
+        const slot = this.slots[0];
+        slot.querySelector('[data-product]').value = this.dataset.currentProduct;
+        this.populateVariants(slot);
+        const option = Array.from(slot.querySelector('[data-variant]').options).find(item => item.value === this.dataset.currentVariant && !item.disabled);
+        if (option) slot.querySelector('[data-variant]').value = option.value;
+        this.update();
+      }
     }
     purchasable(variant) {
       return variant.available === 'true' && Number(variant.min || 1) <= 1 && Number(variant.increment || 1) === 1;
