@@ -99,6 +99,8 @@
       "type": "ccg-direct-to-maker",
       "name": "Direct to Maker",
       "settings": {
+        "media_layout": "descriptive",
+        "image_alt": "Woman wearing a patterned wool cowl and wide-brimmed hat in a red-rock canyon.",
         "image": "shopify://shop_images/b7a6632f-ff7a-43d2-9678-a5076955ef11.jpg",
         "media_position": "right",
         "eyebrow": "DIRECT TO MAKER",
@@ -110,9 +112,7 @@
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
         "mobile_padding_top": 0,
-        "mobile_padding_bottom": 0,
-        "media_layout": "descriptive",
-        "image_alt": "Woman wearing a patterned wool cowl and wide-brimmed hat in a red-rock canyon."
+        "mobile_padding_bottom": 0
       }
     },
     "bundle_cards_ccg": {
@@ -137,6 +137,15 @@
       ],
       "name": "Complete the Look",
       "settings": {
+        "bundle_layout": "original",
+        "custom_heading": "Make it your own",
+        "custom_description": "Choose your favorite pieces. Mix patterns, colors and textures to create your own pairing.",
+        "custom_cart_enabled": false,
+        "custom_dusters": "denim-duster-jackets",
+        "custom_jackets": "patched-denim-jackets",
+        "custom_slings": "sling-bags",
+        "custom_cowls": "wool-cowls",
+        "seo_layout": "original",
         "eyebrow": "COMPLETE THE LOOK",
         "heading": "Matched sets, save 10%",
         "quote": "I pair these myself, from the same blanket run. — Melissa",
@@ -144,16 +153,7 @@
         "desktop_padding_top": 96,
         "desktop_padding_bottom": 96,
         "mobile_padding_top": 56,
-        "mobile_padding_bottom": 56,
-        "seo_layout": "linked",
-        "bundle_layout": "custom",
-        "custom_heading": "Make it your own",
-        "custom_description": "Choose your favorite pieces. Mix patterns, colors and textures to create your own pairing.",
-        "custom_cart_enabled": false,
-        "custom_dusters": "denim-duster-jackets",
-        "custom_jackets": "patched-denim-jackets",
-        "custom_slings": "sling-bags",
-        "custom_cowls": "wool-cowls"
+        "mobile_padding_bottom": 56
       }
     },
     "best_sellers_ccg": {
