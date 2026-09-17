@@ -20,7 +20,7 @@
         "text_color": "#211c17",
         "muted_color": "#7a6d5d",
         "separator_color": "#7a6d5d",
-        "border_color": "#F8F5EE",
+        "border_color": "{{ settings.color_palette.color2 }}",
         "desktop_padding_top": 20,
         "desktop_padding_bottom": 20,
         "mobile_padding_top": 20,
