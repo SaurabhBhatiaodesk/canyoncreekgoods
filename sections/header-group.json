@@ -124,7 +124,7 @@
             "navigation_bar": false,
             "background_color_navigation_bar": "{{ settings.color_palette.background }}",
             "text_color_navigation_bar": "",
-            "drawer_accordion": false,
+            "drawer_accordion": true,
             "drawer_accordion_expand_first": false,
             "drawer_dividers": false
           },
@@ -132,6 +132,7 @@
         }
       },
       "settings": {
+        "seo_heading_layout": "seo",
         "logo_position": "left",
         "menu_position": "center",
         "menu_row": "top",
@@ -173,8 +174,7 @@
         "text_color_transparent_product": "",
         "enable_transparent_header_collection": false,
         "collection_inverse_logo": false,
-        "text_color_transparent_collection": "",
-        "seo_heading_layout": "seo"
+        "text_color_transparent_collection": ""
       }
     }
   },
