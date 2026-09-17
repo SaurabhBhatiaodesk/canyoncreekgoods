@@ -6,7 +6,6 @@
   id="ccg-bundles"
   data-current-product="{{ product.id }}"
   data-current-variant="{{ product.selected_or_first_available_variant.id }}"
-  data-cart-enabled="{{ section.settings.custom_cart_enabled }}"
   data-add-url="{{ routes.cart_add_url }}.js"
   data-cart-url="{{ routes.cart_url }}"
   data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}"
@@ -19,9 +18,6 @@
     <p class="ccg-mix__eyebrow">COMPLETE THE LOOK</p>
     <h2>{{ section.settings.custom_heading | escape }}</h2>
     <p>{{ section.settings.custom_description | escape }}</p>
-    {% unless section.settings.custom_cart_enabled %}
-      <p class="ccg-mix__notice">Add to cart is currently disabled in this section's settings.</p>
-    {% endunless %}
     <form>
       <label for="BundleType-{{ section.id }}">Choose your pairing</label>
       <select id="BundleType-{{ section.id }}" data-pair-type>
@@ -235,7 +231,7 @@ if (!customElements.get('ccg-mix-match')) {
         savingsRow.hidden = true;
         totalRow.hidden = true;
       }
-      this.button.disabled = !valid || this.busy || this.dataset.cartEnabled !== 'true';
+      this.button.disabled = !valid || this.busy;
       if (!this.busy) this.status.textContent = error;
     }
     async addPair() {
@@ -764,13 +760,6 @@ if (!customElements.get('ccg-mix-match')) {
       "id": "custom_description",
       "label": "Layout 2 description",
       "default": "Choose your favorite pieces. Mix patterns, colors and textures to create your own pairing."
-    },
-    {
-      "type": "checkbox",
-      "id": "custom_cart_enabled",
-      "label": "Enable adding custom pairs to cart",
-      "default": true,
-      "info": "Adds both selected variants to cart and attaches the bundle name, bundle key and configured savings."
     },
     {
       "type": "header",
