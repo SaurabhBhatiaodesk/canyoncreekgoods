@@ -1,3 +1,213 @@
+{% if section.settings.bundle_layout == 'custom' %}
+{% render 'ccg-section-spacing' %}
+{%- assign bundle_groups = 'dusters,jackets,slings,cowls' | split: ',' -%}
+<ccg-mix-match class="ccg-mix section" id="ccg-bundles" data-cart-enabled="{{ section.settings.custom_cart_enabled }}" data-add-url="{{ routes.cart_add_url }}.js" data-cart-url="{{ routes.cart_url }}" data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}">
+  <div class="ccg-mix__inner">
+    <p class="ccg-mix__eyebrow">COMPLETE THE LOOK</p>
+    <h2>{{ section.settings.custom_heading | escape }}</h2>
+    <p>{{ section.settings.custom_description | escape }}</p>
+    {% unless section.settings.custom_cart_enabled %}
+      <p class="ccg-mix__notice">Preview only — adding pairs is paused until the checkout discount rules are connected. Regular prices are shown.</p>
+    {% endunless %}
+    <form>
+      <label for="BundleType-{{ section.id }}">Choose your pairing</label>
+      <select id="BundleType-{{ section.id }}" data-pair-type>
+        <option value="dusters">The Canyon Creek Layering Set — Duster + Cowl</option>
+        <option value="jackets">The Western Winter Set — Denim Jacket + Cowl</option>
+        <option value="slings">Sling Bag + Cowl</option>
+        <option value="cowls">Pick any two cowls</option>
+      </select>
+      <div class="ccg-mix__choices">
+        {% for slot in (1..2) %}
+          <fieldset data-slot="{{ slot }}">
+            <legend>Choose item {{ slot }}</legend>
+            <img data-photo hidden width="480" height="480" alt="" loading="lazy">
+            <label for="BundleProduct-{{ section.id }}-{{ slot }}">Product</label>
+            <select id="BundleProduct-{{ section.id }}-{{ slot }}" data-product required></select>
+            <label for="BundleVariant-{{ section.id }}-{{ slot }}">Size / lining / option</label>
+            <select id="BundleVariant-{{ section.id }}-{{ slot }}" data-variant required></select>
+            <a data-product-link hidden>View product details</a>
+          </fieldset>
+        {% endfor %}
+      </div>
+      <div class="ccg-mix__summary">
+        <p>Pair subtotal: <strong data-total>Choose two items</strong></p>
+        <p class="ccg-mix__small">Prices shown before discounts. Any eligible savings will be shown in your cart.</p>
+        <button type="submit" disabled>Add pair to cart</button>
+        <p data-status role="status" aria-live="polite"></p>
+      </div>
+    </form>
+    <noscript>Please enable JavaScript to choose a pair. You can also add items individually from their product pages.</noscript>
+    {% for group in bundle_groups %}
+      {%- assign setting_id = 'custom_' | append: group -%}
+      {%- assign source_collection = section.settings[setting_id] -%}
+      <template data-group="{{ group }}">
+        {% for item in source_collection.products limit: 50 %}
+          {% unless item.gift_card or item.requires_selling_plan %}
+            <div data-product-data data-id="{{ item.id }}" data-title="{{ item.title | escape }}" data-url="{{ item.url }}" data-alt="{{ item.featured_image.alt | default: item.title | escape }}"{% if item.featured_image %} data-image="{{ item.featured_image | image_url: width: 600 }}"{% endif %}>
+              {% for variant in item.variants %}
+                <span data-variant-data data-id="{{ variant.id }}" data-title="{{ variant.title | escape }}" data-price="{{ variant.price }}" data-available="{{ variant.available }}" data-min="{{ variant.quantity_rule.min }}" data-increment="{{ variant.quantity_rule.increment }}" data-max="{{ variant.quantity_rule.max }}"{% if variant.inventory_management != blank and variant.inventory_policy == 'deny' %} data-stock="{{ variant.inventory_quantity | at_least: 0 }}"{% endif %}{% if variant.featured_image %} data-image="{{ variant.featured_image | image_url: width: 600 }}" data-alt="{{ variant.featured_image.alt | default: item.title | escape }}"{% endif %}></span>
+              {% endfor %}
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </template>
+      {% if request.design_mode and source_collection.products_count > 50 %}
+        <p class="ccg-mix__notice">{{ source_collection.title | escape }} has more than 50 products. This selector currently includes the first 50; extend pagination before launch.</p>
+      {% endif %}
+    {% endfor %}
+  </div>
+</ccg-mix-match>
+<style>
+  .ccg-mix { display:block; background:var(--ccg-cream,#ede7dc); color:var(--ccg-ink,#211c17); font-family:Karla,system-ui,sans-serif; scroll-margin-top:6rem; }
+  .ccg-mix__inner { max-width:1200px; margin:auto; }
+  .ccg-mix h2 { font:400 clamp(25px,3vw,36px)/1.25 Rye,serif; margin:0 0 16px; }
+  .ccg-mix p { line-height:1.6; }
+  .ccg-mix__eyebrow { font:400 15px/1.5 'Barlow Condensed',sans-serif; letter-spacing:.18em; color:var(--ccg-tan,#9a623e); }
+  .ccg-mix label { display:block; margin:18px 0 8px; }
+  .ccg-mix select { width:100%; min-height:48px; padding:10px 36px 10px 12px; border:1px solid var(--ccg-hairline,#b6ac9d); background:#f8f5ee; color:#211c17; font:inherit; border-radius:0; }
+  .ccg-mix__choices { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:28px; }
+  .ccg-mix fieldset { margin:0; padding:20px; min-width:0; border:1px solid var(--ccg-hairline,#b6ac9d); }
+  .ccg-mix legend { padding:0 8px; font:400 21px/1.4 'Barlow Condensed',sans-serif; }
+  .ccg-mix img { display:block; width:100%; height:auto; max-height:380px; object-fit:contain; aspect-ratio:1; }
+  .ccg-mix [hidden] { display:none; }
+  .ccg-mix a { display:inline-block; color:inherit; margin-top:16px; text-underline-offset:4px; }
+  .ccg-mix button { padding:16px 28px; min-height:52px; border:1px solid #211c17; background:#211c17; color:#f8f5ee; font:400 18px/1.3 'Barlow Condensed',sans-serif; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
+  .ccg-mix button:disabled { opacity:.5; cursor:not-allowed; }
+  .ccg-mix :focus-visible { outline:2px solid #9a623e; outline-offset:4px; }
+  .ccg-mix__notice { padding:12px 16px; border-left:3px solid #9a623e; background:#f8f5ee; }
+  .ccg-mix__summary { margin-top:26px; border-top:1px solid var(--ccg-hairline,#b6ac9d); padding-top:12px; }
+  .ccg-mix__small { font-size:14px; color:var(--ccg-stone,#645b50); }
+  @media(max-width:749px) { .ccg-mix__choices { grid-template-columns:1fr; gap:20px; } .ccg-mix fieldset { padding:16px; } .ccg-mix button { width:100%; } }
+</style>
+<script>
+if (!customElements.get('ccg-mix-match')) {
+  customElements.define('ccg-mix-match', class extends HTMLElement {
+    connectedCallback() {
+      if (this.initialized) return;
+      this.initialized = true;
+      this.groups = new Map();
+      this.querySelectorAll('template[data-group]').forEach(template => {
+        this.groups.set(template.dataset.group, Array.from(template.content.querySelectorAll('[data-product-data]')).map(node => ({
+          ...node.dataset,
+          variants: Array.from(node.querySelectorAll('[data-variant-data]')).map(variant => ({ ...variant.dataset }))
+        })));
+      });
+      this.slots = Array.from(this.querySelectorAll('[data-slot]'));
+      this.form = this.querySelector('form');
+      this.button = this.querySelector('button[type="submit"]');
+      this.status = this.querySelector('[data-status]');
+      this.type = this.querySelector('[data-pair-type]');
+      this.money = new Intl.NumberFormat(document.documentElement.lang || 'en', {style:'currency', currency:this.dataset.currency});
+      this.type.addEventListener('change', () => this.populate());
+      this.slots.forEach(slot => {
+        slot.querySelector('[data-product]').addEventListener('change', () => this.populateVariants(slot));
+        slot.querySelector('[data-variant]').addEventListener('change', () => this.update());
+      });
+      this.form.addEventListener('submit', event => { event.preventDefault(); this.addPair(); });
+      this.populate();
+    }
+    purchasable(variant) {
+      return variant.available === 'true' && Number(variant.min || 1) <= 1 && Number(variant.increment || 1) === 1;
+    }
+    populate() {
+      this.slots.forEach((slot, index) => {
+        slot.products = this.groups.get(index === 0 ? this.type.value : 'cowls') || [];
+        const select = slot.querySelector('[data-product]');
+        select.replaceChildren(new Option('Choose a product', ''));
+        slot.products.forEach(product => {
+          const option = new Option(product.title, product.id);
+          option.disabled = !product.variants.some(variant => this.purchasable(variant));
+          if (option.disabled) option.text += ' — Unavailable';
+          select.add(option);
+        });
+        slot.querySelector('legend').textContent = index === 0 ? ({dusters:'Choose your duster',jackets:'Choose your denim jacket',slings:'Choose your sling bag',cowls:'Choose your first cowl'}[this.type.value]) : 'Choose your cowl';
+        this.populateVariants(slot);
+      });
+      this.update();
+    }
+    populateVariants(slot) {
+      const product = slot.products.find(item => item.id === slot.querySelector('[data-product]').value);
+      const select = slot.querySelector('[data-variant]');
+      select.replaceChildren(new Option('Choose an option', ''));
+      select.disabled = !product;
+      if (product) {
+        product.variants.forEach(variant => {
+          const label = variant.title === 'Default Title' ? 'One option' : variant.title;
+          const option = new Option(label + ' — ' + this.money.format(Number(variant.price) / 100), variant.id);
+          option.disabled = !this.purchasable(variant);
+          if (option.disabled) option.text += ' — Unavailable';
+          select.add(option);
+        });
+        const available = product.variants.filter(variant => this.purchasable(variant));
+        if (available.length === 1) select.value = available[0].id;
+      }
+      this.update();
+    }
+    selected() {
+      return this.slots.map(slot => {
+        const product = (slot.products || []).find(item => item.id === slot.querySelector('[data-product]').value);
+        const variant = product?.variants.find(item => item.id === slot.querySelector('[data-variant]').value);
+        return {product, variant};
+      });
+    }
+    update() {
+      const selected = this.selected();
+      selected.forEach(({product,variant}, index) => {
+        const slot = this.slots[index];
+        const photo = slot.querySelector('[data-photo]');
+        const src = variant?.image || product?.image;
+        photo.hidden = !src;
+        if (src) photo.src = src; else photo.removeAttribute('src');
+        photo.alt = variant?.alt || product?.alt || '';
+        const link = slot.querySelector('[data-product-link]');
+        link.hidden = !product;
+        if (product) link.href = product.url; else link.removeAttribute('href');
+      });
+      let valid = selected.every(({variant}) => variant && this.purchasable(variant));
+      let error = '';
+      if (valid && selected[0].variant.id === selected[1].variant.id) {
+        const variant = selected[0].variant;
+        if ((variant.stock !== undefined && Number(variant.stock) < 2) || (variant.max && Number(variant.max) < 2)) {
+          valid = false;
+          error = 'Only one of this option is available. Please choose a different second cowl.';
+        }
+      }
+      this.querySelector('[data-total]').textContent = selected.every(item => item.variant) ? this.money.format(selected.reduce((sum,item) => sum + Number(item.variant.price), 0) / 100) : 'Choose two items';
+      this.button.disabled = !valid || this.busy || this.dataset.cartEnabled !== 'true';
+      if (!this.busy) this.status.textContent = error;
+    }
+    async addPair() {
+      this.update();
+      if (this.button.disabled) return;
+      this.busy = true;
+      this.button.disabled = true;
+      this.type.disabled = true;
+      this.slots.forEach(slot => slot.disabled = true);
+      this.status.textContent = 'Adding your pair…';
+      const items = [];
+      this.selected().forEach(({variant}) => {
+        const existing = items.find(item => item.id === variant.id);
+        if (existing) existing.quantity += 1;
+        else items.push({id:variant.id, quantity:1});
+      });
+      try {
+        const response = await fetch(this.dataset.addUrl, {method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify({items})});
+        const result = await response.json();
+        if (!response.ok) throw new Error(typeof result.description === 'string' ? result.description : 'Unable to add the pair. Please check availability.');
+        window.location.assign(this.dataset.cartUrl);
+      } catch (error) {
+        this.busy = false;
+        this.type.disabled = false;
+        this.slots.forEach(slot => slot.disabled = false);
+        this.update();
+        this.status.textContent = error.message + ' Check your cart before retrying; some items may already have been added.';
+      }
+    }
+  });
+}
+</script>
+{% else %}
 {% render 'ccg-section-spacing' %}
 
 <div class="ccg-bundles section"{% if section.settings.seo_layout == 'linked' %} id="ccg-bundles" style="scroll-margin-top: 6rem;"{% endif %}>
@@ -230,6 +440,7 @@
   })();
 </script>
 
+{% endif %}
 {% stylesheet %}
   .ccg-bundles {
     font-family: 'Karla', system-ui, sans-serif;
@@ -455,11 +666,72 @@
   "settings": [
     {
       "type": "select",
+      "id": "bundle_layout",
+      "label": "Bundle layout",
+      "options": [
+        {
+          "value": "original",
+          "label": "Layout 1 — Original Bundler cards"
+        },
+        {
+          "value": "custom",
+          "label": "Layout 2 — Custom mix and match"
+        }
+      ],
+      "default": "original"
+    },
+    {
+      "type": "text",
+      "id": "custom_heading",
+      "label": "Layout 2 heading",
+      "default": "Make it your own"
+    },
+    {
+      "type": "text",
+      "id": "custom_description",
+      "label": "Layout 2 description",
+      "default": "Choose your favorite pieces. Mix patterns, colors and textures to create your own pairing."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_cart_enabled",
+      "label": "Enable adding custom pairs to cart",
+      "default": false,
+      "info": "Leave off until the matching checkout discount rules are installed and verified. This setting does not create discounts."
+    },
+    {
+      "type": "collection",
+      "id": "custom_dusters",
+      "label": "Layout 2 — dusters"
+    },
+    {
+      "type": "collection",
+      "id": "custom_jackets",
+      "label": "Layout 2 — jackets"
+    },
+    {
+      "type": "collection",
+      "id": "custom_slings",
+      "label": "Layout 2 — slings"
+    },
+    {
+      "type": "collection",
+      "id": "custom_cowls",
+      "label": "Layout 2 — cowls"
+    },
+    {
+      "type": "select",
       "id": "seo_layout",
       "label": "Content layout",
       "options": [
-        { "value": "original", "label": "Layout 1 — Original" },
-        { "value": "linked", "label": "Layout 2 — Linked bundles" }
+        {
+          "value": "original",
+          "label": "Layout 1 — Original"
+        },
+        {
+          "value": "linked",
+          "label": "Layout 2 — Linked bundles"
+        }
       ],
       "default": "original",
       "info": "Layout 2 adds a destination for the Bundles navigation links."
