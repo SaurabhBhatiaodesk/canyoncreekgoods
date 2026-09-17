@@ -360,7 +360,8 @@
         "desktop_padding_bottom": 64,
         "mobile_padding_top": 40,
         "mobile_padding_bottom": 40
-      }
+      },
+      "disabled": true
     },
     "ccg_direct_to_maker_eLiTma": {
       "type": "ccg-direct-to-maker",
@@ -425,11 +426,35 @@
         "mobile_padding_top": 40,
         "mobile_padding_bottom": 40
       }
+    },
+    "pdp_mix_match_ccg": {
+      "type": "ccg-bundle-cards",
+      "name": "Custom mix and match",
+      "settings": {
+        "eyebrow": "COMPLETE THE LOOK",
+        "heading": "Matched sets, save 10%",
+        "quote": "I pair these myself, from the same blanket run. — Melissa",
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 48,
+        "desktop_padding_bottom": 48,
+        "mobile_padding_top": 28,
+        "mobile_padding_bottom": 28,
+        "seo_layout": "linked",
+        "bundle_layout": "custom",
+        "custom_heading": "Make it your own",
+        "custom_description": "Choose your favorite pieces. Mix patterns, colors and textures to create your own pairing.",
+        "custom_cart_enabled": false,
+        "custom_dusters": "denim-duster-jackets",
+        "custom_jackets": "patched-denim-jackets",
+        "custom_slings": "sling-bags",
+        "custom_cowls": "wool-cowls"
+      }
     }
   },
   "order": [
     "ccg_breadcrumbs_GhijgB",
     "main",
+    "pdp_mix_match_ccg",
     "pdp_bundle_ccg",
     "ccg_direct_to_maker_eLiTma",
     "pdp_recommendations_ccg"
