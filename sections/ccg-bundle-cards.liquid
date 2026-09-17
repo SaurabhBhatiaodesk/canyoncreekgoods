@@ -15,140 +15,38 @@
   data-discount-cowls="{{ section.settings.custom_discount_cowls }}"
 >
   <div class="ccg-mix__inner">
-
-    <div class="ccg-mix__header">
-      <p class="ccg-mix__eyebrow">COMPLETE THE LOOK</p>
-
-      {%- if section.settings.custom_heading != blank -%}
-        <h2 class="ccg-mix__heading">{{ section.settings.custom_heading | escape }}</h2>
-      {%- endif -%}
-
-      {%- if section.settings.custom_description != blank -%}
-        <p class="ccg-mix__description">{{ section.settings.custom_description | escape }}</p>
-      {%- endif -%}
-    </div>
-
-    <form class="ccg-mix__builder">
-
-      <div class="ccg-mix__bundle-bar">
-        <div>
-          <span class="ccg-mix__bundle-kicker">BUNDLE TYPE</span>
-          <h3 class="ccg-mix__bundle-title">Choose your pairing</h3>
-        </div>
-
-        <div class="ccg-mix__bundle-select">
-          <select id="BundleType-{{ section.id }}" data-pair-type>
-            <option value="dusters">The Canyon Creek Layering Set — Duster + Cowl</option>
-            <option value="jackets">The Western Winter Set — Denim Jacket + Cowl</option>
-            <option value="slings">Sling Bag + Cowl</option>
-            <option value="cowls">Pick any two cowls</option>
-          </select>
-        </div>
-      </div>
-
+    <p class="ccg-mix__eyebrow">COMPLETE THE LOOK</p>
+    <h2>{{ section.settings.custom_heading | escape }}</h2>
+    <p>{{ section.settings.custom_description | escape }}</p>
+    <form>
+      <label for="BundleType-{{ section.id }}">Choose your pairing</label>
+      <select id="BundleType-{{ section.id }}" data-pair-type>
+        <option value="dusters">The Canyon Creek Layering Set — Duster + Cowl</option>
+        <option value="jackets">The Western Winter Set — Denim Jacket + Cowl</option>
+        <option value="slings">Sling Bag + Cowl</option>
+        <option value="cowls">Pick any two cowls</option>
+      </select>
       <div class="ccg-mix__choices">
         {% for slot in (1..2) %}
-          <fieldset class="ccg-mix__product-card" data-slot="{{ slot }}">
-            <legend class="visually-hidden">Choose item {{ slot }}</legend>
-
-            <div class="ccg-mix__media">
-              <div class="ccg-mix__placeholder" data-placeholder>
-                <span class="ccg-mix__placeholder-number">{{ slot }}</span>
-                <span class="ccg-mix__placeholder-text">Choose your item</span>
-              </div>
-
-              <img
-                data-photo
-                hidden
-                width="720"
-                height="720"
-                alt=""
-                loading="lazy"
-              >
-
-              <span class="ccg-mix__check" aria-hidden="true">✓</span>
-            </div>
-
-            <div class="ccg-mix__card-body">
-              <div class="ccg-mix__card-head">
-                <div>
-                  <span class="ccg-mix__card-kicker">ITEM {{ slot }}</span>
-                  <h3 class="ccg-mix__card-title" data-card-title>
-                    {% if slot == 1 %}Choose first item{% else %}Choose second item{% endif %}
-                  </h3>
-                </div>
-
-                <span class="ccg-mix__card-price" data-card-price></span>
-              </div>
-
-              <div class="ccg-mix__field">
-                <label for="BundleProduct-{{ section.id }}-{{ slot }}">Product</label>
-                <select
-                  id="BundleProduct-{{ section.id }}-{{ slot }}"
-                  data-product
-                  required
-                ></select>
-              </div>
-
-              <div class="ccg-mix__field">
-                <label for="BundleVariant-{{ section.id }}-{{ slot }}">Size / lining / option</label>
-                <select
-                  id="BundleVariant-{{ section.id }}-{{ slot }}"
-                  data-variant
-                  required
-                ></select>
-              </div>
-
-              <a class="ccg-mix__product-link" data-product-link hidden>
-                View product details
-                <span aria-hidden="true">↗</span>
-              </a>
-            </div>
+          <fieldset data-slot="{{ slot }}">
+            <legend>Choose item {{ slot }}</legend>
+            <img data-photo hidden width="480" height="480" alt="" loading="lazy">
+            <label for="BundleProduct-{{ section.id }}-{{ slot }}">Product</label>
+            <select id="BundleProduct-{{ section.id }}-{{ slot }}" data-product required></select>
+            <label for="BundleVariant-{{ section.id }}-{{ slot }}">Size / lining / option</label>
+            <select id="BundleVariant-{{ section.id }}-{{ slot }}" data-variant required></select>
+            <a data-product-link hidden>View product details</a>
           </fieldset>
         {% endfor %}
       </div>
-
       <div class="ccg-mix__summary">
-        <div class="ccg-mix__summary-top">
-          <div>
-            <span class="ccg-mix__summary-kicker">YOUR BUNDLE</span>
-            <h3>Build the set & save</h3>
-          </div>
-
-          <div class="ccg-mix__discount-pill">
-            SAVE <span data-discount-percent>0</span>%
-          </div>
-        </div>
-
-        <div class="ccg-mix__summary-grid">
-          <div class="ccg-mix__price-row">
-            <span>Pair subtotal</span>
-            <strong data-subtotal>Choose two items</strong>
-          </div>
-
-          <div class="ccg-mix__price-row ccg-mix__price-row--saving" data-savings-row hidden>
-            <span>Bundle savings</span>
-            <strong data-savings></strong>
-          </div>
-
-          <div class="ccg-mix__price-row ccg-mix__price-row--total" data-total-row hidden>
-            <span>Bundle total</span>
-            <strong data-total></strong>
-          </div>
-        </div>
-
-        <button class="ccg-mix__add-button" type="submit" disabled>
-          <span>Add pair to cart</span>
-          <span aria-hidden="true">→</span>
-        </button>
-
-        <p class="ccg-mix__small">
-          Select one product from each card. Both items will be added to cart together.
-        </p>
-
-        <p class="ccg-mix__status" data-status role="status" aria-live="polite"></p>
+        <p>Pair subtotal: <strong data-subtotal>Choose two items</strong></p>
+        <p data-savings-row hidden>Bundle savings (<span data-discount-percent>0</span>%): <strong data-savings></strong></p>
+        <p data-total-row hidden>Bundle total: <strong data-total></strong></p>
+        <p class="ccg-mix__small">The selected bundle and savings are attached to both cart items when added.</p>
+        <button type="submit" disabled>Add pair to cart</button>
+        <p data-status role="status" aria-live="polite"></p>
       </div>
-
     </form>
     <noscript>Please enable JavaScript to choose a pair. You can also add items individually from their product pages.</noscript>
     {% for group in bundle_groups %}
@@ -172,379 +70,26 @@
   </div>
 </ccg-mix-match>
 <style>
-  .ccg-mix {
-    display: block;
-    background: var(--ccg-cream, #f7f5f1);
-    color: var(--ccg-ink, #211c17);
-    font-family: Karla, system-ui, sans-serif;
-    scroll-margin-top: 6rem;
-  }
-
-  .ccg-mix__inner {
-    max-width: 1240px;
-    margin: 0 auto;
-  }
-
-  .ccg-mix__header {
-    max-width: 760px;
-    margin-bottom: 32px;
-  }
-
-  .ccg-mix__eyebrow,
-  .ccg-mix__bundle-kicker,
-  .ccg-mix__card-kicker,
-  .ccg-mix__summary-kicker {
-    display: block;
-    margin: 0 0 8px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    line-height: 1.2;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--ccg-tan, #9a623e);
-  }
-
-  .ccg-mix__heading {
-    margin: 0;
-    font: 400 clamp(30px, 4vw, 48px)/1.12 Rye, serif;
-    color: var(--ccg-ink, #211c17);
-  }
-
-  .ccg-mix__description {
-    max-width: 680px;
-    margin: 14px 0 0;
-    font-size: 17px;
-    line-height: 1.65;
-    color: var(--ccg-stone, #645b50);
-  }
-
-  .ccg-mix__builder {
-    background: #efefef;
-    border-radius: 18px;
-    padding: 28px;
-  }
-
-  .ccg-mix__bundle-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 28px;
-    padding: 0 0 24px;
-  }
-
-  .ccg-mix__bundle-title {
-    margin: 0;
-    font-family: Rye, serif;
-    font-size: 22px;
-    font-weight: 400;
-  }
-
-  .ccg-mix__bundle-select {
-    width: min(560px, 100%);
-  }
-
-  .ccg-mix label {
-    display: block;
-    margin: 0 0 8px;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  .ccg-mix select {
-    width: 100%;
-    min-height: 50px;
-    padding: 10px 42px 10px 14px;
-    border: 1px solid #cac7c2;
-    background: #fff;
-    color: #211c17;
-    font: inherit;
-    border-radius: 10px;
-  }
-
-  .ccg-mix__choices {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-  }
-
-  .ccg-mix__product-card {
-    position: relative;
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    border: 2px solid transparent;
-    border-radius: 16px;
-    background: #fff;
-    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
-  }
-
-  .ccg-mix__product-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(33, 28, 23, .08);
-  }
-
-  .ccg-mix__product-card.is-selected {
-    border-color: #24211f;
-  }
-
-  .ccg-mix__media {
-    position: relative;
-    aspect-ratio: 1 / .88;
-    overflow: hidden;
-    background: #e7e4df;
-  }
-
-  .ccg-mix__media img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-  }
-
-  .ccg-mix__placeholder {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: 8px;
-    color: #7a746d;
-  }
-
-  .ccg-mix__placeholder-number {
-    display: grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    border: 1px solid #aaa49c;
-    border-radius: 50%;
-    font-weight: 700;
-  }
-
-  .ccg-mix__placeholder-text {
-    font-size: 14px;
-  }
-
-  .ccg-mix__check {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    display: grid;
-    place-items: center;
-    width: 28px;
-    height: 28px;
-    border: 1px solid #d0ccc7;
-    border-radius: 50%;
-    background: #fff;
-    color: transparent;
-    font-size: 15px;
-    font-weight: 700;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  }
-
-  .ccg-mix__product-card.is-selected .ccg-mix__check {
-    background: #211c17;
-    border-color: #211c17;
-    color: #fff;
-  }
-
-  .ccg-mix__card-body {
-    padding: 18px;
-  }
-
-  .ccg-mix__card-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-
-  .ccg-mix__card-title {
-    margin: 0;
-    font-size: 18px;
-    line-height: 1.35;
-    font-weight: 700;
-  }
-
-  .ccg-mix__card-price {
-    flex: 0 0 auto;
-    font-weight: 700;
-    font-size: 18px;
-  }
-
-  .ccg-mix__field + .ccg-mix__field {
-    margin-top: 14px;
-  }
-
-  .ccg-mix__product-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 16px;
-    color: inherit;
-    font-size: 14px;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  .ccg-mix__summary {
-    margin-top: 18px;
-    padding: 22px;
-    border-radius: 14px;
-    background: #fff;
-  }
-
-  .ccg-mix__summary-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #e3dfda;
-  }
-
-  .ccg-mix__summary-top h3 {
-    margin: 0;
-    font-family: Rye, serif;
-    font-size: 22px;
-    font-weight: 400;
-  }
-
-  .ccg-mix__discount-pill {
-    flex: 0 0 auto;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: #211c17;
-    color: #fff;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    letter-spacing: .12em;
-  }
-
-  .ccg-mix__summary-grid {
-    padding: 14px 0 4px;
-  }
-
-  .ccg-mix__price-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 7px 0;
-    font-size: 15px;
-  }
-
-  .ccg-mix__price-row--saving strong {
-    color: var(--ccg-tan, #9a623e);
-  }
-
-  .ccg-mix__price-row--total {
-    margin-top: 8px;
-    padding-top: 14px;
-    border-top: 1px solid #e3dfda;
-    font-size: 18px;
-  }
-
-  .ccg-mix__add-button {
-    width: 100%;
-    min-height: 56px;
-    margin-top: 16px;
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid #211c17;
-    border-radius: 10px;
-    background: #211c17;
-    color: #fff;
-    font: 600 16px/1.2 Karla, system-ui, sans-serif;
-    cursor: pointer;
-    transition: opacity .2s ease, transform .2s ease;
-  }
-
-  .ccg-mix__add-button:not(:disabled):hover {
-    transform: translateY(-1px);
-  }
-
-  .ccg-mix__add-button:disabled {
-    opacity: .45;
-    cursor: not-allowed;
-  }
-
-  .ccg-mix__small {
-    margin: 12px 0 0;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--ccg-stone, #645b50);
-  }
-
-  .ccg-mix__status {
-    margin: 8px 0 0;
-    min-height: 20px;
-    font-size: 14px;
-  }
-
-  .ccg-mix [hidden] {
-    display: none !important;
-  }
-
-  .ccg-mix :focus-visible {
-    outline: 2px solid var(--ccg-tan, #9a623e);
-    outline-offset: 3px;
-  }
-
-  .visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0,0,0,0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
-
-  @media screen and (max-width: 749px) {
-    .ccg-mix__builder {
-      padding: 16px;
-      border-radius: 14px;
-    }
-
-    .ccg-mix__bundle-bar {
-      align-items: stretch;
-      flex-direction: column;
-      gap: 14px;
-      padding-bottom: 18px;
-    }
-
-    .ccg-mix__bundle-select {
-      width: 100%;
-    }
-
-    .ccg-mix__choices {
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    .ccg-mix__media {
-      aspect-ratio: 1.15 / 1;
-    }
-
-    .ccg-mix__summary-top {
-      align-items: center;
-    }
-
-    .ccg-mix__heading {
-      font-size: 30px;
-    }
-
-    .ccg-mix__card-body,
-    .ccg-mix__summary {
-      padding: 16px;
-    }
-  }
+  .ccg-mix { display:block; background:var(--ccg-cream,#ede7dc); color:var(--ccg-ink,#211c17); font-family:Karla,system-ui,sans-serif; scroll-margin-top:6rem; }
+  .ccg-mix__inner { max-width:1200px; margin:auto; }
+  .ccg-mix h2 { font:400 clamp(25px,3vw,36px)/1.25 Rye,serif; margin:0 0 16px; }
+  .ccg-mix p { line-height:1.6; }
+  .ccg-mix__eyebrow { font:400 15px/1.5 'Barlow Condensed',sans-serif; letter-spacing:.18em; color:var(--ccg-tan,#9a623e); }
+  .ccg-mix label { display:block; margin:18px 0 8px; }
+  .ccg-mix select { width:100%; min-height:48px; padding:10px 36px 10px 12px; border:1px solid var(--ccg-hairline,#b6ac9d); background:#f8f5ee; color:#211c17; font:inherit; border-radius:0; }
+  .ccg-mix__choices { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:28px; }
+  .ccg-mix fieldset { margin:0; padding:20px; min-width:0; border:1px solid var(--ccg-hairline,#b6ac9d); }
+  .ccg-mix legend { padding:0 8px; font:400 21px/1.4 'Barlow Condensed',sans-serif; }
+  .ccg-mix img { display:block; width:100%; height:auto; max-height:380px; object-fit:contain; aspect-ratio:1; }
+  .ccg-mix [hidden] { display:none; }
+  .ccg-mix a { display:inline-block; color:inherit; margin-top:16px; text-underline-offset:4px; }
+  .ccg-mix button { padding:16px 28px; min-height:52px; border:1px solid #211c17; background:#211c17; color:#f8f5ee; font:400 18px/1.3 'Barlow Condensed',sans-serif; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
+  .ccg-mix button:disabled { opacity:.5; cursor:not-allowed; }
+  .ccg-mix :focus-visible { outline:2px solid #9a623e; outline-offset:4px; }
+  .ccg-mix__notice { padding:12px 16px; border-left:3px solid #9a623e; background:#f8f5ee; }
+  .ccg-mix__summary { margin-top:26px; border-top:1px solid var(--ccg-hairline,#b6ac9d); padding-top:12px; }
+  .ccg-mix__small { font-size:14px; color:var(--ccg-stone,#645b50); }
+  @media(max-width:749px) { .ccg-mix__choices { grid-template-columns:1fr; gap:20px; } .ccg-mix fieldset { padding:16px; } .ccg-mix button { width:100%; } }
 </style>
 <script>
 if (!customElements.get('ccg-mix-match')) {
@@ -651,26 +196,6 @@ if (!customElements.get('ccg-mix-match')) {
         const link = slot.querySelector('[data-product-link]');
         link.hidden = !product;
         if (product) link.href = product.url; else link.removeAttribute('href');
-
-        const placeholder = slot.querySelector('[data-placeholder]');
-        const title = slot.querySelector('[data-card-title]');
-        const price = slot.querySelector('[data-card-price]');
-
-        slot.classList.toggle('is-selected', !!variant);
-
-        if (placeholder) placeholder.hidden = !!src;
-
-        if (title) {
-          title.textContent = product
-            ? product.title
-            : (index === 0 ? 'Choose first item' : 'Choose second item');
-        }
-
-        if (price) {
-          price.textContent = variant
-            ? this.money.format(Number(variant.price) / 100)
-            : '';
-        }
       });
       let valid = selected.every(({variant}) => variant && this.purchasable(variant));
       let error = '';
