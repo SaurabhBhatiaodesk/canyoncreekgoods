@@ -7,33 +7,33 @@
 {% if section.settings.page_layout == 'about' or page.handle == 'about-me' %}
   <section class="ccg-about">
     <div class="ccg-about__hero">
-      <div class="ccg-about__container ccg-about__hero-grid">
-        <div class="ccg-about__hero-copy">
-          <nav class="ccg-about__breadcrumbs" aria-label="Breadcrumb">
-            <a href="{{ routes.root_url }}">Home</a>
-            <span aria-hidden="true">/</span>
-            <span>{{ page.title }}</span>
-          </nav>
+      <div class="ccg-about__container">
+        <nav class="ccg-about__breadcrumbs" aria-label="Breadcrumb">
+          <a href="{{ routes.root_url }}">Home</a>
+          <span aria-hidden="true">/</span>
+          <span>{{ page.title }}</span>
+        </nav>
 
-          {% if section.settings.about_eyebrow != blank %}
-            <p class="ccg-about__eyebrow">{{ section.settings.about_eyebrow }}</p>
-          {% endif %}
+        {% if section.settings.about_eyebrow != blank %}
+          <p class="ccg-about__eyebrow">{{ section.settings.about_eyebrow }}</p>
+        {% endif %}
 
-          <h1 class="ccg-about__title">{{ page.title }}</h1>
+        <h1 class="ccg-about__title">{{ page.title }}</h1>
 
-          {% if section.settings.about_intro != blank %}
-            <div class="ccg-about__intro">{{ section.settings.about_intro }}</div>
-          {% endif %}
-        </div>
-
-        <div class="ccg-about__portrait" data-about-portrait aria-label="Portrait of Melissa"></div>
+        {% if section.settings.about_intro != blank %}
+          <div class="ccg-about__intro">{{ section.settings.about_intro }}</div>
+        {% endif %}
       </div>
     </div>
 
     <div class="ccg-about__body">
-      <article class="ccg-about__content rte" data-about-content>
-        {{ page.content }}
-      </article>
+      <div class="ccg-about__body-grid">
+        <article class="ccg-about__content rte" data-about-content>
+          {{ page.content }}
+        </article>
+
+        <div class="ccg-about__portrait" data-about-portrait aria-label="Portrait of Melissa"></div>
+      </div>
     </div>
   </section>
 
@@ -173,29 +173,18 @@
   }
 
   .ccg-about__hero {
-    padding: 42px 0 72px;
+    padding: 42px 0 68px;
     border-bottom: 1px solid var(--about-rule);
     background:
       linear-gradient(135deg, rgba(185, 138, 82, 0.12), transparent 48%),
       var(--about-sand);
   }
 
-  .ccg-about__hero-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
-    gap: clamp(48px, 7vw, 96px);
-    align-items: center;
-  }
-
-  .ccg-about__hero-copy {
-    min-width: 0;
-  }
-
   .ccg-about__breadcrumbs {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 72px;
+    margin-bottom: 62px;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 13px;
     letter-spacing: 0.14em;
@@ -223,20 +212,20 @@
   }
 
   .ccg-about__title {
-    max-width: 720px;
+    max-width: 900px;
     margin: 0;
     color: var(--ccg-ink);
     font-family: 'Rye', serif;
-    font-size: clamp(42px, 5vw, 68px);
+    font-size: clamp(42px, 6vw, 78px);
     font-weight: 400;
     letter-spacing: -0.02em;
-    line-height: 1.05;
+    line-height: 1.04;
     text-wrap: balance;
   }
 
   .ccg-about__intro {
-    max-width: 620px;
-    margin-top: 26px;
+    max-width: 680px;
+    margin-top: 24px;
     color: var(--ccg-muted);
     font-size: 19px;
     line-height: 1.7;
@@ -246,9 +235,70 @@
     margin: 0;
   }
 
+  .ccg-about__body {
+    width: min(1040px, calc(100% - 80px));
+    margin-inline: auto;
+    padding-block: 80px 92px;
+  }
+
+  .ccg-about__body-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(340px, 0.88fr);
+    gap: clamp(48px, 7vw, 88px);
+    align-items: start;
+  }
+
+  .ccg-about__content {
+    min-width: 0;
+    color: var(--ccg-muted);
+    font-size: 17px;
+    line-height: 1.82;
+  }
+
+  .ccg-about__content > p {
+    margin: 0 0 25px;
+  }
+
+  .ccg-about__content > p:first-child {
+    margin-bottom: 38px;
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: clamp(22px, 2.5vw, 29px);
+    line-height: 1.5;
+  }
+
+  .ccg-about__content > p:last-of-type {
+    width: fit-content;
+    margin: 36px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--about-rule);
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: 20px;
+  }
+
+  .ccg-about__content > img,
+  .ccg-about__content > p:has(> img) {
+    display: block;
+    width: 100%;
+    margin: 38px 0 0;
+  }
+
+  .ccg-about__content img {
+    width: 100%;
+    height: auto;
+  }
+
+  .ccg-about__content a {
+    color: var(--ccg-ink);
+    text-decoration-color: var(--ccg-tan);
+    text-underline-offset: 4px;
+  }
+
   .ccg-about__portrait {
-    position: relative;
-    min-height: 570px;
+    position: sticky;
+    top: 32px;
+    min-height: 560px;
     overflow: hidden;
     border: 1px solid var(--about-rule);
     background: rgba(185, 138, 82, 0.12);
@@ -277,58 +327,6 @@
     inset: 0;
     object-fit: cover;
     object-position: center;
-  }
-
-  .ccg-about__body {
-    width: min(880px, calc(100% - 80px));
-    margin-inline: auto;
-    padding-block: 78px 92px;
-  }
-
-  .ccg-about__content {
-    color: var(--ccg-muted);
-    font-size: 17px;
-    line-height: 1.82;
-  }
-
-  .ccg-about__content > p {
-    margin: 0 0 25px;
-  }
-
-  .ccg-about__content > p:first-child {
-    margin-bottom: 42px;
-    color: var(--ccg-ink);
-    font-family: 'Rye', serif;
-    font-size: clamp(23px, 2.6vw, 31px);
-    line-height: 1.5;
-  }
-
-  .ccg-about__content > p:last-of-type {
-    width: fit-content;
-    margin: 38px 0 0;
-    padding-top: 18px;
-    border-top: 1px solid var(--about-rule);
-    color: var(--ccg-ink);
-    font-family: 'Rye', serif;
-    font-size: 20px;
-  }
-
-  .ccg-about__content > img,
-  .ccg-about__content > p:has(> img) {
-    display: block;
-    width: 100%;
-    margin: 38px 0 0;
-  }
-
-  .ccg-about__content img {
-    width: 100%;
-    height: auto;
-  }
-
-  .ccg-about__content a {
-    color: var(--ccg-ink);
-    text-decoration-color: var(--ccg-tan);
-    text-underline-offset: 4px;
   }
 
   .ccg-policy {
@@ -603,11 +601,6 @@
       padding: 28px 0 42px;
     }
 
-    .ccg-about__hero-grid {
-      grid-template-columns: 1fr;
-      gap: 36px;
-    }
-
     .ccg-about__breadcrumbs {
       margin-bottom: 42px;
       font-size: 11px;
@@ -622,13 +615,13 @@
       font-size: 17px;
     }
 
-    .ccg-about__portrait {
-      min-height: 0;
-      aspect-ratio: 4 / 5;
-    }
-
     .ccg-about__body {
       padding-block: 52px 64px;
+    }
+
+    .ccg-about__body-grid {
+      grid-template-columns: 1fr;
+      gap: 38px;
     }
 
     .ccg-about__content {
@@ -638,6 +631,13 @@
 
     .ccg-about__content > p:first-child {
       margin-bottom: 34px;
+    }
+
+    .ccg-about__portrait {
+      position: relative;
+      top: auto;
+      min-height: 0;
+      aspect-ratio: 4 / 5;
     }
 
     .ccg-policy__container,
