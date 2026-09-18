@@ -4,7 +4,35 @@
   endif
 %}
 
-{% if section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' %}
+{% if section.settings.page_layout == 'about' %}
+  <section class="ccg-about">
+    <div class="ccg-about__hero">
+      <div class="ccg-about__container">
+        <nav class="ccg-about__breadcrumbs" aria-label="Breadcrumb">
+          <a href="{{ routes.root_url }}">Home</a>
+          <span aria-hidden="true">/</span>
+          <span>{{ page.title }}</span>
+        </nav>
+
+        {% if section.settings.about_eyebrow != blank %}
+          <p class="ccg-about__eyebrow">{{ section.settings.about_eyebrow }}</p>
+        {% endif %}
+
+        <h1 class="ccg-about__title">{{ page.title }}</h1>
+
+        {% if section.settings.about_intro != blank %}
+          <div class="ccg-about__intro">{{ section.settings.about_intro }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ccg-about__body">
+      <article class="ccg-about__content rte">
+        {{ page.content }}
+      </article>
+    </div>
+  </section>
+{% elsif section.settings.page_layout == 'policy' or section.settings.page_layout == 'faq' %}
   <section class="ccg-policy">
     <div class="ccg-policy__hero">
       <div class="ccg-policy__container">
@@ -105,6 +133,146 @@
 {% endif %}
 
 {% stylesheet %}
+  .ccg-about {
+    --about-paper: #ede7dc;
+    --about-sand: #f3ede2;
+    --about-rule: rgba(45, 39, 32, 0.2);
+    background: var(--about-paper);
+    color: var(--ccg-ink);
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-about__container,
+  .ccg-about__body {
+    width: min(1180px, calc(100% - 80px));
+    margin-inline: auto;
+  }
+
+  .ccg-about__hero {
+    padding: 42px 0 68px;
+    border-bottom: 1px solid var(--about-rule);
+    background:
+      linear-gradient(135deg, rgba(185, 138, 82, 0.12), transparent 48%),
+      var(--about-sand);
+  }
+
+  .ccg-about__breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 62px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .ccg-about__breadcrumbs a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .ccg-about__breadcrumbs span:last-child {
+    color: var(--ccg-muted);
+  }
+
+  .ccg-about__eyebrow {
+    margin: 0 0 14px;
+    color: var(--ccg-tan);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.24em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .ccg-about__title {
+    max-width: 900px;
+    margin: 0;
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: clamp(42px, 6vw, 78px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  .ccg-about__intro {
+    max-width: 680px;
+    margin-top: 24px;
+    color: var(--ccg-muted);
+    font-size: 19px;
+    line-height: 1.7;
+  }
+
+  .ccg-about__intro p {
+    margin: 0;
+  }
+
+  .ccg-about__body {
+    padding-block: 80px 92px;
+  }
+
+  .ccg-about__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    column-gap: clamp(48px, 7vw, 96px);
+    align-items: start;
+    color: var(--ccg-muted);
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  .ccg-about__content > *:not(img) {
+    grid-column: 1;
+  }
+
+  .ccg-about__content > p {
+    margin: 0 0 24px;
+  }
+
+  .ccg-about__content > p:first-child {
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: clamp(23px, 2.6vw, 32px);
+    line-height: 1.45;
+  }
+
+  .ccg-about__content > p:last-of-type {
+    width: fit-content;
+    margin-top: 8px;
+    padding-top: 18px;
+    border-top: 1px solid var(--about-rule);
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: 20px;
+  }
+
+  .ccg-about__content > img,
+  .ccg-about__content > p:has(> img) {
+    grid-column: 2;
+    grid-row: 1 / span 12;
+    width: 100%;
+    margin: 0;
+  }
+
+  .ccg-about__content img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 760px;
+    border: 1px solid var(--about-rule);
+    object-fit: cover;
+  }
+
+  .ccg-about__content a {
+    color: var(--ccg-ink);
+    text-decoration-color: var(--ccg-tan);
+    text-underline-offset: 4px;
+  }
+
   .ccg-policy {
     --policy-paper: #f7f3ec;
     --policy-card: #ede7dc;
@@ -368,6 +536,51 @@
   }
 
   @media screen and (max-width: 749px) {
+    .ccg-about__container,
+    .ccg-about__body {
+      width: min(100% - 36px, 1180px);
+    }
+
+    .ccg-about__hero {
+      padding: 28px 0 42px;
+    }
+
+    .ccg-about__breadcrumbs {
+      margin-bottom: 42px;
+      font-size: 11px;
+    }
+
+    .ccg-about__title {
+      font-size: clamp(38px, 13vw, 56px);
+    }
+
+    .ccg-about__intro {
+      margin-top: 18px;
+      font-size: 17px;
+    }
+
+    .ccg-about__body {
+      padding-block: 52px 64px;
+    }
+
+    .ccg-about__content {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      font-size: 16px;
+      line-height: 1.72;
+    }
+
+    .ccg-about__content > img,
+    .ccg-about__content > p:has(> img) {
+      order: -1;
+      margin: 0 0 34px;
+    }
+
+    .ccg-about__content img {
+      max-height: none;
+    }
+
     .ccg-policy__container,
     .ccg-policy__body,
     .ccg-policy__contact {
@@ -479,6 +692,24 @@
         }
       ],
       "default": "original"
+    },
+    {
+      "type": "header",
+      "content": "Layout 4 — About Melissa"
+    },
+    {
+      "type": "text",
+      "id": "about_eyebrow",
+      "label": "Eyebrow",
+      "default": "Meet the maker",
+      "visible_if": "{{ section.settings.page_layout == 'about' }}"
+    },
+    {
+      "type": "richtext",
+      "id": "about_intro",
+      "label": "Introduction",
+      "default": "<p>Handmade in Snowflake, Arizona, for women who carry the spirit of the West wherever life takes them.</p>",
+      "visible_if": "{{ section.settings.page_layout == 'about' }}"
     },
     {
       "type": "header",
