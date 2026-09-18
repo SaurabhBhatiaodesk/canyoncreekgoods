@@ -104,7 +104,7 @@
           "type": "contact-form",
           "settings": {
             "width": "custom",
-            "custom_width": 50,
+            "custom_width": 75,
             "width_mobile": "custom",
             "custom_width_mobile": 100,
             "background_color": "",
@@ -157,7 +157,7 @@
         "section_height": "",
         "section_height_custom": 50,
         "background_media": "none",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "#EDE7DC",
         "video_position": "cover",
         "background_image_position": "cover",
         "toggle_overlay": false,
