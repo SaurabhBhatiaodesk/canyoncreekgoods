@@ -1,16 +1,40 @@
 {% render 'ccg-section-spacing' %}
 
-<div class="ccg-features section">
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+  }
+</style>
+
+<div
+  class="ccg-features section"
+  style="background-color: {{ section.settings.background_color }};"
+>
   <div class="ccg-features__row">
     {%- for block in section.blocks -%}
-      <div class="ccg-features__item" {{ block.shopify_attributes }}>
+      <div
+        class="ccg-features__item"
+        {{ block.shopify_attributes }}
+      >
         {%- if block.settings.icon != blank -%}
           <span class="ccg-features__icon">
-            {{ block.settings.icon | image_url: width: 80 | image_tag: widths: '40, 60, 80', alt: block.settings.title }}
+            {{
+              block.settings.icon
+              | image_url: width: 80
+              | image_tag:
+                widths: '40, 60, 80',
+                alt: block.settings.title
+            }}
           </span>
         {%- endif -%}
-        <span class="ccg-features__title">{{ block.settings.title }}</span>
-        <span class="ccg-features__text">{{ block.settings.text }}</span>
+
+        <span class="ccg-features__title">
+          {{ block.settings.title }}
+        </span>
+
+        <span class="ccg-features__text">
+          {{ block.settings.text }}
+        </span>
       </div>
     {%- endfor -%}
   </div>
@@ -18,7 +42,6 @@
 
 {% stylesheet %}
   .ccg-features {
-    background: var(--ccg-cream);
     border-top: 1px solid var(--ccg-hairline);
     font-family: 'Karla', system-ui, sans-serif;
   }
@@ -29,15 +52,17 @@
   }
 
   .ccg-features__item {
-    padding: 40px 32px;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding: 40px 32px;
     border-right: 1px solid rgba(33, 28, 23, 0.12);
   }
-  .ccg-features__item:first-child{
-    padding-left:0;
+
+  .ccg-features__item:first-child {
+    padding-left: 0;
   }
+
   .ccg-features__item:last-child {
     border-right: 0;
   }
@@ -55,38 +80,38 @@
   }
 
   .ccg-features__title {
-    font-family: 'Rye', serif;
-    font-weight: 400;
-    font-size: 16px;
     color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: 16px;
+    font-weight: 400;
   }
 
   .ccg-features__text {
+    color: var(--ccg-stone);
     font-size: 15px;
     line-height: 1.6;
-    color: var(--ccg-stone);
   }
 
   @media screen and (max-width: 749px) {
     .ccg-features__row {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .ccg-features__item {
       padding: 28px 20px;
     }
-    .ccg-features__item:nth-child(3){
-      padding-left:0;
+
+    .ccg-features__item:nth-child(3) {
+      padding-left: 0;
     }
 
     .ccg-features__item:nth-child(2n) {
-        border-right: 0;
-        padding-right: 0;
+      padding-right: 0;
+      border-right: 0;
     }
 
-    .ccg-features__item:nth-child(-n+2) {
-      border-bottom: 1px solid rgba(33,28,23,.12);
-      padding-right: 0;
+    .ccg-features__item:nth-child(-n + 2) {
+      border-bottom: 1px solid rgba(33, 28, 23, 0.12);
     }
   }
 {% endstylesheet %}
@@ -153,9 +178,23 @@
       "type": "feature",
       "name": "Feature",
       "settings": [
-        { "type": "image_picker", "id": "icon", "label": "Icon (optional)" },
-        { "type": "text", "id": "title", "label": "Title", "default": "100% handmade" },
-        { "type": "text", "id": "text", "label": "Text", "default": "Every piece hand cut, stitched and finished in a small-batch home studio." }
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon (optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "100% handmade"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Every piece hand cut, stitched and finished in a small-batch home studio."
+        }
       ]
     }
   ],
@@ -163,10 +202,34 @@
     {
       "name": "CCG Feature Bar",
       "blocks": [
-        { "type": "feature", "settings": { "title": "100% handmade", "text": "Every piece hand cut, stitched and finished in a small-batch home studio." } },
-        { "type": "feature", "settings": { "title": "Premium US wool", "text": "Sourced from American woolen mills for warmth and lasting texture." } },
-        { "type": "feature", "settings": { "title": "One of a kind", "text": "No two cowls or jackets are identical. Your style stays your own." } },
-        { "type": "feature", "settings": { "title": "Direct to maker", "text": "You buy from the artisan who made it, and she picks up the phone." } }
+        {
+          "type": "feature",
+          "settings": {
+            "title": "100% handmade",
+            "text": "Every piece hand cut, stitched and finished in a small-batch home studio."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Premium US wool",
+            "text": "Sourced from American woolen mills for warmth and lasting texture."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "One of a kind",
+            "text": "No two cowls or jackets are identical. Your style stays your own."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Direct to maker",
+            "text": "You buy from the artisan who made it, and she picks up the phone."
+          }
+        }
       ]
     }
   ]
