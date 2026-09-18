@@ -53,7 +53,7 @@
       "settings": {
         "page_layout": "about",
         "about_eyebrow": "Meet the maker",
-        "about_intro": "<p>Handmade in Snowflake, Arizona, for women who carry the spirit of the West wherever life takes them.</p>",
+        "about_intro": "",
         "policy_eyebrow": "Shipping & delivery",
         "policy_intro": "<p>Handmade in Arizona and packed with care. Here is everything you need to know about processing, delivery, and getting your order home.</p>",
         "show_policy_highlights": true,
