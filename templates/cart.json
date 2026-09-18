@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "cart-section": {
       "type": "main-cart",
@@ -19,6 +20,7 @@
             "show_count": true,
             "type_preset": "h4",
             "alignment": "left",
+            "text_color": "",
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
@@ -34,6 +36,12 @@
             "image_ratio": "portrait",
             "dividers": true,
             "vendor": false,
+            "input_style": "default",
+            "input_background_color": "{{ settings.color_palette.background }}",
+            "input_text_color": "{{ settings.color_palette.foreground }}",
+            "input_border_color": "{{ settings.color_palette.foreground }}",
+            "border_width": 1,
+            "border_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
@@ -47,9 +55,11 @@
           "settings": {
             "extend_summary": true,
             "background_color": "{{ settings.color_palette.color2 }}",
+            "text_color": "",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
+            "border_color": "",
             "border_radius": 0
           },
           "blocks": {}
@@ -57,7 +67,8 @@
       },
       "settings": {
         "section_width": "page-width",
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "#F8F5EE",
+        "text_color": "",
         "padding-block-start": 24,
         "padding-block-end": 0
       }
@@ -85,11 +96,13 @@
             "height": "fit",
             "custom_height": 100,
             "background_media": "none",
+            "background_color": "",
             "video_position": "cover",
             "background_image_position": "cover",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
+            "border_color": "",
             "border_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
@@ -107,10 +120,12 @@
                 "alignment": "left",
                 "type_preset": "h4",
                 "font": "var(--font-body--family)",
+                "font_size": "1rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
+                "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -128,6 +143,10 @@
                 "label": "View all",
                 "open_in_new_tab": false,
                 "style_class": "link",
+                "custom_button_background": "{{ settings.color_palette.foreground }}",
+                "custom_button_text": "{{ settings.color_palette.background }}",
+                "custom_button_border": "{{ settings.color_palette.background }}",
+                "link_text_color": "",
                 "width": "fit-content",
                 "custom_width": 100,
                 "width_mobile": "fit-content",
@@ -147,9 +166,11 @@
           "static": true,
           "settings": {
             "product_card_gap": 4,
+            "background_color": "",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
+            "border_color": "",
             "border_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
@@ -165,6 +186,7 @@
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
+                "border_color": "",
                 "border_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
@@ -182,10 +204,12 @@
                 "alignment": "left",
                 "type_preset": "rte",
                 "font": "var(--font-body--family)",
+                "font_size": "1rem",
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
+                "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -203,6 +227,7 @@
                 "show_sale_price_first": true,
                 "show_installments": false,
                 "show_tax_info": false,
+                "shipping_text": "Free shipping, no minimum",
                 "type_preset": "h6",
                 "width": "100%",
                 "alignment": "left",
@@ -211,6 +236,7 @@
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
+                "text_color": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -226,6 +252,7 @@
           ]
         }
       },
+      "disabled": true,
       "name": "t:names.product_list",
       "settings": {
         "collection": "all",
@@ -246,10 +273,75 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "ccg_best_sellers_BECeAL": {
+      "type": "ccg-best-sellers",
+      "blocks": {
+        "product_N9yjqY": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "title": "Wool Cowl Scarf — Nehalem",
+            "price": "$79.00",
+            "link": "",
+            "badge_text": "Best seller"
+          }
+        },
+        "product_wYzBdx": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "title": "Wool Cowl Scarf — Turquoise Chief",
+            "price": "$79.00",
+            "link": "",
+            "badge_text": "Last one"
+          }
+        },
+        "product_U63C6D": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "title": "Western Cowl — Grey Aztec",
+            "price": "$59.00",
+            "link": "",
+            "badge_text": "One of one"
+          }
+        },
+        "product_UKiMtH": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "title": "Wool Cowl Scarf — Journey West",
+            "price": "$79.00",
+            "link": "",
+            "badge_text": "New"
+          }
+        }
+      },
+      "block_order": [
+        "product_N9yjqY",
+        "product_wYzBdx",
+        "product_U63C6D",
+        "product_UKiMtH"
+      ],
+      "name": "CCG Best Sellers",
+      "settings": {
+        "eyebrow": "OUT THE DOOR IN 1–2 DAYS",
+        "heading": "Ready to ride out",
+        "image_ratio": "portrait",
+        "background_color": "#f8f5ee",
+        "desktop_padding_top": 60,
+        "desktop_padding_bottom": 60,
+        "mobile_padding_top": 60,
+        "mobile_padding_bottom": 56,
+        "collection": "denim-dusters",
+        "product_limit": 4
+      }
     }
   },
   "order": [
     "cart-section",
-    "product_list_NNFgcy"
+    "product_list_NNFgcy",
+    "ccg_best_sellers_BECeAL"
   ]
 }
