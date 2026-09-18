@@ -4,7 +4,35 @@
   endif
 %}
 
-{% if section.settings.page_layout == 'about' or page.handle == 'about-me' %}
+{% if section.settings.page_layout == 'contact' or page.handle == 'contact' %}
+  <section class="ccg-contact-page">
+    <div class="ccg-contact-page__hero">
+      <div class="ccg-contact-page__container">
+        <nav class="ccg-contact-page__breadcrumbs" aria-label="Breadcrumb">
+          <a href="{{ routes.root_url }}">Home</a>
+          <span aria-hidden="true">/</span>
+          <span>{{ page.title }}</span>
+        </nav>
+
+        {% if section.settings.contact_page_eyebrow != blank %}
+          <p class="ccg-contact-page__eyebrow">{{ section.settings.contact_page_eyebrow }}</p>
+        {% endif %}
+
+        <h1 class="ccg-contact-page__title">{{ page.title }}</h1>
+
+        {% if section.settings.contact_page_intro != blank %}
+          <div class="ccg-contact-page__intro">{{ section.settings.contact_page_intro }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ccg-contact-page__body">
+      <article class="ccg-contact-page__content rte">
+        {{ page.content }}
+      </article>
+    </div>
+  </section>
+{% elsif section.settings.page_layout == 'about' or page.handle == 'about-me' %}
   <section class="ccg-about">
     <div class="ccg-about__hero">
       <div class="ccg-about__container">
@@ -158,6 +186,158 @@
 {% endif %}
 
 {% stylesheet %}
+  .ccg-contact-page {
+    --contact-paper: #ede7dc;
+    --contact-sand: #f3ede2;
+    --contact-card: #f7f3ec;
+    --contact-rule: rgba(45, 39, 32, 0.2);
+    background: var(--contact-paper);
+    color: var(--ccg-ink);
+    font-family: 'Karla', system-ui, sans-serif;
+  }
+
+  .ccg-contact-page__container {
+    width: min(1180px, calc(100% - 80px));
+    margin-inline: auto;
+  }
+
+  .ccg-contact-page__hero {
+    padding: 42px 0 68px;
+    border-bottom: 1px solid var(--contact-rule);
+    background:
+      linear-gradient(135deg, rgba(185, 138, 82, 0.12), transparent 48%),
+      var(--contact-sand);
+  }
+
+  .ccg-contact-page__breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 62px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .ccg-contact-page__breadcrumbs a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .ccg-contact-page__breadcrumbs span:last-child {
+    color: var(--ccg-muted);
+  }
+
+  .ccg-contact-page__eyebrow {
+    margin: 0 0 14px;
+    color: var(--ccg-tan);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.24em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .ccg-contact-page__title {
+    max-width: 900px;
+    margin: 0;
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: clamp(42px, 6vw, 78px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  .ccg-contact-page__intro {
+    max-width: 680px;
+    margin-top: 24px;
+    color: var(--ccg-muted);
+    font-size: 19px;
+    line-height: 1.7;
+  }
+
+  .ccg-contact-page__intro p {
+    margin: 0;
+  }
+
+  .ccg-contact-page__body {
+    width: min(1040px, calc(100% - 80px));
+    margin-inline: auto;
+    padding-block: 72px 84px;
+  }
+
+  .ccg-contact-page__content {
+    color: var(--ccg-muted);
+    font-size: 17px;
+    line-height: 1.78;
+  }
+
+  .ccg-contact-page__content > p:first-child {
+    max-width: 760px;
+    margin: 0 0 42px;
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: clamp(22px, 2.6vw, 31px);
+    line-height: 1.5;
+  }
+
+  .ccg-contact-page__content > p {
+    margin: 0 0 24px;
+  }
+
+  .ccg-contact-page__content h2 {
+    margin: 48px 0 16px;
+    color: var(--ccg-ink);
+    font-family: 'Rye', serif;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .ccg-contact-page__content hr {
+    margin: 46px 0;
+    border: 0;
+    border-top: 1px solid var(--contact-rule);
+  }
+
+  .ccg-contact-page__content ul,
+  .ccg-contact-page__content ol {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0 26px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ccg-contact-page__content li {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .ccg-contact-page__content li::before {
+    content: '◆';
+    position: absolute;
+    top: 7px;
+    left: 0;
+    color: var(--ccg-tan);
+    font-size: 9px;
+  }
+
+  .ccg-contact-page__content strong {
+    color: var(--ccg-ink);
+    font-weight: 600;
+  }
+
+  .ccg-contact-page__content a {
+    color: var(--ccg-ink);
+    text-decoration-color: var(--ccg-tan);
+    text-underline-offset: 4px;
+  }
+
   .ccg-about {
     --about-paper: #ede7dc;
     --about-sand: #f3ede2;
@@ -592,6 +772,46 @@
   }
 
   @media screen and (max-width: 749px) {
+    .ccg-contact-page__container,
+    .ccg-contact-page__body {
+      width: min(100% - 36px, 1180px);
+    }
+
+    .ccg-contact-page__hero {
+      padding: 28px 0 42px;
+    }
+
+    .ccg-contact-page__breadcrumbs {
+      margin-bottom: 42px;
+      font-size: 11px;
+    }
+
+    .ccg-contact-page__title {
+      font-size: clamp(38px, 13vw, 56px);
+    }
+
+    .ccg-contact-page__intro {
+      margin-top: 18px;
+      font-size: 17px;
+    }
+
+    .ccg-contact-page__body {
+      padding-block: 52px 60px;
+    }
+
+    .ccg-contact-page__content {
+      font-size: 16px;
+      line-height: 1.72;
+    }
+
+    .ccg-contact-page__content > p:first-child {
+      margin-bottom: 34px;
+    }
+
+    .ccg-contact-page__content h2 {
+      margin-top: 40px;
+    }
+
     .ccg-about__container,
     .ccg-about__body {
       width: min(100% - 36px, 1180px);
@@ -751,14 +971,35 @@
         },
         {
           "value": "about",
-          "label": "Layout 4 — About Melissa"
+          "label": "Layout 4 — About Us"
+        },
+        {
+          "value": "contact",
+          "label": "Layout 5 — Contact Us"
         }
       ],
       "default": "original"
     },
     {
       "type": "header",
-      "content": "Layout 4 — About Melissa"
+      "content": "Layout 5 — Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "contact_page_eyebrow",
+      "label": "Eyebrow",
+      "default": "Let's talk",
+      "visible_if": "{{ section.settings.page_layout == 'contact' }}"
+    },
+    {
+      "type": "richtext",
+      "id": "contact_page_intro",
+      "label": "Introduction",
+      "visible_if": "{{ section.settings.page_layout == 'contact' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout 4 — About Us"
     },
     {
       "type": "text",
