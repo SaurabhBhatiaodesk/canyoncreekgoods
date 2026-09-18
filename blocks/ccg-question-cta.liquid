@@ -1,93 +1,309 @@
+{% liquid
+  assign product_resource = closest.product | default: product
+  assign current_variant = product_resource.selected_or_first_available_variant
+  assign low_stock_threshold = block.settings.low_stock_threshold | default: 5
+
+  assign badge_state = 'limited-run'
+  assign badge_label = block.settings.limited_run_label
+  assign badge_message = block.settings.limited_run_message
+
+  if current_variant.available == false
+    assign badge_state = 'sold-out'
+    assign badge_label = block.settings.sold_out_label
+    assign badge_message = block.settings.sold_out_message
+  elsif current_variant.inventory_management != blank and current_variant.inventory_policy != 'continue'
+    if current_variant.inventory_quantity == 1
+      assign badge_state = 'one-of-a-kind'
+      assign badge_label = block.settings.one_of_a_kind_label
+      assign badge_message = block.settings.one_of_a_kind_message
+    elsif current_variant.inventory_quantity > 1 and current_variant.inventory_quantity <= low_stock_threshold
+      assign badge_state = 'low-stock'
+      assign badge_label = block.settings.low_stock_label
+
+      if block.settings.show_exact_quantity
+        capture badge_message
+          echo 'Only '
+          echo current_variant.inventory_quantity
+          echo ' available · '
+          echo block.settings.low_stock_message
+        endcapture
+      else
+        assign badge_message = block.settings.low_stock_message
+      endif
+    endif
+  endif
+%}
+
 <div
   class="ccg-question-cta"
   style="
-    --ccg-question-cta-ink: {{ block.settings.text_color }};
-    --ccg-question-cta-tan: {{ block.settings.note_color }};
-    --ccg-question-cta-border: {{ block.settings.border_color }};
+    --ccg-question-text: {{ block.settings.text_color }};
+    --ccg-question-accent: {{ block.settings.note_color }};
+    --ccg-question-border: {{ block.settings.border_color }};
+    --ccg-question-card: {{ block.settings.badge_background }};
   "
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.button_label != blank -%}
-    <a class="ccg-question-cta__button" href="{{ block.settings.button_link | default: '/pages/contact' }}">
-      {{ block.settings.button_label }}
+    <a
+      class="ccg-question-cta__button"
+      {% if block.settings.button_link != blank %}
+        href="{{ block.settings.button_link }}"
+      {% else %}
+        role="link"
+        aria-disabled="true"
+      {% endif %}
+    >
+      {{ block.settings.button_label | escape }}
     </a>
   {%- endif -%}
 
-  {%- if block.settings.note != blank -%}
-    <p class="ccg-question-cta__note">{{ block.settings.note }}</p>
+  {%- if product_resource != blank -%}
+    <ccg-inventory-badge
+      class="ccg-inventory-badge ccg-inventory-badge--{{ badge_state }}"
+      data-threshold="{{ low_stock_threshold }}"
+      data-show-quantity="{{ block.settings.show_exact_quantity }}"
+      data-one-label="{{ block.settings.one_of_a_kind_label | escape }}"
+      data-one-message="{{ block.settings.one_of_a_kind_message | escape }}"
+      data-low-label="{{ block.settings.low_stock_label | escape }}"
+      data-low-message="{{ block.settings.low_stock_message | escape }}"
+      data-limited-label="{{ block.settings.limited_run_label | escape }}"
+      data-limited-message="{{ block.settings.limited_run_message | escape }}"
+      data-sold-label="{{ block.settings.sold_out_label | escape }}"
+      data-sold-message="{{ block.settings.sold_out_message | escape }}"
+      aria-live="polite"
+    >
+      <span class="ccg-inventory-badge__mark" aria-hidden="true"></span>
+      <span class="ccg-inventory-badge__copy">
+        <strong class="ccg-inventory-badge__label">{{ badge_label | escape }}</strong>
+        <span class="ccg-inventory-badge__message">{{ badge_message | escape }}</span>
+      </span>
+
+      <script type="application/json" data-ccg-variant-inventory>
+        [
+          {%- for variant in product_resource.variants -%}
+            {
+              "id": {{ variant.id | json }},
+              "available": {{ variant.available | json }},
+              "quantity": {{ variant.inventory_quantity | default: 0 | json }},
+              "tracked": {% if variant.inventory_management != blank %}true{% else %}false{% endif %},
+              "continueSelling": {% if variant.inventory_policy == 'continue' %}true{% else %}false{% endif %}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      </script>
+    </ccg-inventory-badge>
   {%- endif -%}
 </div>
 
 {% stylesheet %}
   .ccg-question-cta {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+    display: grid;
+    gap: 14px;
     width: 100%;
-    font-family: 'Barlow Condensed', sans-serif;
   }
 
   .ccg-question-cta__button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    border: 1px solid var(--ccg-question-cta-border);
-    color: var(--ccg-question-cta-ink);
+    min-height: 58px;
+    padding: 14px 24px;
+    border: 1px solid var(--ccg-question-border);
+    color: var(--ccg-question-text);
     background: transparent;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
     font-weight: 400;
-    line-height: 1.1;
+    letter-spacing: 0.16em;
+    line-height: 1.2;
     text-align: center;
     text-decoration: none;
-    padding: 17px 0px;
-    font-size: 19px;
-    letter-spacing: 0.14em;
     text-transform: uppercase;
-    transition: background-color .2s ease,color .2s ease,border-color .2s ease;
+    transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
   }
 
-  .ccg-question-cta__button:hover,
-  .ccg-question-cta__button:focus {
-    background: var(--ccg-question-cta-ink);
-    border-color: var(--ccg-question-cta-ink);
-    color: var(--ccg-cream);
+  .ccg-question-cta__button:hover {
+    border-color: var(--ccg-question-text);
+    color: #f8f5ee;
+    background: var(--ccg-question-text);
   }
 
-  .ccg-question-cta__note {
-    margin: 0;
-    color: var(--ccg-question-cta-tan);
-    font-weight: 400;
-    line-height: 1.2;
+  .ccg-question-cta__button[aria-disabled='true'] {
+    pointer-events: none;
+  }
+
+  .ccg-inventory-badge {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 15px 18px;
+    border: 1px solid color-mix(in srgb, var(--ccg-question-accent) 24%, transparent);
+    background: var(--ccg-question-card);
+    color: var(--ccg-question-text);
+  }
+
+  .ccg-inventory-badge__mark {
+    width: 8px;
+    height: 8px;
+    margin-top: 6px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--ccg-question-accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ccg-question-accent) 12%, transparent);
+  }
+
+  .ccg-inventory-badge__copy {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .ccg-inventory-badge__label {
+    color: var(--ccg-question-accent);
+    font-family: 'Barlow Condensed', sans-serif;
     font-size: 15px;
+    font-weight: 500;
     letter-spacing: 0.14em;
-    font-family: "Barlow Condensed", sans-serif;
-    text-align: center;
+    line-height: 1.2;
     text-transform: uppercase;
+  }
+
+  .ccg-inventory-badge__message {
+    color: var(--ccg-question-text);
+    font-family: 'Karla', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .ccg-inventory-badge--sold-out {
+    opacity: 0.72;
   }
 
   @media screen and (max-width: 749px) {
-    .ccg-question-cta {
-      gap: 14px;
-    }
-
     .ccg-question-cta__button {
-      min-height: 50px;
-      font-size: 16px;
-      letter-spacing: .14em;
+      min-height: 54px;
+      padding-inline: 18px;
+      font-size: 17px;
     }
 
-    .ccg-question-cta__note {
-      font-size: 15px;
-      letter-spacing: 0.14em;
+    .ccg-inventory-badge {
+      padding: 14px 16px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ccg-question-cta__button {
+      transition: none;
     }
   }
 {% endstylesheet %}
 
+<script>
+  if (!customElements.get('ccg-inventory-badge')) {
+    customElements.define(
+      'ccg-inventory-badge',
+      class extends HTMLElement {
+        connectedCallback() {
+          const inventoryData = this.querySelector('[data-ccg-variant-inventory]');
+
+          try {
+            this.variants = JSON.parse(inventoryData?.textContent || '[]');
+          } catch (error) {
+            this.variants = [];
+          }
+
+          this.productScope = this.closest('product-information, .product-information, section');
+          this.onVariantEvent = this.onVariantEvent.bind(this);
+          this.onProductChange = this.onProductChange.bind(this);
+
+          document.addEventListener('variant:update', this.onVariantEvent);
+          document.addEventListener('product:variant-change', this.onVariantEvent);
+          this.productScope?.addEventListener('change', this.onProductChange);
+        }
+
+        disconnectedCallback() {
+          document.removeEventListener('variant:update', this.onVariantEvent);
+          document.removeEventListener('product:variant-change', this.onVariantEvent);
+          this.productScope?.removeEventListener('change', this.onProductChange);
+        }
+
+        onVariantEvent(event) {
+          const variantId =
+            event.detail?.variant?.id ||
+            event.detail?.resource?.id ||
+            event.detail?.id;
+
+          if (variantId) this.renderVariant(variantId);
+        }
+
+        onProductChange() {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const selectedVariant = this.productScope?.querySelector(
+                'form[action*="/cart/add"] input[name="id"]'
+              );
+
+              if (selectedVariant?.value) this.renderVariant(selectedVariant.value);
+            });
+          });
+        }
+
+        renderVariant(variantId) {
+          const variant = this.variants.find((item) => String(item.id) === String(variantId));
+          if (!variant) return;
+
+          const threshold = Number(this.dataset.threshold || 5);
+          const showQuantity = this.dataset.showQuantity === 'true';
+          let state = 'limited-run';
+          let label = this.dataset.limitedLabel;
+          let message = this.dataset.limitedMessage;
+
+          if (!variant.available) {
+            state = 'sold-out';
+            label = this.dataset.soldLabel;
+            message = this.dataset.soldMessage;
+          } else if (variant.tracked && !variant.continueSelling && variant.quantity === 1) {
+            state = 'one-of-a-kind';
+            label = this.dataset.oneLabel;
+            message = this.dataset.oneMessage;
+          } else if (
+            variant.tracked &&
+            !variant.continueSelling &&
+            variant.quantity > 1 &&
+            variant.quantity <= threshold
+          ) {
+            state = 'low-stock';
+            label = this.dataset.lowLabel;
+            message = showQuantity
+              ? `Only ${variant.quantity} available · ${this.dataset.lowMessage}`
+              : this.dataset.lowMessage;
+          }
+
+          this.classList.remove(
+            'ccg-inventory-badge--one-of-a-kind',
+            'ccg-inventory-badge--low-stock',
+            'ccg-inventory-badge--limited-run',
+            'ccg-inventory-badge--sold-out'
+          );
+          this.classList.add(`ccg-inventory-badge--${state}`);
+          this.querySelector('.ccg-inventory-badge__label').textContent = label || '';
+          this.querySelector('.ccg-inventory-badge__message').textContent = message || '';
+        }
+      }
+    );
+  }
+</script>
+
 {% schema %}
 {
   "name": "CCG Question CTA",
-  "tag": null,
   "settings": [
+    {
+      "type": "header",
+      "content": "Contact button"
+    },
     {
       "type": "text",
       "id": "button_label",
@@ -100,10 +316,71 @@
       "label": "Button link"
     },
     {
+      "type": "header",
+      "content": "Inventory badge"
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "label": "Low-stock threshold",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_exact_quantity",
+      "label": "Show exact quantity for low stock",
+      "default": true
+    },
+    {
       "type": "text",
-      "id": "note",
-      "label": "Note",
-      "default": "Last one · Ships in 1-2 days"
+      "id": "one_of_a_kind_label",
+      "label": "One-of-a-kind label",
+      "default": "One of a kind"
+    },
+    {
+      "type": "text",
+      "id": "one_of_a_kind_message",
+      "label": "One-of-a-kind message",
+      "default": "Only one available · Hand-cut and stitched in Melissa's Snowflake studio."
+    },
+    {
+      "type": "text",
+      "id": "low_stock_label",
+      "label": "Low-stock label",
+      "default": "Low stock"
+    },
+    {
+      "type": "text",
+      "id": "low_stock_message",
+      "label": "Low-stock message",
+      "default": "Handmade in a limited run."
+    },
+    {
+      "type": "text",
+      "id": "limited_run_label",
+      "label": "Standard label",
+      "default": "Handmade in small batches"
+    },
+    {
+      "type": "text",
+      "id": "limited_run_message",
+      "label": "Standard message",
+      "default": "Cut and stitched by hand · Never mass-produced."
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold-out label",
+      "default": "This piece has found a home"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_message",
+      "label": "Sold-out message",
+      "default": "Explore the latest handmade pieces from Canyon Creek Goods."
     },
     {
       "type": "header",
@@ -112,26 +389,31 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Button text color",
+      "label": "Text color",
       "default": "#211c17"
     },
     {
       "type": "color",
       "id": "note_color",
-      "label": "Note color",
+      "label": "Accent color",
       "default": "#8a5a32"
     },
     {
       "type": "color",
       "id": "border_color",
-      "label": "Border color",
+      "label": "Button border color",
       "default": "#8f877b"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge background",
+      "default": "#ede7dc"
     }
   ],
   "presets": [
     {
-      "name": "CCG Question CTA",
-      "category": "Product"
+      "name": "CCG Question CTA"
     }
   ]
 }
