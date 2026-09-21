@@ -293,10 +293,15 @@
               "settings": {
                 "button_label": "Ask Melissa A Question",
                 "button_link": "shopify://pages/contact",
-                "note": "Last one · Ships in 1-2 days",
+                "custom_tag_message": "Handmade in a limited run · Never mass-produced.",
+                "low_stock_threshold": 5,
+                "show_exact_quantity": true,
+                "low_stock_label": "Low stock",
+                "low_stock_message": "Handmade in a limited run.",
                 "text_color": "#211c17",
                 "note_color": "#8a5a32",
-                "border_color": "#8f877b"
+                "border_color": "#8f877b",
+                "badge_background": "#ede7dc"
               },
               "blocks": {}
             },
@@ -350,6 +355,7 @@
     },
     "pdp_mix_match_ccg": {
       "type": "ccg-bundle-cards",
+      "disabled": true,
       "name": "Custom mix and match",
       "settings": {
         "bundle_layout": "custom",
