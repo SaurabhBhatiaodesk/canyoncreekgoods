@@ -121,8 +121,8 @@
         "offer_XXFhQW": {
           "type": "offer",
           "settings": {
-            "heading": "Gift 10 Cowls",
-            "description": "<p>Easy, thoughtful gifts for your small crew, office, shop, team or clients.</p>",
+            "heading": "",
+            "description": "",
             "text_alignment": "left",
             "bundle_id": "127991"
           }
