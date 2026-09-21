@@ -146,7 +146,7 @@
         "background_color": "#F8F5EE",
         "video_position": "cover",
         "background_image_position": "cover",
-        "toggle_overlay": true,
+        "toggle_overlay": false,
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
