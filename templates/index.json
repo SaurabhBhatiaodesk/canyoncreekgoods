@@ -130,8 +130,8 @@
         "offer_nDAFtJ": {
           "type": "offer",
           "settings": {
-            "heading": "Gift 20 Cowls",
-            "description": "<p>For the whole dang crew, plus a few extras.</p>",
+            "heading": "",
+            "description": "",
             "text_alignment": "left",
             "bundle_id": "127993"
           }
