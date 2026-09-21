@@ -121,18 +121,18 @@
         "offer_XXFhQW": {
           "type": "offer",
           "settings": {
-            "number": "01",
             "heading": "Gift 10 Cowls",
             "description": "<p>Easy, thoughtful gifts for your small crew, office, shop, team or clients.</p>",
+            "text_alignment": "left",
             "bundle_id": "127991"
           }
         },
         "offer_nDAFtJ": {
           "type": "offer",
           "settings": {
-            "number": "02",
             "heading": "Gift 20 Cowls",
             "description": "<p>For the whole dang crew, plus a few extras.</p>",
+            "text_alignment": "left",
             "bundle_id": "127993"
           }
         }
@@ -149,10 +149,12 @@
         "show_contact": false,
         "contact_heading": "Got a big crew?",
         "contact_text": "<p>No worries, <a href=\"mailto:canyoncreekgoods@gmail.com\">send me an email</a> and I'll sort out the rest.</p>",
-        "background_color": "#F8F5EE",
-        "text_color": "#2F2923",
-        "muted_text_color": "#5C5145",
-        "accent_color": "#B98A52",
+        "background_color": "#f8f5ee",
+        "text_color": "#2f2923",
+        "muted_text_color": "#5c5145",
+        "accent_color": "#b98a52",
+        "text_alignment": "left",
+        "width_mode": "full",
         "max_width": 1440,
         "content_width": 900,
         "padding_top": 80,
