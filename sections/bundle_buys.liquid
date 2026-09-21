@@ -1,0 +1,499 @@
+    {% comment %}
+      Canyon Creek Goods — Gift the Crew
+      Shopify OS 2.0 section
+      Save as: sections/ccg-gift-the-crew.liquid
+    {% endcomment %}
+
+    <section
+      id="CCGGiftCrew-{{ section.id }}"
+      class="ccg-gift-crew"
+      style="
+        --ccg-bg: {{ section.settings.background_color }};
+        --ccg-ink: {{ section.settings.text_color }};
+        --ccg-muted: {{ section.settings.muted_text_color }};
+        --ccg-tan: {{ section.settings.accent_color }};
+        --ccg-max-width: {{ section.settings.max_width }}px;
+        --ccg-content-width: {{ section.settings.content_width }}px;
+        --ccg-pad-top: {{ section.settings.padding_top }}px;
+        --ccg-pad-bottom: {{ section.settings.padding_bottom }}px;
+      "
+    >
+      <div class="ccg-gift-crew__inner">
+
+        <header class="ccg-gift-crew__header">
+          {% if section.settings.eyebrow != blank %}
+            <p class="ccg-gift-crew__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <h2 class="ccg-gift-crew__heading">{{ section.settings.heading | escape }}</h2>
+          {% endif %}
+
+          {% if section.settings.intro != blank %}
+            <div class="ccg-gift-crew__intro rte">{{ section.settings.intro }}</div>
+          {% endif %}
+        </header>
+
+        {% if section.blocks.size > 0 %}
+          <div class="ccg-gift-crew__offers">
+            {% for block in section.blocks %}
+              <div class="ccg-gift-crew__offer" {{ block.shopify_attributes }}>
+                <div class="ccg-gift-crew__offer-copy">
+                  {% if block.settings.number != blank %}
+                    <p class="ccg-gift-crew__offer-number">{{ block.settings.number | escape }}</p>
+                  {% endif %}
+
+                  <div class="ccg-gift-crew__offer-text">
+                    {% if block.settings.heading != blank %}
+                      <h3 class="ccg-gift-crew__offer-heading">{{ block.settings.heading | escape }}</h3>
+                    {% endif %}
+
+                    {% if block.settings.description != blank %}
+                      <div class="ccg-gift-crew__offer-description rte">{{ block.settings.description }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                {% if block.settings.bundle_id != blank %}
+                  <div class="ccg-gift-crew__widget">
+                    <mbc-bundles-widget data-bundle-id="{{ block.settings.bundle_id | escape }}"></mbc-bundles-widget>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_contact %}
+          <div class="ccg-gift-crew__contact">
+            {% if section.settings.contact_heading != blank %}
+              <h3 class="ccg-gift-crew__contact-heading">{{ section.settings.contact_heading | escape }}</h3>
+            {% endif %}
+
+            {% if section.settings.contact_text != blank %}
+              <div class="ccg-gift-crew__contact-text rte">{{ section.settings.contact_text }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+
+      </div>
+    </section>
+
+    {% style %}
+      #CCGGiftCrew-{{ section.id }} {
+        width: 100%;
+        background: var(--ccg-bg);
+        font-family: 'Karla', system-ui, sans-serif;
+        padding: var(--ccg-pad-top) 32px var(--ccg-pad-bottom);
+        box-sizing: border-box;
+      }
+
+      #CCGGiftCrew-{{ section.id }},
+      #CCGGiftCrew-{{ section.id }} * {
+        box-sizing: border-box;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__inner {
+        width: 100%;
+        max-width: var(--ccg-max-width);
+        margin: 0 auto;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__header {
+        width: 100%;
+        max-width: var(--ccg-content-width);
+        margin: 0 auto 56px;
+        text-align: center;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__eyebrow {
+        margin: 0 0 14px;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--ccg-tan);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__heading {
+        margin: 0;
+        font-family: 'Rye', serif;
+        font-size: clamp(32px, 4vw, 52px);
+        font-weight: 400;
+        line-height: 1.2;
+        color: var(--ccg-ink);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__intro {
+        max-width: 800px;
+        margin: 24px auto 0;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__intro p {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 300;
+        line-height: 1.75;
+        color: var(--ccg-muted);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__intro p + p {
+        margin-top: 16px;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offers {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 72px;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer {
+        width: 100%;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-copy {
+        display: flex;
+        align-items: flex-start;
+        width: 100%;
+        max-width: var(--ccg-content-width);
+        margin: 0 auto 28px;
+        gap: 20px;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-number {
+        flex: 0 0 auto;
+        min-width: 34px;
+        margin: 5px 0 0;
+        font-family: 'Rye', serif;
+        font-size: 19px;
+        line-height: 1;
+        color: var(--ccg-tan);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-text {
+        min-width: 0;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-heading {
+        margin: 0 0 8px;
+        font-family: 'Rye', serif;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.3;
+        color: var(--ccg-ink);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-description,
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-description p {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 300;
+        line-height: 1.6;
+        letter-spacing: 0.02em;
+        color: var(--ccg-muted);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__widget {
+        display: block;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__widget mbc-bundles-widget {
+        display: block;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact {
+        width: 100%;
+        max-width: var(--ccg-content-width);
+        margin: 64px auto 0;
+        text-align: center;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact-heading {
+        margin: 0 0 10px;
+        font-family: 'Rye', serif;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.3;
+        color: var(--ccg-ink);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact-text,
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact-text p {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.7;
+        color: var(--ccg-muted);
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact a {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ccg-ink);
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+        padding-bottom: 2px;
+      }
+
+      #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact a:hover {
+        color: var(--ccg-tan);
+      }
+
+      @media screen and (max-width: 989px) {
+        #CCGGiftCrew-{{ section.id }} {
+          padding-left: 24px;
+          padding-right: 24px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offers {
+          gap: 56px;
+        }
+      }
+
+      @media screen and (max-width: 749px) {
+        #CCGGiftCrew-{{ section.id }} {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__header {
+          margin-bottom: 42px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__heading {
+          font-size: 32px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__intro p,
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-description,
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-description p,
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact-text,
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact-text p {
+          font-size: 16px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-copy {
+          gap: 10px;
+          margin-bottom: 22px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-number {
+          font-size: 18px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offer-heading,
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact-heading {
+          font-size: 22px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__offers {
+          gap: 48px;
+        }
+
+        #CCGGiftCrew-{{ section.id }} .ccg-gift-crew__contact {
+          margin-top: 48px;
+        }
+      }
+    {% endstyle %}
+
+    {% schema %}
+    {
+      "name": "Gift the Crew",
+      "tag": "section",
+      "class": "section-ccg-gift-crew",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Handmade. Western. Ready to gift."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Gift the Crew"
+        },
+        {
+          "type": "richtext",
+          "id": "intro",
+          "label": "Introduction",
+          "default": "<p>Our wool cowls make an easy and genuinely useful gift this winter. No sizing, no guessing, just premium cozy wool.</p><p>Each cowl comes individually packaged and gift-ready with wool care instructions and a QR code linking to our cowl-wearing tutorial video. All you have to do is hand them out!</p>"
+        },
+        {
+          "type": "header",
+          "content": "Contact"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_contact",
+          "label": "Show contact section",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "contact_heading",
+          "label": "Contact heading",
+          "default": "Got a big crew?"
+        },
+        {
+          "type": "richtext",
+          "id": "contact_text",
+          "label": "Contact text",
+          "default": "<p>No worries, <a href=\"mailto:canyoncreekgoods@gmail.com\">send me an email</a> and I'll sort out the rest.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background",
+          "default": "#F8F5EE"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Heading color",
+          "default": "#2F2923"
+        },
+        {
+          "type": "color",
+          "id": "muted_text_color",
+          "label": "Body text color",
+          "default": "#5C5145"
+        },
+        {
+          "type": "color",
+          "id": "accent_color",
+          "label": "Accent color",
+          "default": "#B98A52"
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "max_width",
+          "min": 1000,
+          "max": 1800,
+          "step": 20,
+          "unit": "px",
+          "label": "Section content width",
+          "default": 1440
+        },
+        {
+          "type": "range",
+          "id": "content_width",
+          "min": 600,
+          "max": 1200,
+          "step": 20,
+          "unit": "px",
+          "label": "Text content width",
+          "default": 900
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "min": 0,
+          "max": 160,
+          "step": 4,
+          "unit": "px",
+          "label": "Top padding",
+          "default": 80
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 160,
+          "step": 4,
+          "unit": "px",
+          "label": "Bottom padding",
+          "default": 80
+        }
+      ],
+      "blocks": [
+        {
+          "type": "offer",
+          "name": "Bundle offer",
+          "settings": [
+            {
+              "type": "text",
+              "id": "number",
+              "label": "Number",
+              "default": "01"
+            },
+            {
+              "type": "text",
+              "id": "heading",
+              "label": "Heading",
+              "default": "Gift 10 Cowls"
+            },
+            {
+              "type": "richtext",
+              "id": "description",
+              "label": "Description",
+              "default": "<p>Easy, thoughtful gifts for your small crew, office, shop, team or clients.</p>"
+            },
+            {
+              "type": "text",
+              "id": "bundle_id",
+              "label": "MBC bundle ID",
+              "info": "Enter only the numeric bundle ID, for example: 127991",
+              "default": "127991"
+            }
+          ]
+        }
+      ],
+      "max_blocks": 10,
+      "presets": [
+        {
+          "name": "Gift the Crew",
+          "blocks": [
+            {
+              "type": "offer",
+              "settings": {
+                "number": "01",
+                "heading": "Gift 10 Cowls",
+                "description": "<p>Easy, thoughtful gifts for your small crew, office, shop, team or clients.</p>",
+                "bundle_id": "127991"
+              }
+            },
+            {
+              "type": "offer",
+              "settings": {
+                "number": "02",
+                "heading": "Gift 20 Cowls",
+                "description": "<p>For the whole dang crew, plus a few extras.</p>",
+                "bundle_id": "127993"
+              }
+            }
+          ]
+        }
+      ]
+    }
+    {% endschema %}
