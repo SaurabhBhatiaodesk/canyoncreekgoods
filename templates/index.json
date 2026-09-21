@@ -146,7 +146,7 @@
         "eyebrow": "Handmade. Western. Ready to gift.",
         "heading": "Gift the Crew",
         "intro": "<p>Our wool cowls make an easy and genuinely useful gift this winter. No sizing, no guessing, just premium cozy wool.</p><p>Each cowl comes individually packaged and gift-ready with wool care instructions and a QR code linking to our cowl-wearing tutorial video. All you have to do is hand them out!</p>",
-        "show_contact": true,
+        "show_contact": false,
         "contact_heading": "Got a big crew?",
         "contact_text": "<p>No worries, <a href=\"mailto:canyoncreekgoods@gmail.com\">send me an email</a> and I'll sort out the rest.</p>",
         "background_color": "#F8F5EE",
