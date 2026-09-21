@@ -135,6 +135,7 @@
         "bundle_1",
         "bundle_2"
       ],
+      "disabled": true,
       "name": "Complete the Look",
       "settings": {
         "bundle_layout": "custom",
@@ -215,9 +216,9 @@
         "heading": "Ready to ride out",
         "image_ratio": "portrait",
         "background_color": "#f8f5ee",
-        "desktop_padding_top": 0,
+        "desktop_padding_top": 76,
         "desktop_padding_bottom": 76,
-        "mobile_padding_top": 0,
+        "mobile_padding_top": 56,
         "mobile_padding_bottom": 56,
         "collection": "ready-to-ride-out",
         "product_limit": 4
