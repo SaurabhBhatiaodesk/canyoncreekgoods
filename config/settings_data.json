@@ -12,12 +12,12 @@
     "logo": "shopify://shop_images/02e0d0ae-b1e5-47e0-afe9-7b1a4753ca38.png",
     "logo_inverse": "shopify://shop_images/d32f2025-8239-4f48-b151-bd8097b91d6c.png",
     "logo_height": 52,
-    "logo_height_mobile": 40,
+    "logo_height_mobile": 52,
     "page_text_color": "{{ settings.color_palette.foreground }}",
-    "type_body_font": "inter_n4",
-    "type_subheading_font": "inter_n5",
-    "type_heading_font": "inter_n7",
-    "type_accent_font": "inter_n7",
+    "type_body_font": "karla_n4",
+    "type_subheading_font": "barlow_condensed_n4",
+    "type_heading_font": "barlow_condensed_n4",
+    "type_accent_font": "karla_n4",
     "type_size_paragraph": "14",
     "type_line_height_paragraph": "body-loose",
     "type_font_h1": "heading",
@@ -106,9 +106,14 @@
     "variant_button_width": "equal-width-buttons",
     "content_for_index": [],
     "blocks": {
+      "1909789295049107559": {
+        "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-core-snippet/57c94b78-e464-47f4-9403-7ffcfcddb33f",
+        "disabled": false,
+        "settings": {}
+      },
       "5918445685253060206": {
         "type": "shopify://apps/bundler/blocks/bundler-script-append/7a6ae1b8-3b16-449b-8429-8bb89a62c664",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     },
