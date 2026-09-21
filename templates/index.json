@@ -115,6 +115,61 @@
         "mobile_padding_bottom": 0
       }
     },
+    "1789970456d7dd69fc": {
+      "type": "_blocks",
+      "blocks": {
+        "mbc_bundles_mbc_bundles_featured_bundle_CPU3Gf": {
+          "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-featured-bundle/57c94b78-e464-47f4-9403-7ffcfcddb33f",
+          "settings": {
+            "bundle_id": "127991",
+            "productsPerView": 2,
+            "side_bar_bg_color": "#313131",
+            "side_bar_title_color": "#ffffff",
+            "side_bar_sale_color": "#ffffff",
+            "side_bar_price_color": "#ffffff",
+            "side_bar_compare_price_color": "#C8C8C8",
+            "side_bar_button_color": "#313131",
+            "side_bar_button_bg_color": "#ffffff",
+            "item_border_color": "#DDDDDD",
+            "item_title_color": "#313131",
+            "item_price_color": "#313131",
+            "item_compare_price_color": "#C8C8C8",
+            "item_separator_color": "#313131"
+          }
+        }
+      },
+      "block_order": [
+        "mbc_bundles_mbc_bundles_featured_bundle_CPU3Gf"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "bundle_cards_ccg": {
       "type": "ccg-bundle-cards",
       "blocks": {
@@ -345,6 +400,7 @@
     "hero_ccg",
     "collection_picker_ccg",
     "direct_to_maker_ccg",
+    "1789970456d7dd69fc",
     "bundle_cards_ccg",
     "best_sellers_ccg",
     "shows_list_ccg",
