@@ -51,7 +51,7 @@
       ],
       "name": "CCG Feature Bar",
       "settings": {
-        "background_color": "#F8F5EE",
+        "background_color": "#f8f5ee",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
         "mobile_padding_top": 0,
@@ -66,7 +66,7 @@
           "settings": {
             "heading": "Shop",
             "menu": "shop",
-            "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim-dusters\nSweatshirts | /collections/western-sweatshirts\nMatched Sets | /#ccg-bundles"
+            "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim-dusters\nSweatshirts | /collections/western-sweatshirts"
           }
         },
         "column_help": {
