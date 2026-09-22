@@ -49,6 +49,12 @@
           },
           "blocks": {}
         },
+        "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_BwjD4T": {
+          "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
+          "settings": {
+            "widget_type": "default"
+          }
+        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -318,12 +324,6 @@
               "settings": {},
               "blocks": {}
             },
-            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_KwLNLw": {
-              "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
-              "settings": {
-                "widget_type": "default"
-              }
-            },
             "product_custom_description_aGPLBH": {
               "type": "product-custom-description",
               "name": "Product Description",
@@ -340,13 +340,13 @@
             "ccg_question_cta_tMHHTd",
             "product_details_DFbiWd",
             "product_features_prQAn3",
-            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_KwLNLw",
             "product_custom_description_aGPLBH"
           ]
         }
       },
       "block_order": [
-        "disclosures_g9mWze"
+        "disclosures_g9mWze",
+        "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_BwjD4T"
       ],
       "settings": {
         "content_width": "content-center-aligned",
