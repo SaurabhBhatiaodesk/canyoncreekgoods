@@ -318,12 +318,6 @@
               "settings": {},
               "blocks": {}
             },
-            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_JdG3MC": {
-              "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
-              "settings": {
-                "widget_type": "default"
-              }
-            },
             "product_custom_description_aGPLBH": {
               "type": "product-custom-description",
               "name": "Product Description",
@@ -340,7 +334,6 @@
             "ccg_question_cta_tMHHTd",
             "product_details_DFbiWd",
             "product_features_prQAn3",
-            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_JdG3MC",
             "product_custom_description_aGPLBH"
           ]
         }
@@ -389,10 +382,9 @@
     },
     "pdp_bundle_ccg": {
       "type": "ccg-pdp-bundle",
-      "disabled": true,
       "name": "Complete the Look (PDP)",
       "settings": {
-        "fixed_bundle_id": "865898 ",
+        "fixed_bundle_id": "",
         "eyebrow": "COMPLETE THE LOOK",
         "quote": "Cut from the same blanket, back to back. One set exists. — Melissa",
         "background_color": "#ede7dc",
