@@ -49,12 +49,6 @@
           },
           "blocks": {}
         },
-        "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_BwjD4T": {
-          "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
-          "settings": {
-            "widget_type": "default"
-          }
-        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -345,8 +339,7 @@
         }
       },
       "block_order": [
-        "disclosures_g9mWze",
-        "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_BwjD4T"
+        "disclosures_g9mWze"
       ],
       "settings": {
         "content_width": "content-center-aligned",
@@ -543,11 +536,11 @@
   "order": [
     "ccg_breadcrumbs_GhijgB",
     "main",
+    "17900747068b7b6208",
     "pdp_mix_match_ccg",
     "pdp_bundle_ccg",
     "ccg_direct_to_maker_eLiTma",
     "pdp_recommendations_ccg",
-    "179004683067e607f8",
-    "17900747068b7b6208"
+    "179004683067e607f8"
   ]
 }
