@@ -51,7 +51,7 @@
       ],
       "name": "CCG Feature Bar",
       "settings": {
-        "background_color": "#EDE7DC",
+        "background_color": "#F8F5EE",
         "desktop_padding_top": 0,
         "desktop_padding_bottom": 0,
         "mobile_padding_top": 0,
@@ -93,6 +93,7 @@
       ],
       "name": "Footer",
       "settings": {
+        "seo_layout": "semantic",
         "logo_image": "shopify://shop_images/d32f2025-8239-4f48-b151-bd8097b91d6c.png",
         "logo_text": "Canyon Creek Goods",
         "logo_width": 90,
@@ -114,8 +115,7 @@
         "desktop_padding_top": 72,
         "desktop_padding_bottom": 32,
         "mobile_padding_top": 48,
-        "mobile_padding_bottom": 28,
-        "seo_layout": "semantic"
+        "mobile_padding_bottom": 28
       }
     },
     "footer_m9NzUG": {
