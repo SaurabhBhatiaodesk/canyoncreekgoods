@@ -121,9 +121,9 @@
         "offer_apQaRL": {
           "type": "offer",
           "settings": {
-            "heading": "Gift 10 Cowls",
+            "heading": "",
             "description": "<p>Easy, thoughtful gifts for your small crew, office, shop, team or clients.</p>",
-            "text_alignment": "left",
+            "text_alignment": "center",
             "bundle_id": "127993"
           }
         }
@@ -136,7 +136,7 @@
         "eyebrow": "Handmade. Western. Ready to gift.",
         "heading": "Gift the Crew",
         "intro": "<p>Our wool cowls make an easy and genuinely useful gift this winter. No sizing, no guessing, just premium cozy wool.</p><p>Each cowl comes individually packaged and gift-ready with wool care instructions and a QR code linking to our cowl-wearing tutorial video. All you have to do is hand them out!</p>",
-        "show_contact": false,
+        "show_contact": true,
         "contact_heading": "Got a big crew?",
         "contact_text": "<p>No worries, <a href=\"mailto:canyoncreekgoods@gmail.com\">send me an email</a> and I'll sort out the rest.</p>",
         "background_color": "#f8f5ee",
