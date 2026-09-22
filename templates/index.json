@@ -118,30 +118,19 @@
     "bundle_buys_rnazfK": {
       "type": "bundle_buys",
       "blocks": {
-        "offer_XXFhQW": {
+        "offer_apQaRL": {
           "type": "offer",
           "settings": {
-            "heading": "",
-            "description": "",
+            "heading": "Gift 10 Cowls",
+            "description": "<p>Easy, thoughtful gifts for your small crew, office, shop, team or clients.</p>",
             "text_alignment": "left",
             "bundle_id": "127991"
-          }
-        },
-        "offer_nDAFtJ": {
-          "type": "offer",
-          "settings": {
-            "heading": "",
-            "description": "",
-            "text_alignment": "left",
-            "bundle_id": "127993"
           }
         }
       },
       "block_order": [
-        "offer_XXFhQW",
-        "offer_nDAFtJ"
+        "offer_apQaRL"
       ],
-      "disabled": true,
       "name": "Gift the Crew",
       "settings": {
         "eyebrow": "Handmade. Western. Ready to gift.",
@@ -165,6 +154,12 @@
     "bundle_cards_ccg": {
       "type": "ccg-bundle-cards",
       "blocks": {
+        "bundle_mWcKPQ": {
+          "type": "bundle",
+          "settings": {
+            "bundle_id": ""
+          }
+        },
         "bundle_1": {
           "type": "bundle",
           "settings": {
@@ -179,6 +174,7 @@
         }
       },
       "block_order": [
+        "bundle_mWcKPQ",
         "bundle_1",
         "bundle_2"
       ],
