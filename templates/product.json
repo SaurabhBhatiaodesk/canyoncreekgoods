@@ -105,6 +105,12 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_Gh7nWE": {
+              "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
+              "settings": {
+                "widget_type": "default"
+              }
+            },
             "group_icgrde": {
               "type": "group",
               "name": "t:names.header",
@@ -328,6 +334,7 @@
             }
           },
           "block_order": [
+            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_Gh7nWE",
             "group_icgrde",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
