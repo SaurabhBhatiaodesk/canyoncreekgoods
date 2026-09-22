@@ -51,7 +51,9 @@
         "page-content"
       ],
       "settings": {
-        "page_layout": "policy",
+        "page_layout": "about",
+        "contact_page_eyebrow": "Let's talk",
+        "contact_page_intro": "",
         "about_eyebrow": "Meet the maker",
         "about_intro": "",
         "policy_eyebrow": "Shipping & delivery",
