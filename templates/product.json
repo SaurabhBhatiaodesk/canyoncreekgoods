@@ -382,6 +382,7 @@
     },
     "pdp_bundle_ccg": {
       "type": "ccg-pdp-bundle",
+      "disabled": true,
       "name": "Complete the Look (PDP)",
       "settings": {
         "fixed_bundle_id": "",
