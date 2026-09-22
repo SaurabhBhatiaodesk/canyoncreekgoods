@@ -287,6 +287,12 @@
               },
               "block_order": []
             },
+            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_KwLNLw": {
+              "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
+              "settings": {
+                "widget_type": "default"
+              }
+            },
             "ccg_question_cta_tMHHTd": {
               "type": "ccg-question-cta",
               "name": "CCG Question CTA",
@@ -325,23 +331,17 @@
                 "text_color": "#7a6d5d"
               },
               "blocks": {}
-            },
-            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_KwLNLw": {
-              "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
-              "settings": {
-                "widget_type": "default"
-              }
             }
           },
           "block_order": [
             "group_icgrde",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_KwLNLw",
             "ccg_question_cta_tMHHTd",
             "product_details_DFbiWd",
             "product_features_prQAn3",
-            "product_custom_description_aGPLBH",
-            "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_KwLNLw"
+            "product_custom_description_aGPLBH"
           ]
         }
       },
