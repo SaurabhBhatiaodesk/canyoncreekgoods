@@ -110,7 +110,7 @@
           "type": "_header-menu",
           "static": true,
           "settings": {
-            "menu": "header-menu",
+            "menu": "ccg-draft-main-menu",
             "background_color": "{{ settings.color_palette.background }}",
             "text_color": "",
             "type_font_primary_size": "1.125rem",

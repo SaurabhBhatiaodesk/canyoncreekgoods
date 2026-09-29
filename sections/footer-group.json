@@ -65,7 +65,7 @@
           "type": "column",
           "settings": {
             "heading": "Shop",
-            "menu": "shop",
+            "menu": "ccg-draft-main-menu",
             "links": "Wool Cowls | /collections/wool-cowls\nSling Bags | /collections/sling-bags\nDenim & Outerwear | /collections/denim-dusters\nSweatshirts | /collections/western-sweatshirts"
           }
         },
