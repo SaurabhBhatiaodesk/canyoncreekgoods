@@ -178,7 +178,6 @@
         "bundle_1",
         "bundle_2"
       ],
-      "disabled": true,
       "name": "Complete the Look",
       "settings": {
         "bundle_layout": "custom",
