@@ -79,6 +79,10 @@
             {%- if block.settings.menu != blank -%}
 
               {%- for link in block.settings.menu.links -%}
+                {%- assign footer_link_title = link.title | strip | downcase -%}
+                {%- if footer_link_title == 'matched sets' -%}
+                  {%- continue -%}
+                {%- endif -%}
 
                 <li>
                   <a href="{% if section.settings.seo_layout == 'semantic' and link.title == 'Matched Sets' and link.url == '/collections/western-cowls' %}{{ routes.root_url }}#ccg-bundles{% else %}{{ link.url }}{% endif %}">
@@ -99,6 +103,10 @@
                 {%- if line != blank -%}
 
                   {%- assign parts = line | split: ' | ' -%}
+                  {%- assign footer_link_title = parts.first | strip | downcase -%}
+                  {%- if footer_link_title == 'matched sets' -%}
+                    {%- continue -%}
+                  {%- endif -%}
 
                   <li>
 

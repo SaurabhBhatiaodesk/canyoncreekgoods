@@ -173,7 +173,6 @@
                   </button>
                   {%- if product.has_only_default_variant -%}
                     <input type="hidden" data-quick-add-variant value="{{ product.selected_or_first_available_variant.id }}">
-                    <span class="ccg-seller-card__quickadd-variant">{{ product.selected_or_first_available_variant.title }}</span>
                   {%- else -%}
                     <select class="ccg-seller-card__quickadd-select" data-quick-add-select aria-label="Select size for {{ product.title }}">
                       {%- for variant in product.variants -%}
