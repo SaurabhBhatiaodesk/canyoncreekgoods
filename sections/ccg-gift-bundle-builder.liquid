@@ -349,11 +349,19 @@
           }
         }
 
-        const numeric = Number(rawValue);
+        /* Number(null) / Number('') / Number(false) are 0, which would lock in a bogus value. */
+        const numeric =
+          rawValue === null ||
+          rawValue === '' ||
+          typeof rawValue === 'boolean' ||
+          typeof rawValue === 'object'
+            ? NaN
+            : Number(rawValue);
 
         if (Number.isFinite(numeric)) {
           if (
             minimum == null &&
+            numeric > 0 &&
             (
               key.includes('minimumitemsrequired') ||
               key.includes('minitems') ||
@@ -367,6 +375,7 @@
 
           if (
             maximum == null &&
+            numeric > 0 &&
             (
               key.includes('maximumitemsallowed') ||
               key.includes('maxitems') ||
@@ -379,7 +388,7 @@
 
           if (
             percent == null &&
-            numeric >= 0 &&
+            numeric > 0 &&
             numeric <= 100 &&
             (
               key.includes('discountpercentage') ||
@@ -496,31 +505,19 @@
     return null;
   };
 
+  /* Priority: MBC data object, then the live bundle title, then any % in the widget text. */
   const resolveMbcPercent = (widget, objectPercent, textPercent) => {
     const livePercent = getPercentFromLiveBundleTitle(widget);
 
-    if (
-      textPercent !== null &&
-      textPercent !== undefined &&
-      Number.isFinite(Number(textPercent))
-    ) {
-      return Number(textPercent);
-    }
-
-    if (
-      livePercent !== null &&
-      livePercent !== undefined &&
-      Number.isFinite(Number(livePercent))
-    ) {
-      return Number(livePercent);
-    }
-
-    if (
-      objectPercent !== null &&
-      objectPercent !== undefined &&
-      Number.isFinite(Number(objectPercent))
-    ) {
-      return Number(objectPercent);
+    for (const value of [objectPercent, livePercent, textPercent]) {
+      if (
+        value !== null &&
+        value !== undefined &&
+        value !== '' &&
+        Number.isFinite(Number(value))
+      ) {
+        return Number(value);
+      }
     }
 
     return null;
@@ -573,8 +570,6 @@
         Number.isFinite(Number(textRules.percent))
           ? Number(textRules.percent)
           : null;
-
-      const liveTitlePercent = getPercentFromLiveBundleTitle(widget);
 
       const percent = resolveMbcPercent(
         widget,
