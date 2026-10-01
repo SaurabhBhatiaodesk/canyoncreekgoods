@@ -1061,11 +1061,18 @@
 
 
 
-      input.min = '0';
+      input.min = '1';
 
 
 
-      input.max = String(Math.min(item.max, target));
+      input.max = String(
+        Math.max(
+          1,
+          target > 0
+            ? Math.min(item.max, target)
+            : item.max
+        )
+      );
 
 
 
@@ -1097,83 +1104,87 @@
 
 
 
-      const setQuantity = (next) => {
+      const getAllowedMax = () => {
+        const inventoryMax = Number(item.max || 0);
+        const bundleMax = Number(target || 0);
 
-
-
-        const max = Math.min(item.max, target);
-
-
-
-        const value = Math.max(0, Math.min(max, Number(next) || 0));
-
-
-
-
-
-
-
-        if (value === 0) {
-
-
-
-          selected.delete(item.id);
-
-
-
-          renderSelected();
-
-
-
-          update();
-
-
-
-          return;
-
-
-
+        if (inventoryMax > 0 && bundleMax > 0) {
+          return Math.max(1, Math.min(inventoryMax, bundleMax));
         }
 
+        if (inventoryMax > 0) {
+          return Math.max(1, inventoryMax);
+        }
 
+        if (bundleMax > 0) {
+          return Math.max(1, bundleMax);
+        }
 
-
-
-
-
-        item.quantity = value;
-
-
-
-        input.value = String(value);
-
-
-
-        update();
-
-
-
+        return 1;
       };
 
+      const refreshQuantityControls = () => {
+        const max = getAllowedMax();
 
+        input.min = '1';
+        input.max = String(max);
+        input.value = String(item.quantity);
 
+        minus.disabled = item.quantity <= 1;
+        plus.disabled = item.quantity >= max;
 
+        minus.setAttribute('aria-disabled', minus.disabled ? 'true' : 'false');
+        plus.setAttribute('aria-disabled', plus.disabled ? 'true' : 'false');
+      };
 
+      const setQuantity = (next) => {
+        const max = getAllowedMax();
+        const numeric = Number(next);
 
+        if (!Number.isFinite(numeric)) {
+          refreshQuantityControls();
+          return;
+        }
 
-      minus.addEventListener('click', () => setQuantity(item.quantity - 1));
+        const value = Math.max(1, Math.min(max, Math.round(numeric)));
 
+        item.quantity = value;
+        refreshQuantityControls();
+        update();
+      };
 
+      minus.addEventListener('click', () => {
+        if (item.quantity <= 1) return;
+        setQuantity(item.quantity - 1);
+      });
 
-      plus.addEventListener('click', () => setQuantity(item.quantity + 1));
+      plus.addEventListener('click', () => {
+        setQuantity(item.quantity + 1);
+      });
 
+      input.addEventListener('input', () => {
+        /*
+         * Keep the selected card visible while the customer edits the field.
+         * An empty/temporary value must never remove the product.
+         */
+        if (input.value === '') return;
 
+        const numeric = Number(input.value);
+        if (!Number.isFinite(numeric)) return;
 
-      input.addEventListener('input', () => setQuantity(input.value));
+        setQuantity(numeric);
+      });
 
+      input.addEventListener('change', () => {
+        if (input.value === '') {
+          setQuantity(item.quantity);
+          return;
+        }
 
+        setQuantity(input.value);
+      });
 
-
+      refreshQuantityControls();
 
 
 
@@ -1919,9 +1930,16 @@
 
     activePlan = plan;
     bundleId = plan.dataset.bundleId || '';
-    target = 0;
     discount = null;
     bundleLabel = plan.dataset.label || 'Bundle';
+
+    if (statusEl) {
+      statusEl.textContent = 'Loading bundle rules…';
+    }
+
+    if (addButton) {
+      addButton.disabled = true;
+    }
 
     plans.forEach((item) => {
       const active = item === plan;
@@ -3042,6 +3060,11 @@
   .ccg-gift-builder__quantity button,
 
 
+
+  .ccg-gift-builder__quantity button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+  }
 
   .ccg-gift-builder__quantity input {
 
