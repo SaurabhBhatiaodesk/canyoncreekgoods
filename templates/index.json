@@ -66,7 +66,7 @@
           "type": "tile",
           "settings": {
             "collection": "western-sweatshirts",
-            "image_hover": "shopify://shop_images/a1a356971d9d3652a9dc8a663de4bb87cdb6fbe9157a47675b0280c8c6d0eb08.jpg",
+            "image_hover": "shopify://shop_images/image_db00a8df_3c3ac3bd-6d7d-4773-b466-cce67b9bd5db.jpg",
             "title": "Sweatshirts",
             "subtitle": "Buttery soft",
             "link": ""
@@ -103,7 +103,7 @@
         "media_position": "right",
         "eyebrow": "DIRECT TO MAKER",
         "heading": "Every piece leaves my hands before it reaches yours.",
-        "description": "<p>No production line, no overseas factory. I hand cut, stitch and finish each cowl and jacket in a small-batch home studio in Arizona, using premium wool milled in the US. You are buying from the woman who made it, and she answers her own email.</p>",
+        "description": "<p>No production line, no overseas factory. I hand cut, stitch and finish each cowl and jacket in a small-batch home studio in Arizona, using premium wool milled in the US.&nbsp;</p>",
         "button_label": "Read the whole story",
         "button_link": "shopify://pages/about-me",
         "background_color": "#ede7dc",
