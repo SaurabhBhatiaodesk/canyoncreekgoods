@@ -763,6 +763,20 @@
 
     if (!picker) return;
 
+    if (!bundleId || !target || target <= 0) {
+      if (statusEl) {
+        statusEl.textContent = 'Bundle rules are still loading. Please try again.';
+      }
+
+      if (errorEl) {
+        errorEl.textContent =
+          'The selected MBC bundle has not finished loading yet.';
+        errorEl.hidden = false;
+      }
+
+      return;
+    }
+
 
 
     picker.hidden = false;
@@ -1025,6 +1039,10 @@
 
 
 
+      const quantityLabel = document.createElement('div');
+      quantityLabel.className = 'ccg-gift-builder__quantity-label';
+      quantityLabel.textContent = 'Quantity';
+
       const quantity = document.createElement('div');
 
 
@@ -1192,7 +1210,7 @@
 
 
 
-      copy.append(title, price, quantity);
+      copy.append(title, price, quantityLabel, quantity);
 
 
 
@@ -1375,158 +1393,142 @@
 
 
   const extractBundleConfig = (bundle) => {
-
     if (!bundle || typeof bundle !== 'object') return {};
 
-
-
-    const candidates = [bundle];
-
-
-
-    [
-
-      'settings',
-
-      'offer',
-
-      'discount',
-
-      'discountSettings',
-
-      'productSettings',
-
-      'bundle'
-
-    ].forEach((key) => {
-
-      if (bundle[key] && typeof bundle[key] === 'object') candidates.push(bundle[key]);
-
-    });
-
-
+    const seen = new WeakSet();
+    const queue = [{ value: bundle, depth: 0 }];
 
     let percent = null;
-
     let minimum = null;
-
     let maximum = null;
-
     let title = '';
 
+    const normalizeKey = (key) =>
+      String(key || '')
+        .replace(/[^a-z0-9]/gi, '')
+        .toLowerCase();
 
+    while (queue.length) {
+      const { value, depth } = queue.shift();
 
-    for (const candidate of candidates) {
+      if (!value || typeof value !== 'object') continue;
+      if (seen.has(value)) continue;
+      seen.add(value);
 
-      if (!title) {
+      let entries = [];
 
-        title = getText(candidate, ['bundleTitle', 'bundle_title', 'title', 'name']);
-
+      try {
+        entries = Array.isArray(value)
+          ? value.map((item, index) => [String(index), item])
+          : Object.entries(value);
+      } catch (e) {
+        entries = [];
       }
 
+      for (const [rawKey, rawValue] of entries) {
+        const key = normalizeKey(rawKey);
 
+        if (!title && typeof rawValue === 'string') {
+          if (
+            key === 'bundletitle' ||
+            key === 'title' ||
+            key === 'name'
+          ) {
+            title = rawValue.trim();
+          }
+        }
 
-      if (minimum == null) {
+        const numericValue = Number(rawValue);
 
-        minimum = getNumber(candidate, [
+        if (Number.isFinite(numericValue)) {
+          if (
+            minimum == null &&
+            (
+              key.includes('minimumitemsrequired') ||
+              key.includes('minitems') ||
+              key.includes('minimumquantity') ||
+              key.includes('requireditems') ||
+              key.includes('requiredquantity') ||
+              key === 'min'
+            )
+          ) {
+            minimum = numericValue;
+          }
 
-          'minimumItemsRequired',
+          if (
+            maximum == null &&
+            (
+              key.includes('maximumitemsallowed') ||
+              key.includes('maxitems') ||
+              key.includes('maximumquantity') ||
+              key.includes('maxquantity') ||
+              key === 'max'
+            )
+          ) {
+            maximum = numericValue;
+          }
 
-          'minimum_items_required',
+          if (
+            percent == null &&
+            numericValue >= 0 &&
+            numericValue <= 100 &&
+            (
+              key.includes('discountpercentage') ||
+              key.includes('discountpercent') ||
+              key === 'percentage' ||
+              key === 'percent'
+            )
+          ) {
+            percent = numericValue;
+          }
+        }
 
-          'minItems',
-
-          'min_items',
-
-          'minimumQuantity',
-
-          'minimum_quantity',
-
-          'requiredItems',
-
-          'required_items'
-
-        ]);
-
+        if (
+          rawValue &&
+          typeof rawValue === 'object' &&
+          depth < 8
+        ) {
+          queue.push({
+            value: rawValue,
+            depth: depth + 1
+          });
+        }
       }
-
-
-
-      if (maximum == null) {
-
-        maximum = getNumber(candidate, [
-
-          'maximumItemsAllowed',
-
-          'maximum_items_allowed',
-
-          'maxItems',
-
-          'max_items',
-
-          'maximumQuantity',
-
-          'maximum_quantity'
-
-        ]);
-
-      }
-
-
-
-      const type = getText(candidate, ['discountType', 'discount_type', 'type']).toLowerCase();
-
-
-
-      const value = getNumber(candidate, [
-
-        'discountPercentage',
-
-        'discount_percentage',
-
-        'discountPercent',
-
-        'discount_percent',
-
-        'percentage',
-
-        'percent',
-
-        'discountValue',
-
-        'discount_value'
-
-      ]);
-
-
-
-      if (
-
-        percent == null &&
-
-        value != null &&
-
-        value >= 0 &&
-
-        value <= 100 &&
-
-        (!type || type.includes('percent'))
-
-      ) {
-
-        percent = value;
-
-      }
-
     }
 
+    /*
+     * Fallback: MBC bundle titles commonly contain the live rule,
+     * e.g. "Gift 10 Cowls | 10% Off". If MBC's internal field names
+     * change, use the MBC title itself rather than a theme hardcode.
+     */
+    if (title) {
+      if (minimum == null || minimum <= 0) {
+        const quantityMatch =
+          title.match(/\b(?:gift\s*)?(\d+)\s*(?:cowls?|items?)\b/i) ||
+          title.match(/\bgift\s*(\d+)\b/i);
 
+        if (quantityMatch) {
+          minimum = Number(quantityMatch[1]);
+          maximum = Number(quantityMatch[1]);
+        }
+      }
 
-    return { percent, minimum, maximum, title };
+      if (percent == null) {
+        const discountMatch = title.match(/(\d+(?:\.\d+)?)\s*%\s*(?:off)?/i);
 
+        if (discountMatch) {
+          percent = Number(discountMatch[1]);
+        }
+      }
+    }
+
+    return {
+      percent,
+      minimum,
+      maximum,
+      title
+    };
   };
-
-
 
   const syncPlanFromMBC = async (plan) => {
     if (!plan) return false;
@@ -1707,7 +1709,7 @@
 
 
 
-    const remaining = target - total;
+    const remaining = target > 0 ? target - total : null;
 
 
 
@@ -1757,7 +1759,7 @@
 
 
 
-      addButton.disabled = total !== target;
+      addButton.disabled = target <= 0 || total !== target;
 
 
 
@@ -1777,7 +1779,11 @@
 
 
 
-      if (remaining > 0) {
+      if (remaining == null) {
+
+        statusEl.textContent = 'Loading bundle rules…';
+
+      } else if (remaining > 0) {
 
 
 
@@ -1933,6 +1939,9 @@
     discount = null;
     bundleLabel = plan.dataset.label || 'Bundle';
 
+    selected.clear();
+    renderSelected();
+
     if (statusEl) {
       statusEl.textContent = 'Loading bundle rules…';
     }
@@ -1963,7 +1972,8 @@
         errorEl.hidden = false;
       }
 
-      plan.hidden = true;
+      plan.classList.remove('is-loading');
+      plan.textContent = `Bundle ${bundleId}`;
       addButton.disabled = true;
       return;
     }
@@ -3032,6 +3042,13 @@
 
 
 
+
+  .ccg-gift-builder__quantity-label {
+    margin: 8px 0 6px;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
 
   .ccg-gift-builder__quantity {
 
