@@ -128,14 +128,14 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'bundle' and block.settings.bundle_id != blank -%}
           <button
-            class="ccg-gift-builder__plan{% if forloop.first %} is-active{% endif %}"
+            class="ccg-gift-builder__plan{% if forloop.first %} is-active{% endif %} is-loading"
             type="button"
             data-plan
             data-bundle-id="{{ block.settings.bundle_id | escape }}"
             aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
             {{ block.shopify_attributes }}
           >
-            Loading…
+            <span class="ccg-gift-builder__plan-label" aria-hidden="true"></span>
           </button>
         {%- endif -%}
       {%- endfor -%}
@@ -845,6 +845,22 @@
 
 
 
+  const syncPickerSelectionState = () => {
+    pickerProducts.forEach((button) => {
+      const id = Number(button.dataset.variantId);
+      const isSelected = selected.has(id);
+
+      button.classList.toggle('is-selected', isSelected);
+      button.setAttribute('aria-disabled', isSelected ? 'true' : 'false');
+
+      if (isSelected) {
+        button.disabled = true;
+      } else if (!button.classList.contains('is-unavailable')) {
+        button.disabled = false;
+      }
+    });
+  };
+
   const renderSelected = () => {
 
 
@@ -1185,6 +1201,8 @@
 
 
 
+    syncPickerSelectionState();
+
   };
 
 
@@ -1519,10 +1537,12 @@
       bundleLabel = config.title;
       plan.textContent = config.title;
       plan.dataset.label = config.title;
+      plan.classList.remove('is-loading');
     } else {
       bundleLabel = `Bundle ${id}`;
       plan.textContent = bundleLabel;
       plan.dataset.label = bundleLabel;
+      plan.classList.remove('is-loading');
     }
 
     target = 0;
@@ -1818,7 +1838,7 @@
 
 
 
-      if (!id) return;
+      if (!id || selected.has(id)) return;
 
 
 
@@ -1925,6 +1945,7 @@
         errorEl.hidden = false;
       }
 
+      plan.hidden = true;
       addButton.disabled = true;
       return;
     }
@@ -2536,6 +2557,10 @@
     min-height: 34px;
     color: rgba(33,28,23,.65);
     font-size: 13px;
+  }
+
+  .ccg-gift-builder__plan.is-loading {
+    visibility: hidden;
   }
 
   .ccg-gift-builder__plan {
@@ -3589,6 +3614,26 @@
 
 
 
+
+  .ccg-gift-builder__picker-product.is-selected {
+    position: relative;
+    opacity: .45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .ccg-gift-builder__picker-product.is-selected::after {
+    content: 'Selected';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(248,245,238,.78);
+    color: var(--builder-ink);
+    font: 700 13px/1 'Barlow Condensed', sans-serif;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
 
   .ccg-gift-builder__picker-product.is-unavailable {
 
