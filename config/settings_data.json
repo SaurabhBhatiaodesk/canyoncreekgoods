@@ -226,5 +226,10 @@
         "color2": "#DFDFDF"
       }
     }
+  },
+  "platform_customizations": {
+    "custom_css": [
+      ".mbc-bundle__item-out-of-stock{display: none;}"
+    ]
   }
 }
