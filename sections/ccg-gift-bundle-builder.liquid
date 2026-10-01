@@ -76,16 +76,13 @@
         </div>
 
         <div>
-          <span>
-            Bundle discount
-            (<span data-discount-label>—</span>)
-          </span>
-          <strong data-savings>-{{ 0 | money }}</strong>
+          <span>Bundle discount</span>
+          <strong data-savings>Applied on cart page</strong>
         </div>
 
         <div class="ccg-gift-builder__total-row">
           <span>Bundle total</span>
-          <strong data-price>{{ 0 | money }}</strong>
+          <strong data-price>Calculated on cart page</strong>
         </div>
 
         <button class="ccg-gift-builder__add" type="button" data-add disabled>
@@ -673,30 +670,12 @@
     if (totalEl) totalEl.textContent = total;
     if (targetEl) targetEl.textContent = target > 0 ? target : '—';
 
-    if (discountLabel) {
-      discountLabel.textContent =
-        Number.isFinite(discount)
-          ? `${discount}%`
-          : 'MBC';
-    }
-
     if (subtotalEl) {
       subtotalEl.textContent = formatMoney(subtotal);
     }
 
-    if (savingsEl) {
-      savingsEl.textContent =
-        savings != null
-          ? `-${formatMoney(savings)}`
-          : 'Calculated in cart';
-    }
-
-    if (priceEl) {
-      priceEl.textContent =
-        bundleTotal != null
-          ? formatMoney(bundleTotal)
-          : 'Calculated in cart';
-    }
+    if (savingsEl) savingsEl.textContent = 'Applied on cart page';
+    if (priceEl) priceEl.textContent = 'Calculated on cart page';
 
     if (addButton) {
       addButton.disabled =
