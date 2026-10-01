@@ -56,7 +56,7 @@
           "type": "tile",
           "settings": {
             "collection": "denim-dusters",
-            "image_hover": "shopify://shop_images/rn-image_picker_lib_temp_e44fe59c-a32e-492c-a0ab-ae1de06ff74c.jpg",
+            "image_hover": "shopify://shop_images/CourtneyCCG-39.jpg",
             "title": "Denim & Dusters",
             "subtitle": "4 collections",
             "link": ""
@@ -113,22 +113,6 @@
         "mobile_padding_bottom": 0
       }
     },
-    "gift_bundle_builder_ccg": {
-      "type": "ccg-gift-bundle-builder",
-      "name": "Gift the Crew",
-      "settings": {
-        "collection": "wool-cowls",
-        "gift_10_bundle_id": "127991",
-        "gift_20_bundle_id": "127993",
-        "products_limit": 24,
-        "eyebrow": "Handmade. Western. Ready to gift.",
-        "heading": "Gift the Crew",
-        "description": "<p>Choose different cowl patterns and quantities that total 10 or 20. Save 10% on Gift 10 or 15% on Gift 20.</p>",
-        "background_color": "#f8f5ee",
-        "text_color": "#2f2923",
-        "accent_color": "#a77b58"
-      }
-    },
     "bundle_buys_rnazfK": {
       "type": "bundle_buys",
       "blocks": {
@@ -137,7 +121,6 @@
           "settings": {
             "heading": "",
             "description": "",
-            "text_alignment": "center",
             "bundle_id": "127991"
           }
         },
@@ -146,7 +129,6 @@
           "settings": {
             "heading": "",
             "description": "<p>Easy, thoughtful gifts for your small crew, office, shop, team or clients.</p>",
-            "text_alignment": "center",
             "bundle_id": "127993"
           }
         }
@@ -163,18 +145,8 @@
         "intro": "<p>Our wool cowls make an easy and genuinely useful gift this winter. No sizing, no guessing, just premium cozy wool.</p><p>Each cowl comes individually packaged and gift-ready with wool care instructions and a QR code linking to our cowl-wearing tutorial video. All you have to do is hand them out!</p>",
         "card_collection": "wool-cowls",
         "show_contact": true,
-        "contact_heading": "Got a big crew?",
-        "contact_text": "<p>No worries, <a href=\"mailto:canyoncreekgoods@gmail.com\">send me an email</a> and I'll sort out the rest.</p>",
         "background_color": "#f8f5ee",
-        "text_color": "#2f2923",
-        "muted_text_color": "#5c5145",
-        "accent_color": "#b98a52",
-        "text_alignment": "left",
-        "width_mode": "full",
-        "max_width": 1440,
-        "content_width": 900,
-        "padding_top": 80,
-        "padding_bottom": 80
+        "text_color": "#2f2923"
       }
     },
     "bundle_cards_ccg": {
@@ -414,7 +386,7 @@
     "hero_ccg",
     "collection_picker_ccg",
     "direct_to_maker_ccg",
-    "gift_bundle_builder_ccg",
+    "bundle_buys_rnazfK",
     "bundle_cards_ccg",
     "best_sellers_ccg",
     "shows_list_ccg",
