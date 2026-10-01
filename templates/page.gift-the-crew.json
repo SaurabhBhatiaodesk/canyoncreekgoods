@@ -148,7 +148,7 @@
       "type": "custom-liquid",
       "name": "t:names.custom_liquid",
       "settings": {
-        "custom_liquid": "<div id=\"mbc-bundle-127991\"></div>",
+        "custom_liquid": "<mbc-bundles-widget data-bundle-id=\"127991\"></mbc-bundles-widget>",
         "background_color": "",
         "section_width": "page-width",
         "padding-block-start": 0,
