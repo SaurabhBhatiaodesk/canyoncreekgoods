@@ -1,7 +1,9 @@
 * {
   box-sizing: border-box;
 }
-
+.product-information div#mbcBundleItemsWidget {
+    display: none;
+}
 body {
   color: var(--color-foreground);
   background: var(--color-background);
