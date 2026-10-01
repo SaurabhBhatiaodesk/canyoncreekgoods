@@ -128,14 +128,14 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'bundle' and block.settings.bundle_id != blank -%}
           <button
-            class="ccg-gift-builder__plan{% if forloop.first %} is-active{% endif %}"
+            class="ccg-gift-builder__plan{% if forloop.first %} is-active{% endif %} is-loading"
             type="button"
             data-plan
             data-bundle-id="{{ block.settings.bundle_id | escape }}"
             aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
             {{ block.shopify_attributes }}
           >
-            Loading…
+            <span class="ccg-gift-builder__plan-label" aria-hidden="true"></span>
           </button>
         {%- endif -%}
       {%- endfor -%}
@@ -1519,10 +1519,12 @@
       bundleLabel = config.title;
       plan.textContent = config.title;
       plan.dataset.label = config.title;
+      plan.classList.remove('is-loading');
     } else {
       bundleLabel = `Bundle ${id}`;
       plan.textContent = bundleLabel;
       plan.dataset.label = bundleLabel;
+      plan.classList.remove('is-loading');
     }
 
     target = 0;
@@ -1925,6 +1927,7 @@
         errorEl.hidden = false;
       }
 
+      plan.hidden = true;
       addButton.disabled = true;
       return;
     }
@@ -2536,6 +2539,10 @@
     min-height: 34px;
     color: rgba(33,28,23,.65);
     font-size: 13px;
+  }
+
+  .ccg-gift-builder__plan.is-loading {
+    visibility: hidden;
   }
 
   .ccg-gift-builder__plan {
