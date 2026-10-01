@@ -238,7 +238,7 @@
       "name": "CCG Image Banner Text",
       "settings": {
         "content_layout": "collection",
-        "image": "shopify://shop_images/CanyonCreekGoods_Collection_Banner.webp",
+        "image": "shopify://shop_images/CanyonCreekGoods_Collection_Banner_Desktop.webp",
         "mobile_image": "shopify://shop_images/CanyonCreekGoods_Collection_Banner_Mobile.webp",
         "eyebrow": "Shop · Wool Cowls",
         "heading": "Wool Cowls",
