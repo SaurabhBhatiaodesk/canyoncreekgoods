@@ -444,10 +444,21 @@
       }
     }
 
-    const percentMatch = text.match(/(\d+(?:\.\d+)?)\s*%\s*(?:off)?/i);
+    const percentSources = [
+      title,
+      text,
+      widget?.getAttribute?.('data-title') || ''
+    ];
 
-    if (percentMatch) {
-      percent = Number(percentMatch[1]);
+    for (const source of percentSources) {
+      const percentMatch = String(source || '').match(
+        /(\d+(?:\.\d+)?)\s*%\s*(?:off)?/i
+      );
+
+      if (percentMatch) {
+        percent = Number(percentMatch[1]);
+        break;
+      }
     }
 
     return {
@@ -455,6 +466,36 @@
       quantity,
       percent
     };
+  };
+
+  const getPercentFromLiveBundleTitle = (widget) => {
+    if (!widget) return null;
+
+    const widgetRoot = getWidgetRoot(widget);
+
+    const candidates = [
+      widgetRoot?.querySelector?.('.mbc-bundles-list__title')?.textContent,
+      widgetRoot?.querySelector?.('.mbc-bundle h1')?.textContent,
+      widgetRoot?.querySelector?.('.mbc-bundle h2')?.textContent,
+      widgetRoot?.querySelector?.('.mbc-bundle h3')?.textContent,
+      getWidgetText(widget)
+    ];
+
+    for (const candidate of candidates) {
+      const match = String(candidate || '').match(
+        /(\d+(?:\.\d+)?)\s*%\s*(?:off)?/i
+      );
+
+      if (match) {
+        const value = Number(match[1]);
+
+        if (Number.isFinite(value)) {
+          return value;
+        }
+      }
+    }
+
+    return null;
   };
 
   const loadRules = async (id) => {
@@ -489,13 +530,31 @@
         quantity = Number(objectRules.maximum);
       }
 
-      const percent =
+      const objectPercent =
+        objectRules.percent !== null &&
+        objectRules.percent !== undefined &&
+        objectRules.percent !== '' &&
         Number.isFinite(Number(objectRules.percent))
           ? Number(objectRules.percent)
+          : null;
+
+      const textPercent =
+        textRules.percent !== null &&
+        textRules.percent !== undefined &&
+        textRules.percent !== '' &&
+        Number.isFinite(Number(textRules.percent))
+          ? Number(textRules.percent)
+          : null;
+
+      const liveTitlePercent = getPercentFromLiveBundleTitle(widget);
+
+      const percent =
+        objectPercent !== null
+          ? objectPercent
           : (
-              Number.isFinite(Number(textRules.percent))
-                ? Number(textRules.percent)
-                : null
+              textPercent !== null
+                ? textPercent
+                : liveTitlePercent
             );
 
       bestRules = {
@@ -894,6 +953,9 @@
       bundleLabel = rules.title || `Bundle ${id}`;
       target = Number(rules.quantity || 0);
       discount =
+        rules.percent !== null &&
+        rules.percent !== undefined &&
+        rules.percent !== '' &&
         Number.isFinite(Number(rules.percent))
           ? Number(rules.percent)
           : null;
