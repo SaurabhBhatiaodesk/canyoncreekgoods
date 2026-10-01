@@ -51,12 +51,12 @@
         "page-content"
       ],
       "settings": {
-        "page_layout": "about",
+        "page_layout": "policy",
         "contact_page_eyebrow": "Let's talk",
         "contact_page_intro": "",
         "about_eyebrow": "Why not",
         "about_intro": "",
-        "policy_eyebrow": "ON THE TRAIL",
+        "policy_eyebrow": "Bundle & Save",
         "policy_intro": "",
         "show_policy_highlights": false,
         "highlight_1_label": "",
