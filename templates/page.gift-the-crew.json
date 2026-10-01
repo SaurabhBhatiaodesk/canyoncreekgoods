@@ -90,13 +90,13 @@
             "side_bar_title_color": "#ffffff",
             "side_bar_sale_color": "#ffffff",
             "side_bar_price_color": "#ffffff",
-            "side_bar_compare_price_color": "#C8C8C8",
+            "side_bar_compare_price_color": "#c8c8c8",
             "side_bar_button_color": "#313131",
             "side_bar_button_bg_color": "#ffffff",
-            "item_border_color": "#DDDDDD",
+            "item_border_color": "#dddddd",
             "item_title_color": "#313131",
             "item_price_color": "#313131",
-            "item_compare_price_color": "#C8C8C8",
+            "item_compare_price_color": "#c8c8c8",
             "item_separator_color": "#313131"
           }
         }
@@ -132,10 +132,34 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "custom_liquid_wtRLj8": {
+      "type": "custom-liquid",
+      "name": "t:names.custom_liquid",
+      "settings": {
+        "custom_liquid": "",
+        "background_color": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "custom_liquid_7rMYkq": {
+      "type": "custom-liquid",
+      "name": "t:names.custom_liquid",
+      "settings": {
+        "custom_liquid": "<div id=\"mbc-bundle-127991\"></div>",
+        "background_color": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
     "main",
-    "1790821485fc835298"
+    "1790821485fc835298",
+    "custom_liquid_wtRLj8",
+    "custom_liquid_7rMYkq"
   ]
 }
