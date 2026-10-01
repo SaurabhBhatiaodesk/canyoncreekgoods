@@ -237,12 +237,12 @@
       "type": "ccg-image-banner-text",
       "name": "CCG Image Banner Text",
       "settings": {
-        "image": "shopify://shop_images/1ed0e69b-cd31-4cff-8166-613e4db84339.jpg",
+        "content_layout": "collection",
+        "image": "shopify://shop_images/OL_19530.jpg",
         "eyebrow": "Shop · Wool Cowls",
         "heading": "Wool Cowls",
         "description": "<p>Hand cut one at a time from premium American wool. Each cowl comes from a single blanket run, so when it sells it is gone for good.</p>",
-        "overlay_opacity": 0.5,
-        "content_layout": "collection"
+        "overlay_opacity": 0.5
       }
     },
     "ccg_collection_grid_ccg": {
@@ -254,6 +254,7 @@
         "image_ratio": "square",
         "products_per_page": 24,
         "quick_price_filter": 70,
+        "max_category_filters": 5,
         "low_stock_threshold": 3,
         "background_color": "#f8f5ee",
         "desktop_padding_top": 32,
@@ -266,9 +267,9 @@
       "type": "ccg-direct-to-maker",
       "name": "CCG Direct to Maker",
       "settings": {
-        "image": "shopify://shop_images/c5fa9890-28a1-48c7-b637-1abc497799b2.jpg",
         "media_layout": "descriptive",
         "image_alt": "Rolls of fabric with colorful geometric and bison patterns on display.",
+        "image": "shopify://shop_images/c5fa9890-28a1-48c7-b637-1abc497799b2.jpg",
         "media_position": "right",
         "eyebrow": "Not sure which one",
         "heading": "Send me a photo of your favourite jacket",
