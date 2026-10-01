@@ -50,6 +50,7 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "page_layout": "policy",
         "contact_page_eyebrow": "Let's talk",
