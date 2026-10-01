@@ -82,6 +82,12 @@
     "gift_bundle_builder": {
       "type": "ccg-gift-bundle-builder",
       "blocks": {
+        "bundle_6rC6nq": {
+          "type": "bundle",
+          "settings": {
+            "bundle_id": "127991"
+          }
+        },
         "bundle_3rXHLB": {
           "type": "bundle",
           "settings": {
@@ -90,6 +96,7 @@
         }
       },
       "block_order": [
+        "bundle_6rC6nq",
         "bundle_3rXHLB"
       ],
       "name": "Gift bundle builder",
