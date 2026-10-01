@@ -80,30 +80,6 @@
     },
     "1790821485fc835298": {
       "type": "_blocks",
-      "blocks": {
-        "mbc_bundles_mbc_bundles_featured_bundle_ceD4x3": {
-          "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-featured-bundle/57c94b78-e464-47f4-9403-7ffcfcddb33f",
-          "settings": {
-            "bundle_id": "127991",
-            "productsPerView": 2,
-            "side_bar_bg_color": "#313131",
-            "side_bar_title_color": "#ffffff",
-            "side_bar_sale_color": "#ffffff",
-            "side_bar_price_color": "#ffffff",
-            "side_bar_compare_price_color": "#c8c8c8",
-            "side_bar_button_color": "#313131",
-            "side_bar_button_bg_color": "#ffffff",
-            "item_border_color": "#dddddd",
-            "item_title_color": "#313131",
-            "item_price_color": "#313131",
-            "item_compare_price_color": "#c8c8c8",
-            "item_separator_color": "#313131"
-          }
-        }
-      },
-      "block_order": [
-        "mbc_bundles_mbc_bundles_featured_bundle_ceD4x3"
-      ],
       "disabled": true,
       "settings": {
         "content_direction": "column",
@@ -138,17 +114,6 @@
       "type": "custom-liquid",
       "name": "t:names.custom_liquid",
       "settings": {
-        "custom_liquid": "<mbc-bundles-widget data-bundle-id=\"127991\"></mbc-bundles-widget>",
-        "background_color": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
-    "custom_liquid_wtRLj8": {
-      "type": "custom-liquid",
-      "name": "t:names.custom_liquid",
-      "settings": {
         "custom_liquid": "",
         "background_color": "",
         "section_width": "page-width",
@@ -160,7 +125,6 @@
   "order": [
     "main",
     "1790821485fc835298",
-    "custom_liquid_7rMYkq",
-    "custom_liquid_wtRLj8"
+    "custom_liquid_7rMYkq"
   ]
 }
