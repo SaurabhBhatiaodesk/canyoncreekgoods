@@ -131,6 +131,7 @@
       ],
       "disabled": true,
       "name": "Gift the Crew",
+      "disabled": false,
       "settings": {
         "eyebrow": "Handmade. Western. Ready to gift.",
         "heading": "Gift the Crew",

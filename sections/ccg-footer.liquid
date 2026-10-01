@@ -85,7 +85,7 @@
                 {%- endif -%}
 
                 <li>
-                  <a href="{% if section.settings.seo_layout == 'semantic' and link.title == 'Matched Sets' and link.url == '/collections/western-cowls' %}{{ routes.root_url }}#ccg-bundles{% else %}{{ link.url }}{% endif %}">
+                  <a href="{{ link.url }}">
                     {{ link.title }}
                   </a>
                 </li>
@@ -420,7 +420,7 @@
         { "value": "semantic", "label": "Layout 2 — SEO links" }
       ],
       "default": "original",
-      "info": "Layout 2 uses semantic footer headings and connects Matched Sets to the homepage bundles."
+      "info": "Layout 2 uses semantic footer headings."
     },
     {
       "type": "image_picker",
