@@ -320,6 +320,7 @@
             },
             "mbc_bundles_mbc_bundles_shortcode_widget_for_product_page_YcQWKY": {
               "type": "shopify://apps/mbc-bundles/blocks/mbc-bundles-shortcode-widget-for-product-page/57c94b78-e464-47f4-9403-7ffcfcddb33f",
+              "disabled": true,
               "settings": {
                 "widget_type": "default"
               }
