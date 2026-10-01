@@ -52,7 +52,9 @@
       ],
       "settings": {
         "page_layout": "about",
-        "about_eyebrow": "Meet the maker",
+        "contact_page_eyebrow": "Let's talk",
+        "contact_page_intro": "",
+        "about_eyebrow": "Why not",
         "about_intro": "",
         "policy_eyebrow": "ON THE TRAIL",
         "policy_intro": "",
