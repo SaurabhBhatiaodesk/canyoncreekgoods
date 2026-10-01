@@ -116,6 +116,15 @@
     "bundle_buys_rnazfK": {
       "type": "bundle_buys",
       "blocks": {
+        "offer_gift10": {
+          "type": "offer",
+          "settings": {
+            "heading": "",
+            "description": "",
+            "text_alignment": "center",
+            "bundle_id": "127991"
+          }
+        },
         "offer_apQaRL": {
           "type": "offer",
           "settings": {
@@ -127,6 +136,7 @@
         }
       },
       "block_order": [
+        "offer_gift10",
         "offer_apQaRL"
       ],
       "name": "Gift the Crew",
