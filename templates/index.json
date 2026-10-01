@@ -113,6 +113,22 @@
         "mobile_padding_bottom": 0
       }
     },
+    "gift_bundle_builder_ccg": {
+      "type": "ccg-gift-bundle-builder",
+      "name": "Gift the Crew",
+      "settings": {
+        "collection": "wool-cowls",
+        "gift_10_bundle_id": "127991",
+        "gift_20_bundle_id": "127993",
+        "products_limit": 24,
+        "eyebrow": "Handmade. Western. Ready to gift.",
+        "heading": "Gift the Crew",
+        "description": "<p>Choose different cowl patterns and quantities that total 10 or 20. Save 10% on Gift 10 or 15% on Gift 20.</p>",
+        "background_color": "#f8f5ee",
+        "text_color": "#2f2923",
+        "accent_color": "#a77b58"
+      }
+    },
     "bundle_buys_rnazfK": {
       "type": "bundle_buys",
       "blocks": {
@@ -398,7 +414,7 @@
     "hero_ccg",
     "collection_picker_ccg",
     "direct_to_maker_ccg",
-    "bundle_buys_rnazfK",
+    "gift_bundle_builder_ccg",
     "bundle_cards_ccg",
     "best_sellers_ccg",
     "shows_list_ccg",
