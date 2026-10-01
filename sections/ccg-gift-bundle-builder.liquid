@@ -5,7 +5,7 @@
 <section
   id="CCGGiftBuilder-{{ section.id }}"
   class="ccg-gift-builder"
-  data-ccg-mbc-wrapper
+  data-ccg-gift-builder
   style="
     --builder-bg: {{ section.settings.background_color }};
     --builder-ink: {{ section.settings.text_color }};
@@ -13,122 +13,162 @@
   "
 >
   <div class="ccg-gift-builder__inner">
+
     <div class="ccg-gift-builder__intro">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="ccg-gift-builder__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <p class="ccg-gift-builder__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
       {%- endif -%}
 
       {%- if section.settings.heading != blank -%}
-        <h2 class="ccg-gift-builder__heading">{{ section.settings.heading | escape }}</h2>
+        <h2 class="ccg-gift-builder__heading">
+          {{ section.settings.heading | escape }}
+        </h2>
       {%- endif -%}
 
       {%- if section.settings.description != blank -%}
-        <div class="ccg-gift-builder__description rte">{{ section.settings.description }}</div>
+        <div class="ccg-gift-builder__description rte">
+          {{ section.settings.description }}
+        </div>
       {%- endif -%}
     </div>
 
     {%- if mbc_bundle_id != blank -%}
-      <div class="ccg-gift-builder__widget">
-        <mbc-bundles-widget data-bundle-id="{{ mbc_bundle_id | escape }}"></mbc-bundles-widget>
+      <div class="ccg-gift-builder__app">
+        <mbc-bundles-widget
+          data-bundle-id="{{ mbc_bundle_id | escape }}"
+        ></mbc-bundles-widget>
       </div>
     {%- else -%}
-      <p class="ccg-gift-builder__notice">
-        Add the MBC Bundle ID in this section's settings.
-      </p>
+      <div class="ccg-gift-builder__notice">
+        Add an MBC Bundle ID in this section's settings.
+      </div>
     {%- endif -%}
+
   </div>
 </section>
 
 <script>
-  (() => {
-    const section = document.getElementById('CCGGiftBuilder-{{ section.id }}');
-    if (!section || section.dataset.ccgReady === 'true') return;
+(() => {
+  const section = document.getElementById('CCGGiftBuilder-{{ section.id }}');
+  if (!section || section.dataset.ready === 'true') return;
 
-    section.dataset.ccgReady = 'true';
+  section.dataset.ready = 'true';
 
-    const widget = section.querySelector('mbc-bundles-widget');
-    if (!widget) return;
+  const widget = section.querySelector('mbc-bundles-widget');
+  if (!widget) return;
 
-    /*
-      IMPORTANT:
-      MBC remains the single source of truth for:
-      - products
-      - quantities
-      - bundle rules
-      - discounts
-      - pricing
-      - final cart/checkout pricing
+  /*
+   * IMPORTANT
+   * ----------
+   * The theme does NOT calculate:
+   * - discount
+   * - subtotal
+   * - bundle total
+   * - required quantity
+   * - bundle products
+   *
+   * MBC Bundles is the single source of truth.
+   * This keeps storefront pricing aligned with cart + checkout.
+   */
 
-      We do NOT calculate bundle totals or discounts in theme JavaScript.
-    */
+  const changeAddToCartText = (root) => {
+    if (!root || !root.querySelectorAll) return;
 
-    const normalizeButtonText = (root) => {
-      if (!root || !root.querySelectorAll) return;
+    root
+      .querySelectorAll('button, input[type="submit"], [role="button"]')
+      .forEach((el) => {
+        const text = (
+          el.tagName === 'INPUT'
+            ? el.value
+            : el.textContent
+        )?.replace(/\s+/g, ' ').trim() || '';
 
-      const buttons = root.querySelectorAll('button, [role="button"], input[type="submit"]');
-
-      buttons.forEach((button) => {
-        const currentText = (
-          button.tagName === 'INPUT'
-            ? button.value
-            : button.textContent
-        )?.trim() || '';
-
-        if (/add\s+.*\s+to\s+cart/i.test(currentText) || /^add to cart$/i.test(currentText)) {
-          if (button.tagName === 'INPUT') {
-            button.value = 'Add to cart';
+        if (
+          /^add(?:\s+.+)?\s+to\s+cart$/i.test(text) ||
+          /^add to cart$/i.test(text)
+        ) {
+          if (el.tagName === 'INPUT') {
+            el.value = 'Add to cart';
           } else {
-            button.textContent = 'Add to cart';
+            el.textContent = 'Add to cart';
           }
         }
       });
-    };
+  };
 
-    const scanWidget = () => {
-      normalizeButtonText(widget);
+  const scan = () => {
+    changeAddToCartText(widget);
 
-      if (widget.shadowRoot) {
-        normalizeButtonText(widget.shadowRoot);
-      }
-    };
+    if (widget.shadowRoot) {
+      changeAddToCartText(widget.shadowRoot);
+    }
+  };
 
-    scanWidget();
+  const observe = (root) => {
+    if (!root) return;
 
     const observer = new MutationObserver(() => {
-      scanWidget();
+      scan();
     });
 
-    observer.observe(widget, {
-      subtree: true,
-      childList: true,
-      characterData: true
-    });
+    try {
+      observer.observe(root, {
+        subtree: true,
+        childList: true,
+        characterData: true
+      });
+    } catch (e) {}
+  };
 
-    const shadowWait = setInterval(() => {
-      scanWidget();
+  observe(widget);
+  scan();
+
+  let attempts = 0;
+
+  const waitForMBC = setInterval(async () => {
+    attempts += 1;
+
+    const mbc = window.MAKEBECOOL_BUNDLES;
+
+    if (mbc) {
+      try {
+        if (typeof mbc.loadWidgetScript === 'function') {
+          await mbc.loadWidgetScript();
+        }
+      } catch (e) {}
+
+      scan();
 
       if (widget.shadowRoot) {
-        try {
-          observer.observe(widget.shadowRoot, {
-            subtree: true,
-            childList: true,
-            characterData: true
-          });
-        } catch (e) {}
-
-        clearInterval(shadowWait);
+        observe(widget.shadowRoot);
       }
-    }, 250);
 
-    setTimeout(() => clearInterval(shadowWait), 10000);
-  })();
+      clearInterval(waitForMBC);
+    }
+
+    if (attempts >= 40) {
+      clearInterval(waitForMBC);
+    }
+  }, 250);
+
+  /*
+   * When MBC recalculates pricing or cart discounts,
+   * rescan only for presentation text.
+   * We never overwrite the actual prices.
+   */
+  document.addEventListener('MAKEBECOOL_BUNDLES.pricingCalculated', scan);
+  document.addEventListener('MAKEBECOOL_BUNDLES.updateCart', scan);
+})();
 </script>
 
 {% stylesheet %}
   .ccg-gift-builder {
+    width: 100%;
+    padding: 64px 32px 96px;
     background: var(--builder-bg);
     color: var(--builder-ink);
-    padding: 64px 32px 96px;
   }
 
   .ccg-gift-builder__inner {
@@ -138,51 +178,77 @@
   }
 
   .ccg-gift-builder__intro {
-    max-width: 760px;
+    max-width: 900px;
     margin: 0 auto 36px;
     text-align: center;
   }
 
   .ccg-gift-builder__eyebrow {
-    margin: 0 0 10px;
+    margin: 0 0 14px;
     color: var(--builder-accent);
-    font: 400 14px/1.2 'Barlow Condensed', sans-serif;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
     letter-spacing: .22em;
     text-transform: uppercase;
   }
 
   .ccg-gift-builder__heading {
-    margin: 0 0 16px;
+    margin: 0 0 18px;
     color: var(--builder-ink);
     font-family: 'Rye', serif;
-    font-size: clamp(30px, 4vw, 48px);
+    font-size: clamp(34px, 5vw, 58px);
     font-weight: 400;
-    line-height: 1.12;
+    line-height: 1.08;
+    text-wrap: balance;
   }
 
   .ccg-gift-builder__description {
+    max-width: 760px;
+    margin: 0 auto;
     color: var(--builder-ink);
-    line-height: 1.7;
+    font-size: 15px;
+    line-height: 1.65;
   }
 
   .ccg-gift-builder__description p {
     margin: 0;
   }
 
-  .ccg-gift-builder__widget {
+  .ccg-gift-builder__app {
     width: 100%;
+    margin-top: 24px;
   }
 
-  .ccg-gift-builder__widget mbc-bundles-widget {
+  .ccg-gift-builder__app mbc-bundles-widget {
     display: block;
     width: 100%;
   }
 
   .ccg-gift-builder__notice {
-    margin: 0;
-    padding: 20px;
+    max-width: 760px;
+    margin: 30px auto 0;
+    padding: 18px 20px;
     border: 1px solid rgba(33, 28, 23, .18);
     background: #fbf9f4;
+    text-align: center;
+  }
+
+  /*
+   * Keep the same warm / minimal page feel.
+   * Actual MBC widget internals remain controlled by MBC,
+   * so product/discount/price/cart behavior stays dynamic.
+   */
+  .ccg-gift-builder__app {
+    --ccg-border: rgba(33, 28, 23, .18);
+    --ccg-card: #fbf9f4;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ccg-gift-builder {
+      padding-inline: 22px;
+    }
   }
 
   @media screen and (max-width: 749px) {
@@ -195,7 +261,11 @@
     }
 
     .ccg-gift-builder__heading {
-      font-size: clamp(28px, 10vw, 40px);
+      font-size: clamp(30px, 11vw, 44px);
+    }
+
+    .ccg-gift-builder__description {
+      font-size: 14px;
     }
   }
 {% endstylesheet %}
@@ -209,7 +279,11 @@
       "id": "mbc_bundle_id",
       "label": "MBC Bundle ID",
       "default": "128498",
-      "info": "MBC controls products, quantities, discounts, pricing and bundle rules dynamically."
+      "info": "MBC dynamically controls products, quantity rules, discounts, totals, cart and checkout pricing."
+    },
+    {
+      "type": "header",
+      "content": "Heading"
     },
     {
       "type": "text",
@@ -227,7 +301,11 @@
       "type": "richtext",
       "id": "description",
       "label": "Description",
-      "default": "<p>Choose different cowl patterns and set the quantity for each. Your quantities must total the amount required by the selected bundle.</p>"
+      "default": "<p>Choose your favorite cowl patterns and quantities to build your bundle.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
@@ -245,7 +323,7 @@
       "type": "color",
       "id": "accent_color",
       "label": "Accent",
-      "default": "#a77b58"
+      "default": "#b18461"
     }
   ],
   "presets": [
