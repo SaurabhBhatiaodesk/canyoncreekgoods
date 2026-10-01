@@ -383,9 +383,7 @@
             numeric <= 100 &&
             (
               key.includes('discountpercentage') ||
-              key.includes('discountpercent') ||
-              key === 'percentage' ||
-              key === 'percent'
+              key.includes('discountpercent')
             )
           ) {
             percent = numeric;
@@ -498,6 +496,36 @@
     return null;
   };
 
+  const resolveMbcPercent = (widget, objectPercent, textPercent) => {
+    const livePercent = getPercentFromLiveBundleTitle(widget);
+
+    if (
+      textPercent !== null &&
+      textPercent !== undefined &&
+      Number.isFinite(Number(textPercent))
+    ) {
+      return Number(textPercent);
+    }
+
+    if (
+      livePercent !== null &&
+      livePercent !== undefined &&
+      Number.isFinite(Number(livePercent))
+    ) {
+      return Number(livePercent);
+    }
+
+    if (
+      objectPercent !== null &&
+      objectPercent !== undefined &&
+      Number.isFinite(Number(objectPercent))
+    ) {
+      return Number(objectPercent);
+    }
+
+    return null;
+  };
+
   const loadRules = async (id) => {
     if (ruleCache.has(id)) {
       return ruleCache.get(id);
@@ -548,14 +576,11 @@
 
       const liveTitlePercent = getPercentFromLiveBundleTitle(widget);
 
-      const percent =
-        objectPercent !== null
-          ? objectPercent
-          : (
-              textPercent !== null
-                ? textPercent
-                : liveTitlePercent
-            );
+      const percent = resolveMbcPercent(
+        widget,
+        objectPercent,
+        textPercent
+      );
 
       bestRules = {
         id,
