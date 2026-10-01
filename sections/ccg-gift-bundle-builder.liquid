@@ -14,11 +14,15 @@
   <div class="ccg-gift-builder__inner">
     <div class="ccg-gift-builder__intro">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="ccg-gift-builder__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <p class="ccg-gift-builder__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
       {%- endif -%}
 
       {%- if section.settings.heading != blank -%}
-        <h2 class="ccg-gift-builder__heading">{{ section.settings.heading | escape }}</h2>
+        <h2 class="ccg-gift-builder__heading">
+          {{ section.settings.heading | escape }}
+        </h2>
       {%- endif -%}
 
       {%- if section.settings.description != blank -%}
@@ -29,157 +33,16 @@
     </div>
 
     {%- if mbc_bundle_id != blank -%}
-      <div class="ccg-gift-builder__widget-wrap" data-mbc-host>
-        <mbc-bundles-widget data-bundle-id="{{ mbc_bundle_id | escape }}"></mbc-bundles-widget>
+      <div class="ccg-gift-builder__widget">
+        <mbc-bundles-widget data-bundle-id="{{ mbc_bundle_id }}"></mbc-bundles-widget>
       </div>
     {%- else -%}
       <p class="ccg-gift-builder__notice">
-        Add the MBC bundle ID in this section's settings.
+        Add the MBC Bundle ID in this section's settings.
       </p>
     {%- endif -%}
   </div>
 </section>
-
-<script>
-(() => {
-  const sectionId = 'CCGGiftBuilder-{{ section.id }}';
-
-  const bootMBC = async () => {
-    const section = document.getElementById(sectionId);
-    if (!section) return;
-
-    const widget = section.querySelector('mbc-bundles-widget');
-    if (!widget) return;
-
-    let tries = 0;
-
-    const waitForMBC = async () => {
-      tries += 1;
-
-      const mbc = window.MAKEBECOOL_BUNDLES;
-
-      if (!mbc) {
-        if (tries < 60) {
-          window.setTimeout(waitForMBC, 250);
-        }
-        return;
-      }
-
-      try {
-        if (typeof mbc.loadWidgetScript === 'function') {
-          await mbc.loadWidgetScript();
-        }
-      } catch (e) {
-        console.warn('MBC loadWidgetScript error:', e);
-      }
-
-      try {
-        /*
-         * This page is not necessarily a product page.
-         * MBC documents initWidgetOnCollectionPage() for storefront
-         * placements outside the normal product-page flow.
-         */
-        if (typeof mbc.initWidgetOnCollectionPage === 'function') {
-          await mbc.initWidgetOnCollectionPage();
-        }
-      } catch (e) {
-        console.warn('MBC initWidgetOnCollectionPage error:', e);
-      }
-
-      /*
-       * Fallback for themes/app versions where the widget initializer
-       * is handled by initWidget().
-       */
-      try {
-        if (
-          !widget.children.length &&
-          typeof mbc.initWidget === 'function'
-        ) {
-          await mbc.initWidget();
-        }
-      } catch (e) {
-        console.warn('MBC initWidget fallback error:', e);
-      }
-
-      /*
-       * MBC is the source of truth for products, quantities,
-       * discounts, totals and checkout pricing.
-       * Theme JS never calculates any price.
-       */
-      const normalizeButtonText = () => {
-        const roots = [widget];
-
-        if (widget.shadowRoot) {
-          roots.push(widget.shadowRoot);
-        }
-
-        roots.forEach((root) => {
-          if (!root?.querySelectorAll) return;
-
-          root.querySelectorAll('button, input[type="submit"], [role="button"]').forEach((el) => {
-            const text = (
-              el.tagName === 'INPUT'
-                ? el.value
-                : el.textContent
-            )?.replace(/\s+/g, ' ').trim() || '';
-
-            if (/^add(?:\s+.+)?\s+to\s+cart$/i.test(text)) {
-              if (el.tagName === 'INPUT') {
-                el.value = 'Add to cart';
-              } else {
-                el.textContent = 'Add to cart';
-              }
-            }
-          });
-        });
-      };
-
-      normalizeButtonText();
-
-      const observer = new MutationObserver(normalizeButtonText);
-
-      try {
-        observer.observe(widget, {
-          childList: true,
-          subtree: true,
-          characterData: true
-        });
-      } catch (e) {}
-
-      if (widget.shadowRoot) {
-        try {
-          observer.observe(widget.shadowRoot, {
-            childList: true,
-            subtree: true,
-            characterData: true
-          });
-        } catch (e) {}
-      }
-
-      document.addEventListener('MAKEBECOOL_BUNDLES.updateCart', normalizeButtonText);
-      document.addEventListener('MAKEBECOOL_BUNDLES.pricingCalculated', normalizeButtonText);
-    };
-
-    waitForMBC();
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bootMBC, { once: true });
-  } else {
-    bootMBC();
-  }
-
-  /*
-   * Shopify theme editor can replace a section without a full page reload.
-   * Re-run MBC when this section is reloaded in the editor.
-   */
-  document.addEventListener('shopify:section:load', (event) => {
-    if (event.target?.id === sectionId) {
-      bootMBC();
-    }
-  });
-})();
-</script>
 
 {% stylesheet %}
   .ccg-gift-builder {
@@ -234,13 +97,8 @@
     margin: 0;
   }
 
-  .ccg-gift-builder__widget-wrap {
-    width: 100%;
-    min-height: 1px;
-    margin-top: 18px;
-  }
-
-  .ccg-gift-builder__widget-wrap mbc-bundles-widget {
+  .ccg-gift-builder__widget,
+  .ccg-gift-builder__widget mbc-bundles-widget {
     display: block;
     width: 100%;
   }
@@ -284,7 +142,7 @@
       "id": "mbc_bundle_id",
       "label": "MBC Bundle ID",
       "default": "128498",
-      "info": "MBC controls the bundle products, quantities, discount, total and checkout pricing dynamically."
+      "info": "Paste the numeric bundle ID from MBC. The MBC widget controls products, quantities, discount, pricing, cart and checkout."
     },
     {
       "type": "header",
@@ -306,7 +164,7 @@
       "type": "richtext",
       "id": "description",
       "label": "Description",
-      "default": "<p>Choose different cowl patterns and set the quantity for each.</p>"
+      "default": "<p>Choose your favorite cowl patterns and quantities to build your bundle.</p>"
     },
     {
       "type": "header",
