@@ -17,6 +17,7 @@
   data-gift-builder
 
   data-money-format="{{ shop.money_format | escape }}"
+  data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}"
 
   style="
 
@@ -369,6 +370,7 @@
 
 
   const moneyFormat = root.dataset.moneyFormat || '${{amount}}';
+  const currencyCode = root.dataset.currency || 'USD';
 
   const plans = [...root.querySelectorAll('[data-plan]')];
 
@@ -419,22 +421,17 @@
 
 
   const formatMoney = (cents) => {
+    const value = Number(cents || 0) / 100;
 
-    const amount = (Number(cents || 0) / 100).toFixed(2);
-
-
-
-    return moneyFormat.replace(
-
-      /\\{\\{\s*amount(?:_with_comma_separator)?\s*\\}\\}/,
-
-      amount
-
-    );
-
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currencyCode
+      }).format(value);
+    } catch (error) {
+      return `$${value.toFixed(2)}`;
+    }
   };
-
-
 
   const openPicker = () => {
 
