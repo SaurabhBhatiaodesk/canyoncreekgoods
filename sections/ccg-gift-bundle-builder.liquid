@@ -574,9 +574,13 @@
         textPercent
       );
 
+      const pctText = Number.isFinite(percent) && percent > 0
+        ? ` | ${Number.isInteger(percent) ? percent : percent.toFixed(1)}% off`
+        : '';
+
       bestRules = {
         id,
-        title,
+        title: quantity > 0 ? `${quantity} Cowls${pctText}` : title,
         quantity,
         percent
       };
