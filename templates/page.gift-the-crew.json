@@ -78,6 +78,28 @@
         "padding-block-end": 80
       }
     },
+    "gift_bundle_builder": {
+      "type": "ccg-gift-bundle-builder",
+      "name": "Gift bundle builder",
+      "settings": {
+        "collection": "wool-cowls",
+        "products_limit": 24,
+        "gift_10_label": "Gift 10",
+        "gift_10_bundle_id": "127991",
+        "gift_10_quantity": 10,
+        "gift_10_discount": 10,
+        "gift_20_label": "Gift 20",
+        "gift_20_bundle_id": "127993",
+        "gift_20_quantity": 20,
+        "gift_20_discount": 10,
+        "eyebrow": "Mix, match & save",
+        "heading": "Build your bundle",
+        "description": "<p>Choose different cowl patterns and set the quantity for each. Your quantities must total 10 or 20.</p>",
+        "background_color": "#f8f5ee",
+        "text_color": "#211c17",
+        "accent_color": "#a77b58"
+      }
+    },
     "1790821485fc835298": {
       "type": "_blocks",
       "disabled": true,
@@ -119,22 +141,6 @@
         "section_width": "page-width",
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
-    },
-    "gift_bundle_builder": {
-      "type": "ccg-gift-bundle-builder",
-      "name": "Gift bundle builder",
-      "settings": {
-        "collection": "wool-cowls",
-        "gift_10_bundle_id": "127991",
-        "gift_20_bundle_id": "127993",
-        "products_limit": 24,
-        "eyebrow": "Mix, match & save",
-        "heading": "Build your crew gift bundle",
-        "description": "<p>Choose different cowl patterns and set the quantity for each. Your quantities must total 10 or 20.</p>",
-        "background_color": "#f8f5ee",
-        "text_color": "#211c17",
-        "accent_color": "#a77b58"
       }
     }
   },
