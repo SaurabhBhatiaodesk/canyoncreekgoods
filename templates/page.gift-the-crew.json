@@ -1,0 +1,83 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "t:names.title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {
+            "text_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "settings": {
+        "page_layout": "about",
+        "about_eyebrow": "Meet the maker",
+        "about_intro": "",
+        "policy_eyebrow": "ON THE TRAIL",
+        "policy_intro": "",
+        "show_policy_highlights": false,
+        "highlight_1_label": "",
+        "highlight_1_text": "Leaves the studio in 1–3 business days",
+        "highlight_2_label": "Made to order",
+        "highlight_2_text": "Created by hand in approximately 1–2 weeks",
+        "highlight_3_label": "US shipping",
+        "highlight_3_text": "Free sitewide with tracking included",
+        "show_contact_cta": false,
+        "contact_eyebrow": "Need a hand?",
+        "contact_heading": "Questions about your order?",
+        "contact_text": "Send Melissa a note before ordering if you are working toward a special date or need help choosing a shipping option.",
+        "contact_email": "canyoncreekgoods@gmail.com",
+        "contact_button": "Email Melissa",
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
