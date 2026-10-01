@@ -238,8 +238,8 @@
       "name": "CCG Image Banner Text",
       "settings": {
         "content_layout": "collection",
-        "image": "shopify://shop_images/CanyonCreekGoods_Collection_Banner_Desktop_2.webp",
-        "mobile_image": "shopify://shop_images/CanyonCreekGoods_Collection_Banner_Mobile.webp",
+        "image": "shopify://shop_images/GoldenHourFarm.jpg",
+        "mobile_image": "shopify://shop_images/GoldenHourFarm.jpg",
         "eyebrow": "Shop · Wool Cowls",
         "heading": "Wool Cowls",
         "description": "<p>Hand cut one at a time from premium American wool. Each cowl comes from a single blanket run, so when it sells it is gone for good.</p>",
