@@ -1,18 +1,13 @@
 {%- liquid
-  assign has_bundle_blocks = false
-
-  for block in section.blocks
-    if block.type == 'bundle' and block.settings.bundle_id != blank
-      assign has_bundle_blocks = true
-      break
-    endif
-  endfor
+  assign bundle_collection = section.settings.collection
+  assign products_limit = section.settings.products_limit
 -%}
 
 <section
   id="CCGGiftBuilder-{{ section.id }}"
   class="ccg-gift-builder"
   data-gift-builder
+  data-money-format="{{ shop.money_format | escape }}"
   data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}"
   style="
     --builder-bg: {{ section.settings.background_color }};
@@ -35,49 +30,49 @@
       {%- endif -%}
     </div>
 
-    {%- if has_bundle_blocks -%}
-      <div class="ccg-gift-builder__plans" role="group" aria-label="Choose bundle size">
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'bundle' and block.settings.bundle_id != blank -%}
-            <button
-              class="ccg-gift-builder__plan is-loading"
-              type="button"
-              data-plan
-              data-bundle-id="{{ block.settings.bundle_id | escape }}"
-              aria-pressed="false"
-              {{ block.shopify_attributes }}
-            >
-              <span data-plan-label></span>
-            </button>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
+    <div class="ccg-gift-builder__plans" role="group" aria-label="Choose bundle size">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'bundle' and block.settings.bundle_id != blank -%}
+          <button
+            class="ccg-gift-builder__plan is-loading"
+            type="button"
+            data-plan
+            data-bundle-id="{{ block.settings.bundle_id | escape }}"
+            aria-pressed="false"
+            {{ block.shopify_attributes }}
+          >
+            <span data-plan-label></span>
+          </button>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
 
-      <div class="ccg-gift-builder__status" aria-live="polite">
+    {%- if bundle_collection != blank and bundle_collection.products_count > 0 -%}
+      <div class="ccg-gift-builder__status">
         <span>
           Selected:
           <strong data-total>0</strong>
           of
-          <strong data-target-count>0</strong>
+          <strong data-target-count>—</strong>
         </span>
         <span data-status>Loading bundle rules…</span>
       </div>
 
       <div class="ccg-gift-builder__selected-grid" data-selected-grid>
-        <button class="ccg-gift-builder__add-card" type="button" data-open-picker disabled>
+        <button class="ccg-gift-builder__add-card" type="button" data-open-picker>
           <span class="ccg-gift-builder__plus">+</span>
           <span>Add product</span>
         </button>
       </div>
 
-      <button class="ccg-gift-builder__choose" type="button" data-open-picker disabled>
+      <button class="ccg-gift-builder__choose" type="button" data-open-picker>
         Choose a product
       </button>
 
       <div class="ccg-gift-builder__summary">
         <div>
           <span>Bundle subtotal</span>
-          <strong data-subtotal>—</strong>
+          <strong data-subtotal>{{ 0 | money }}</strong>
         </div>
 
         <div>
@@ -85,56 +80,84 @@
             Bundle discount
             (<span data-discount-label>—</span>)
           </span>
-          <strong data-savings>—</strong>
+          <strong data-savings>-{{ 0 | money }}</strong>
         </div>
 
         <div class="ccg-gift-builder__total-row">
           <span>Bundle total</span>
-          <strong data-price>—</strong>
+          <strong data-price>{{ 0 | money }}</strong>
         </div>
 
         <button class="ccg-gift-builder__add" type="button" data-add disabled>
           Add to cart
         </button>
 
-        <p class="ccg-gift-builder__error" data-error role="alert" hidden></p>
+        <p class="ccg-gift-builder__error" data-error hidden></p>
       </div>
 
       <div class="ccg-gift-builder__picker" data-picker hidden>
         <div class="ccg-gift-builder__picker-backdrop" data-close-picker></div>
 
-        <div
-          class="ccg-gift-builder__picker-panel"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Choose products"
-        >
+        <div class="ccg-gift-builder__picker-panel" role="dialog" aria-modal="true" aria-label="Choose products">
           <div class="ccg-gift-builder__picker-head">
             <div>
               <p class="ccg-gift-builder__picker-eyebrow">Choose products</p>
               <h3>Add cowls to your bundle</h3>
             </div>
 
-            <button
-              type="button"
-              class="ccg-gift-builder__picker-close"
-              data-close-picker
-              aria-label="Close"
-            >
+            <button type="button" class="ccg-gift-builder__picker-close" data-close-picker aria-label="Close">
               ×
             </button>
           </div>
 
-          <div class="ccg-gift-builder__picker-grid" data-picker-grid></div>
+          <div class="ccg-gift-builder__picker-grid">
+            {%- for product in bundle_collection.products limit: products_limit -%}
+              {%- assign variant = product.selected_or_first_available_variant -%}
+              {%- if variant != blank -%}
+                {%- liquid
+                  assign max_quantity = 50
+
+                  if variant.inventory_management != blank and variant.inventory_policy == 'deny'
+                    assign max_quantity = variant.inventory_quantity | at_least: 0 | at_most: 50
+                  endif
+                -%}
+
+                <button
+                  type="button"
+                  class="ccg-gift-builder__picker-product{% unless variant.available and max_quantity > 0 %} is-unavailable{% endunless %}"
+                  data-picker-product
+                  data-variant-id="{{ variant.id }}"
+                  data-title="{{ product.title | escape }}"
+                  data-price="{{ variant.price }}"
+                  data-max="{{ max_quantity }}"
+                  data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 600 }}{% endif %}"
+                  {% unless variant.available and max_quantity > 0 %}disabled{% endunless %}
+                >
+                  <span class="ccg-gift-builder__picker-media">
+                    {%- if product.featured_image != blank -%}
+                      {{
+                        product.featured_image
+                        | image_url: width: 500
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '200,300,400,500',
+                          alt: product.title
+                      }}
+                    {%- endif -%}
+                  </span>
+
+                  <span class="ccg-gift-builder__picker-copy">
+                    <strong>{{ product.title | escape }}</strong>
+                    <span>{{ variant.price | money }}</span>
+                  </span>
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
         </div>
       </div>
 
-      <!--
-        MBC is the source of truth.
-        These are the app's official manual-placement widgets, kept off-screen
-        only as the live data/cart engine for the custom design above.
-      -->
-      <div class="ccg-gift-builder__mbc-bridge" data-mbc-bridge aria-hidden="true">
+      <div class="ccg-gift-builder__mbc-bridge" aria-hidden="true">
         {%- for block in section.blocks -%}
           {%- if block.type == 'bundle' and block.settings.bundle_id != blank -%}
             <mbc-bundles-widget
@@ -146,7 +169,7 @@
       </div>
     {%- else -%}
       <p class="ccg-gift-builder__empty">
-        Add at least one “MBC bundle” block and paste the bundle ID.
+        Select a collection in this section's theme settings.
       </p>
     {%- endif -%}
   </div>
@@ -160,12 +183,11 @@
   root.dataset.ready = 'true';
 
   const currencyCode = root.dataset.currency || 'USD';
-
   const plans = [...root.querySelectorAll('[data-plan]')];
-  const bridgeWidgets = [...root.querySelectorAll('[data-ccg-mbc-widget]')];
+  const mbcWidgets = [...root.querySelectorAll('[data-ccg-mbc-widget]')];
   const selectedGrid = root.querySelector('[data-selected-grid]');
   const picker = root.querySelector('[data-picker]');
-  const pickerGrid = root.querySelector('[data-picker-grid]');
+  const pickerProducts = [...root.querySelectorAll('[data-picker-product]')];
 
   const totalEl = root.querySelector('[data-total]');
   const targetEl = root.querySelector('[data-target-count]');
@@ -178,79 +200,51 @@
   const errorEl = root.querySelector('[data-error]');
   const openPickerButtons = [...root.querySelectorAll('[data-open-picker]')];
 
-  const stateById = new Map();
+  const selected = new Map();
+  const ruleCache = new Map();
 
-  let activeState = null;
   let activePlan = null;
-  let syncTimer = null;
+  let bundleLabel = 'Bundle';
+  let target = 0;
+  let discount = null;
+  let bundleId = '';
+
+  const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
   const formatMoney = (cents) => {
-    const amount = Number(cents || 0) / 100;
+    const value = Number(cents || 0) / 100;
 
     try {
       return new Intl.NumberFormat(undefined, {
         style: 'currency',
         currency: currencyCode
-      }).format(amount);
+      }).format(value);
     } catch (error) {
-      return `$${amount.toFixed(2)}`;
+      return `$${value.toFixed(2)}`;
     }
-  };
-
-  const parseMoney = (value) => {
-    if (value == null) return null;
-
-    const text = String(value)
-      .replace(/\s/g, '')
-      .replace(/,/g, '');
-
-    const match = text.match(/-?\d+(?:\.\d{1,2})?/);
-    if (!match) return null;
-
-    const number = Number(match[0]);
-    if (!Number.isFinite(number)) return null;
-
-    return Math.round(number * 100);
-  };
-
-  const moneyAmountsFromText = (text) => {
-    if (!text) return [];
-
-    const matches = String(text).match(
-      /(?:[$£€₹]\s*\d[\d,]*(?:\.\d{1,2})?|(?:USD|CAD|AUD|GBP|EUR|INR)\s*\d[\d,]*(?:\.\d{1,2})?)/gi
-    ) || [];
-
-    const values = matches
-      .map(parseMoney)
-      .filter((value) => Number.isFinite(value));
-
-    return [...new Set(values)];
   };
 
   const normalizeText = (value) =>
-    String(value || '')
-      .replace(/\s+/g, ' ')
-      .trim();
+    String(value || '').replace(/\s+/g, ' ').trim();
 
-  const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
-
-  const getWidgetForId = (bundleId) =>
-    bridgeWidgets.find(
-      (widget) => String(widget.dataset.bundleId || '') === String(bundleId || '')
+  const getWidgetForId = (id) =>
+    mbcWidgets.find(
+      (widget) => String(widget.dataset.bundleId || '') === String(id || '')
     ) || null;
 
+  const getWidgetRoot = (widget) => widget?.shadowRoot || widget;
+
   const getWidgetText = (widget) => {
-    if (!widget) return '';
+    const widgetRoot = getWidgetRoot(widget);
 
-    const chunks = [
-      widget.textContent || ''
-    ];
-
-    if (widget.shadowRoot) {
-      chunks.push(widget.shadowRoot.textContent || '');
-    }
-
-    return normalizeText(chunks.join(' '));
+    return normalizeText(
+      [
+        widget?.textContent || '',
+        widgetRoot && widgetRoot !== widget
+          ? widgetRoot.textContent || ''
+          : ''
+      ].join(' ')
+    );
   };
 
   const findBundleObject = (source, wantedId) => {
@@ -261,7 +255,7 @@
     const queue = [{ value: source, depth: 0 }];
     let visited = 0;
 
-    while (queue.length && visited < 6000) {
+    while (queue.length && visited < 5000) {
       const { value, depth } = queue.shift();
       visited += 1;
 
@@ -292,20 +286,20 @@
         entries = [];
       }
 
-      for (const [, child] of entries) {
+      entries.forEach(([, child]) => {
         if (child && typeof child === 'object') {
           queue.push({
             value: child,
             depth: depth + 1
           });
         }
-      }
+      });
     }
 
     return null;
   };
 
-  const extractObjectConfig = (bundle) => {
+  const extractRulesFromObject = (bundle) => {
     if (!bundle || typeof bundle !== 'object') return {};
 
     const seen = new WeakSet();
@@ -314,10 +308,9 @@
     let title = '';
     let minimum = null;
     let maximum = null;
-    let discountType = '';
-    let discountValue = null;
+    let percent = null;
 
-    const keyName = (key) =>
+    const normalizeKey = (key) =>
       String(key || '')
         .replace(/[^a-z0-9]/gi, '')
         .toLowerCase();
@@ -340,7 +333,7 @@
       }
 
       for (const [rawKey, rawValue] of entries) {
-        const key = keyName(rawKey);
+        const key = normalizeKey(rawKey);
 
         if (!title && typeof rawValue === 'string') {
           if (
@@ -385,7 +378,9 @@
           }
 
           if (
-            discountValue == null &&
+            percent == null &&
+            numeric >= 0 &&
+            numeric <= 100 &&
             (
               key.includes('discountpercentage') ||
               key.includes('discountpercent') ||
@@ -393,42 +388,7 @@
               key === 'percent'
             )
           ) {
-            discountType = 'percentage';
-            discountValue = numeric;
-          }
-
-          if (
-            discountValue == null &&
-            (
-              key.includes('amountoff') ||
-              key.includes('discountamount')
-            )
-          ) {
-            discountType = 'amount';
-            discountValue = numeric;
-          }
-
-          if (
-            discountValue == null &&
-            (
-              key.includes('saleprice') ||
-              key.includes('fixedprice')
-            )
-          ) {
-            discountType = 'sale_price';
-            discountValue = numeric;
-          }
-        }
-
-        if (!discountType && typeof rawValue === 'string') {
-          const lower = rawValue.toLowerCase();
-
-          if (key.includes('discounttype') || key === 'type') {
-            if (lower.includes('percent')) discountType = 'percentage';
-            if (lower.includes('amount')) discountType = 'amount';
-            if (lower.includes('sale') || lower.includes('fixed')) {
-              discountType = 'sale_price';
-            }
+            percent = numeric;
           }
         }
 
@@ -449,313 +409,122 @@
       title,
       minimum,
       maximum,
-      discountType,
-      discountValue
+      percent
     };
   };
 
-  const parseTextConfig = (widget, bundleId) => {
-    const text = getWidgetText(widget);
+  const parseRulesFromText = (widget, id) => {
+    const widgetRoot = getWidgetRoot(widget);
 
     const titleNode =
-      widget?.querySelector?.('.mbc-bundles-list__title') ||
-      widget?.querySelector?.('.mbc-bundle h1, .mbc-bundle h2, .mbc-bundle h3');
+      widgetRoot?.querySelector?.('.mbc-bundles-list__title') ||
+      widgetRoot?.querySelector?.('.mbc-bundle h1, .mbc-bundle h2, .mbc-bundle h3');
 
     const title = normalizeText(titleNode?.textContent || '');
+    const text = normalizeText(`${title} ${getWidgetText(widget)}`);
 
-    let target = null;
-    let discountType = '';
-    let discountValue = null;
+    let quantity = null;
+    let percent = null;
 
     const quantityPatterns = [
+      /\bat\s+least\s+(\d+)\s+items?\b/i,
       /\bminimum(?:\s+items?\s+required)?\s*:?\s*(\d+)\b/i,
-      /\brequired(?:\s+items?|\s+quantity)?\s*:?\s*(\d+)\b/i,
       /\bchoose\s+(\d+)\s+(?:items?|products?|cowls?)\b/i,
       /\bselect\s+(\d+)\s+(?:items?|products?|cowls?)\b/i,
       /\bgift\s+(\d+)\b/i,
-      /\b(\d+)\s+(?:items?|products?|cowls?)\b/i
+      /\b(\d+)\s+cowls?\b/i
     ];
 
     for (const pattern of quantityPatterns) {
-      const match = `${title} ${text}`.match(pattern);
+      const match = text.match(pattern);
 
       if (match) {
-        target = Number(match[1]);
+        quantity = Number(match[1]);
         break;
       }
     }
 
-    const percentMatch = `${title} ${text}`.match(/(\d+(?:\.\d+)?)\s*%\s*(?:off)?/i);
+    const percentMatch = text.match(/(\d+(?:\.\d+)?)\s*%\s*(?:off)?/i);
 
     if (percentMatch) {
-      discountType = 'percentage';
-      discountValue = Number(percentMatch[1]);
+      percent = Number(percentMatch[1]);
     }
 
     return {
-      title: title || `Bundle ${bundleId}`,
-      target,
-      discountType,
-      discountValue
+      title: title || `Bundle ${id}`,
+      quantity,
+      percent
     };
   };
 
-  const getRoot = (widget) => widget?.shadowRoot || widget;
-
-  const getProductRows = (widget) => {
-    const widgetRoot = getRoot(widget);
-
-    return widgetRoot
-      ? [...widgetRoot.querySelectorAll('.mbc-bundle__item.mbc-bundle__item--product')]
-      : [];
-  };
-
-  const getRowControl = (row) => {
-    const qty = row.querySelector('.mbc-bundle__qty-selector');
-
-    if (qty) {
-      const input = qty.querySelector('input');
-      const buttons = [...qty.querySelectorAll('button')];
-
-      return {
-        type: 'quantity',
-        container: qty,
-        input,
-        minus: buttons[0] || null,
-        plus: buttons[buttons.length - 1] || null
-      };
+  const loadRules = async (id) => {
+    if (ruleCache.has(id)) {
+      return ruleCache.get(id);
     }
 
-    const checkbox = row.querySelector('.mbc-checkbox__input, .mbc-checkbox input[type="checkbox"]');
-
-    if (checkbox) {
-      return {
-        type: 'checkbox',
-        input: checkbox
-      };
-    }
-
-    return {
-      type: 'fixed'
-    };
-  };
-
-  const getRowQuantity = (row) => {
-    const control = getRowControl(row);
-
-    if (control.type === 'quantity') {
-      return Math.max(0, Number(control.input?.value || 0) || 0);
-    }
-
-    if (control.type === 'checkbox') {
-      return control.input?.checked ? 1 : 0;
-    }
-
-    return 1;
-  };
-
-  const getBaseRowPrice = (row) => {
-    const priceNode = row.querySelector('.mbc-bundle__item-price');
-    const amounts = moneyAmountsFromText(priceNode?.textContent || '');
-
-    if (!amounts.length) return 0;
-
-    return Math.max(...amounts);
-  };
-
-  const getRowTitle = (row, index) => {
-    const node = row.querySelector('.mbc-bundle__item-title');
-    const text = normalizeText(node?.textContent || '');
-
-    return text || `Product ${index + 1}`;
-  };
-
-  const getRowImage = (row) => {
-    const image = row.querySelector('img');
-
-    return image?.currentSrc || image?.src || '';
-  };
-
-  const buildProducts = (state) => {
-    const rows = getProductRows(state.widget);
-
-    return rows.map((row, index) => ({
-      key: `${index}:${getRowTitle(row, index)}`,
-      index,
-      title: getRowTitle(row, index),
-      image: getRowImage(row),
-      price: getBaseRowPrice(row),
-      quantity: getRowQuantity(row),
-      unavailable: Boolean(row.querySelector('.mbc-bundle__item-out-of-stock'))
-    }));
-  };
-
-  const readWidgetPrice = (state) => {
-    const widgetRoot = getRoot(state.widget);
-    const node = widgetRoot?.querySelector('.mbc-bundle__price');
-    const text = normalizeText(node?.textContent || '');
-    const amounts = moneyAmountsFromText(text);
-
-    let total = null;
-    let compareAt = null;
-
-    if (amounts.length === 1) {
-      total = amounts[0];
-    }
-
-    if (amounts.length >= 2) {
-      total = Math.min(...amounts);
-      compareAt = Math.max(...amounts);
-    }
-
-    const percentMatch = text.match(/(\d+(?:\.\d+)?)\s*%/);
-
-    return {
-      text,
-      total,
-      compareAt,
-      percent:
-        percentMatch
-          ? Number(percentMatch[1])
-          : null
-    };
-  };
-
-  const waitForWidgetReady = async (widget, timeout = 12000) => {
+    const widget = getWidgetForId(id);
     const started = Date.now();
+    let bestRules = null;
 
-    while (Date.now() - started < timeout) {
-      const widgetRoot = getRoot(widget);
+    while (Date.now() - started < 10000) {
+      const mbc = window.MAKEBECOOL_BUNDLES || null;
+      const objectBundle = findBundleObject(mbc, id);
+      const objectRules = extractRulesFromObject(objectBundle);
+      const textRules = parseRulesFromText(widget, id);
+
+      const title =
+        objectRules.title ||
+        textRules.title ||
+        `Bundle ${id}`;
+
+      let quantity =
+        Number(objectRules.minimum || 0) ||
+        Number(textRules.quantity || 0);
 
       if (
-        widgetRoot?.querySelector('.mbc-bundle') &&
-        widgetRoot?.querySelector('.mbc-bundle__item.mbc-bundle__item--product')
+        Number(objectRules.minimum) > 0 &&
+        Number(objectRules.maximum) > 0 &&
+        Number(objectRules.minimum) === Number(objectRules.maximum)
       ) {
-        return true;
+        quantity = Number(objectRules.maximum);
       }
 
-      await wait(150);
-    }
+      const percent =
+        Number.isFinite(Number(objectRules.percent))
+          ? Number(objectRules.percent)
+          : (
+              Number.isFinite(Number(textRules.percent))
+                ? Number(textRules.percent)
+                : null
+            );
 
-    return false;
-  };
+      bestRules = {
+        id,
+        title,
+        quantity,
+        percent
+      };
 
-  const readBundleConfig = (state) => {
-    const mbc = window.MAKEBECOOL_BUNDLES || null;
-
-    const objectBundle =
-      findBundleObject(mbc, state.id) ||
-      findBundleObject(state.widget, state.id);
-
-    const objectConfig = extractObjectConfig(objectBundle);
-    const textConfig = parseTextConfig(state.widget, state.id);
-
-    const title =
-      objectConfig.title ||
-      textConfig.title ||
-      `Bundle ${state.id}`;
-
-    let target =
-      Number(objectConfig.minimum || 0) ||
-      Number(textConfig.target || 0);
-
-    if (
-      Number(objectConfig.minimum) > 0 &&
-      Number(objectConfig.maximum) > 0 &&
-      Number(objectConfig.minimum) === Number(objectConfig.maximum)
-    ) {
-      target = Number(objectConfig.maximum);
-    }
-
-    let discountType =
-      objectConfig.discountType ||
-      textConfig.discountType ||
-      '';
-
-    let discountValue =
-      Number.isFinite(Number(objectConfig.discountValue))
-        ? Number(objectConfig.discountValue)
-        : (
-            Number.isFinite(Number(textConfig.discountValue))
-              ? Number(textConfig.discountValue)
-              : null
-          );
-
-    const widgetPrice = readWidgetPrice(state);
-
-    if (!discountType && Number.isFinite(widgetPrice.percent)) {
-      discountType = 'percentage';
-      discountValue = widgetPrice.percent;
-    }
-
-    return {
-      title,
-      target,
-      discountType,
-      discountValue
-    };
-  };
-
-  const setMbcQuantity = async (state, productIndex, requested) => {
-    const rows = getProductRows(state.widget);
-    const row = rows[productIndex];
-
-    if (!row) return;
-
-    const control = getRowControl(row);
-    const next = Math.max(0, Math.round(Number(requested) || 0));
-
-    if (control.type === 'quantity') {
-      const current = getRowQuantity(row);
-
-      if (!control.input) return;
-
-      if (next > current) {
-        for (let index = current; index < next; index += 1) {
-          if (control.plus?.disabled) break;
-
-          if (control.plus) {
-            control.plus.click();
-          } else {
-            control.input.value = String(index + 1);
-            control.input.dispatchEvent(new Event('input', { bubbles: true }));
-            control.input.dispatchEvent(new Event('change', { bubbles: true }));
-          }
-
-          await wait(20);
-        }
+      if (quantity > 0) {
+        ruleCache.set(id, bestRules);
+        return bestRules;
       }
 
-      if (next < current) {
-        for (let index = current; index > next; index -= 1) {
-          if (control.minus?.disabled) break;
-
-          if (control.minus) {
-            control.minus.click();
-          } else {
-            control.input.value = String(index - 1);
-            control.input.dispatchEvent(new Event('input', { bubbles: true }));
-            control.input.dispatchEvent(new Event('change', { bubbles: true }));
-          }
-
-          await wait(20);
-        }
-      }
+      await wait(200);
     }
 
-    if (control.type === 'checkbox') {
-      const checked = next > 0;
-
-      if (control.input.checked !== checked) {
-        control.input.click();
-      }
+    if (bestRules?.quantity > 0) {
+      ruleCache.set(id, bestRules);
+      return bestRules;
     }
 
-    scheduleSync();
+    throw new Error(
+      `Could not read the live rules for MBC bundle ${id}.`
+    );
   };
 
   const openPicker = () => {
-    if (!picker || !activeState?.ready) return;
+    if (!picker || !target) return;
 
     picker.hidden = false;
     document.documentElement.classList.add('ccg-picker-open');
@@ -776,72 +545,104 @@
     button.addEventListener('click', closePicker);
   });
 
-  const renderPicker = () => {
-    if (!pickerGrid) return;
+  const getItems = () => [...selected.values()];
 
-    pickerGrid.innerHTML = '';
+  const syncPickerSelectionState = () => {
+    pickerProducts.forEach((button) => {
+      const id = Number(button.dataset.variantId);
+      const isSelected = selected.has(id);
 
-    if (!activeState?.ready) return;
+      button.classList.toggle('is-selected', isSelected);
 
-    activeState.products.forEach((product) => {
-      const button = document.createElement('button');
-
-      button.type = 'button';
-      button.className = 'ccg-gift-builder__picker-product';
-
-      if (product.unavailable) {
-        button.classList.add('is-unavailable');
+      if (isSelected) {
         button.disabled = true;
+        button.setAttribute('aria-disabled', 'true');
+      } else if (!button.classList.contains('is-unavailable')) {
+        button.disabled = false;
+        button.setAttribute('aria-disabled', 'false');
       }
-
-      if (product.quantity > 0) {
-        button.classList.add('is-selected');
-        button.disabled = true;
-      }
-
-      const media = document.createElement('span');
-      media.className = 'ccg-gift-builder__picker-media';
-
-      if (product.image) {
-        const image = document.createElement('img');
-        image.src = product.image;
-        image.alt = product.title;
-        image.loading = 'lazy';
-        media.appendChild(image);
-      }
-
-      const copy = document.createElement('span');
-      copy.className = 'ccg-gift-builder__picker-copy';
-
-      const title = document.createElement('strong');
-      title.textContent = product.title;
-
-      const price = document.createElement('span');
-      price.textContent =
-        product.price > 0
-          ? formatMoney(product.price)
-          : '';
-
-      copy.append(title, price);
-      button.append(media, copy);
-
-      if (product.quantity > 0) {
-        const selected = document.createElement('span');
-        selected.className = 'ccg-gift-builder__selected-badge';
-        selected.textContent = 'Selected';
-        button.appendChild(selected);
-      }
-
-      button.addEventListener('click', async () => {
-        if (button.disabled) return;
-
-        button.disabled = true;
-        await setMbcQuantity(activeState, product.index, 1);
-        closePicker();
-      });
-
-      pickerGrid.appendChild(button);
     });
+  };
+
+  const update = () => {
+    const items = getItems();
+    const total = items.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+
+    const subtotal = items.reduce(
+      (sum, item) => sum + (item.price * item.quantity),
+      0
+    );
+
+    const savings =
+      Number.isFinite(discount)
+        ? Math.round(subtotal * discount / 100)
+        : null;
+
+    const bundleTotal =
+      savings != null
+        ? subtotal - savings
+        : null;
+
+    const remaining =
+      target > 0
+        ? target - total
+        : null;
+
+    if (totalEl) totalEl.textContent = total;
+    if (targetEl) targetEl.textContent = target > 0 ? target : '—';
+
+    if (discountLabel) {
+      discountLabel.textContent =
+        Number.isFinite(discount)
+          ? `${discount}%`
+          : 'MBC';
+    }
+
+    if (subtotalEl) {
+      subtotalEl.textContent = formatMoney(subtotal);
+    }
+
+    if (savingsEl) {
+      savingsEl.textContent =
+        savings != null
+          ? `-${formatMoney(savings)}`
+          : 'Calculated in cart';
+    }
+
+    if (priceEl) {
+      priceEl.textContent =
+        bundleTotal != null
+          ? formatMoney(bundleTotal)
+          : 'Calculated in cart';
+    }
+
+    if (addButton) {
+      addButton.disabled =
+        !target ||
+        total !== target;
+
+      addButton.textContent = 'Add to cart';
+    }
+
+    if (statusEl) {
+      if (remaining == null) {
+        statusEl.textContent = 'Loading bundle rules…';
+      } else if (remaining > 0) {
+        statusEl.textContent =
+          `Choose ${remaining} more ${remaining === 1 ? 'cowl' : 'cowls'}.`;
+      } else if (remaining < 0) {
+        statusEl.textContent =
+          `Remove ${Math.abs(remaining)} ${Math.abs(remaining) === 1 ? 'cowl' : 'cowls'}.`;
+      } else {
+        statusEl.textContent =
+          `${bundleLabel} is ready to add.`;
+      }
+    }
+
+    syncPickerSelectionState();
   };
 
   const renderSelected = () => {
@@ -851,474 +652,232 @@
       .querySelectorAll('[data-selected-product]')
       .forEach((card) => card.remove());
 
-    if (!activeState?.ready) return;
+    selected.forEach((item) => {
+      const article = document.createElement('article');
 
-    activeState.products
-      .filter((product) => product.quantity > 0)
-      .forEach((product) => {
-        const article = document.createElement('article');
+      article.className = 'ccg-gift-builder__product-card';
+      article.dataset.selectedProduct = '';
+      article.dataset.variantId = item.id;
 
-        article.className = 'ccg-gift-builder__product-card';
-        article.dataset.selectedProduct = '';
+      const remove = document.createElement('button');
 
-        const remove = document.createElement('button');
-        remove.type = 'button';
-        remove.className = 'ccg-gift-builder__remove';
-        remove.textContent = 'Remove product';
+      remove.type = 'button';
+      remove.className = 'ccg-gift-builder__remove';
+      remove.textContent = 'Remove product';
 
-        remove.addEventListener('click', async () => {
-          remove.disabled = true;
-          await setMbcQuantity(activeState, product.index, 0);
-        });
+      remove.addEventListener('click', () => {
+        selected.delete(item.id);
+        renderSelected();
+        update();
+      });
 
-        const media = document.createElement('div');
-        media.className = 'ccg-gift-builder__product-media';
+      const media = document.createElement('div');
+      media.className = 'ccg-gift-builder__product-media';
 
-        if (product.image) {
-          const image = document.createElement('img');
-          image.src = product.image;
-          image.alt = product.title;
-          image.loading = 'lazy';
-          media.appendChild(image);
+      if (item.image) {
+        const image = document.createElement('img');
+
+        image.src = item.image;
+        image.alt = item.title;
+        image.loading = 'lazy';
+
+        media.appendChild(image);
+      }
+
+      const copy = document.createElement('div');
+      copy.className = 'ccg-gift-builder__product-copy';
+
+      const title = document.createElement('h3');
+      title.textContent = item.title;
+
+      const price = document.createElement('p');
+      price.textContent = formatMoney(item.price);
+
+      const quantityLabel = document.createElement('div');
+      quantityLabel.className = 'ccg-gift-builder__quantity-label';
+      quantityLabel.textContent = 'Quantity';
+
+      const quantity = document.createElement('div');
+      quantity.className = 'ccg-gift-builder__quantity';
+
+      const minus = document.createElement('button');
+      minus.type = 'button';
+      minus.textContent = '−';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '1';
+      input.value = String(item.quantity);
+      input.inputMode = 'numeric';
+
+      const plus = document.createElement('button');
+      plus.type = 'button';
+      plus.textContent = '+';
+
+      const getAllowedMax = () => {
+        const inventoryMax = Number(item.max || 0);
+
+        if (inventoryMax > 0 && target > 0) {
+          return Math.max(
+            1,
+            Math.min(inventoryMax, target)
+          );
         }
 
-        const copy = document.createElement('div');
-        copy.className = 'ccg-gift-builder__product-copy';
+        return Math.max(1, inventoryMax || target || 1);
+      };
 
-        const title = document.createElement('h3');
-        title.textContent = product.title;
+      const refreshControls = () => {
+        const max = getAllowedMax();
 
-        const price = document.createElement('p');
-        price.textContent =
-          product.price > 0
-            ? formatMoney(product.price)
-            : '';
-
-        const quantityLabel = document.createElement('div');
-        quantityLabel.className = 'ccg-gift-builder__quantity-label';
-        quantityLabel.textContent = 'Quantity';
-
-        const quantity = document.createElement('div');
-        quantity.className = 'ccg-gift-builder__quantity';
-
-        const minus = document.createElement('button');
-        minus.type = 'button';
-        minus.textContent = '−';
-        minus.disabled = product.quantity <= 1;
-
-        const input = document.createElement('input');
-        input.type = 'number';
         input.min = '1';
-        input.value = String(product.quantity);
-        input.inputMode = 'numeric';
+        input.max = String(max);
+        input.value = String(item.quantity);
 
-        if (activeState.target > 0) {
-          input.max = String(activeState.target);
-        }
+        minus.disabled = item.quantity <= 1;
 
-        const plus = document.createElement('button');
-        plus.type = 'button';
-        plus.textContent = '+';
-
-        const selectedTotal = activeState.products.reduce(
-          (sum, item) => sum + item.quantity,
+        const currentTotal = getItems().reduce(
+          (sum, entry) => sum + entry.quantity,
           0
         );
 
-        if (
-          activeState.target > 0 &&
-          selectedTotal >= activeState.target
-        ) {
-          plus.disabled = true;
-        }
-
-        minus.addEventListener('click', async () => {
-          if (product.quantity <= 1) return;
-
-          minus.disabled = true;
-          await setMbcQuantity(
-            activeState,
-            product.index,
-            product.quantity - 1
+        plus.disabled =
+          item.quantity >= max ||
+          (
+            target > 0 &&
+            currentTotal >= target
           );
-        });
-
-        plus.addEventListener('click', async () => {
-          plus.disabled = true;
-          await setMbcQuantity(
-            activeState,
-            product.index,
-            product.quantity + 1
-          );
-        });
-
-        input.addEventListener('change', async () => {
-          const requested = Math.max(
-            1,
-            Math.round(Number(input.value) || product.quantity)
-          );
-
-          input.disabled = true;
-          await setMbcQuantity(
-            activeState,
-            product.index,
-            requested
-          );
-        });
-
-        quantity.append(minus, input, plus);
-        copy.append(title, price, quantityLabel, quantity);
-        article.append(remove, media, copy);
-
-        const addCard = selectedGrid.querySelector('[data-open-picker]');
-        selectedGrid.insertBefore(article, addCard);
-      });
-  };
-
-  const getSummary = () => {
-    if (!activeState?.ready) {
-      return {
-        totalQty: 0,
-        subtotal: null,
-        savings: null,
-        total: null,
-        discountLabel: '—'
       };
-    }
 
-    const totalQty = activeState.products.reduce(
-      (sum, product) => sum + product.quantity,
-      0
-    );
+      const setQuantity = (next) => {
+        const numeric = Number(next);
 
-    const subtotal = activeState.products.reduce(
-      (sum, product) =>
-        sum + (product.price * product.quantity),
-      0
-    );
+        if (!Number.isFinite(numeric)) {
+          refreshControls();
+          return;
+        }
 
-    const widgetPrice = readWidgetPrice(activeState);
+        const currentTotalWithoutItem =
+          getItems().reduce(
+            (sum, entry) =>
+              sum +
+              (
+                entry.id === item.id
+                  ? 0
+                  : entry.quantity
+              ),
+            0
+          );
 
-    let total = widgetPrice.total;
-    let savings = null;
-    let discountLabelText = 'MBC';
+        const room =
+          target > 0
+            ? Math.max(
+                1,
+                target - currentTotalWithoutItem
+              )
+            : getAllowedMax();
 
-    if (
-      activeState.discountType === 'percentage' &&
-      Number.isFinite(activeState.discountValue)
-    ) {
-      discountLabelText = `${activeState.discountValue}%`;
-
-      if (subtotal > 0) {
-        savings = Math.round(
-          subtotal * activeState.discountValue / 100
+        const value = Math.max(
+          1,
+          Math.min(
+            getAllowedMax(),
+            room,
+            Math.round(numeric)
+          )
         );
 
-        if (!Number.isFinite(total)) {
-          total = subtotal - savings;
+        item.quantity = value;
+
+        refreshControls();
+        update();
+      };
+
+      minus.addEventListener('click', () => {
+        if (item.quantity <= 1) return;
+
+        setQuantity(item.quantity - 1);
+      });
+
+      plus.addEventListener('click', () => {
+        setQuantity(item.quantity + 1);
+      });
+
+      input.addEventListener('input', () => {
+        if (input.value === '') return;
+
+        setQuantity(input.value);
+      });
+
+      input.addEventListener('change', () => {
+        if (input.value === '') {
+          input.value = String(item.quantity);
+          return;
         }
-      }
-    }
 
-    if (
-      activeState.discountType === 'amount' &&
-      Number.isFinite(activeState.discountValue)
-    ) {
-      const amountOff = Math.round(
-        activeState.discountValue > 1000
-          ? activeState.discountValue
-          : activeState.discountValue * 100
+        setQuantity(input.value);
+      });
+
+      refreshControls();
+
+      quantity.append(minus, input, plus);
+      copy.append(title, price, quantityLabel, quantity);
+      article.append(remove, media, copy);
+
+      selectedGrid.insertBefore(
+        article,
+        selectedGrid.querySelector('[data-open-picker]')
       );
-
-      discountLabelText = `${formatMoney(amountOff)} off`;
-
-      if (subtotal > 0) {
-        savings = Math.min(subtotal, amountOff);
-
-        if (!Number.isFinite(total)) {
-          total = subtotal - savings;
-        }
-      }
-    }
-
-    if (
-      activeState.discountType === 'sale_price' &&
-      Number.isFinite(activeState.discountValue)
-    ) {
-      const salePrice = Math.round(
-        activeState.discountValue > 1000
-          ? activeState.discountValue
-          : activeState.discountValue * 100
-      );
-
-      discountLabelText = 'Sale price';
-
-      if (!Number.isFinite(total)) {
-        total = salePrice;
-      }
-
-      if (subtotal > 0) {
-        savings = Math.max(0, subtotal - total);
-      }
-    }
-
-    if (
-      Number.isFinite(widgetPrice.compareAt) &&
-      Number.isFinite(widgetPrice.total)
-    ) {
-      savings =
-        widgetPrice.compareAt - widgetPrice.total;
-
-      if (!subtotal) {
-        return {
-          totalQty,
-          subtotal: widgetPrice.compareAt,
-          savings,
-          total: widgetPrice.total,
-          discountLabel: discountLabelText
-        };
-      }
-    }
-
-    if (
-      savings == null &&
-      subtotal > 0 &&
-      Number.isFinite(total)
-    ) {
-      savings = Math.max(0, subtotal - total);
-    }
-
-    return {
-      totalQty,
-      subtotal:
-        subtotal > 0
-          ? subtotal
-          : null,
-      savings,
-      total:
-        Number.isFinite(total)
-          ? total
-          : null,
-      discountLabel: discountLabelText
-    };
-  };
-
-  const updateSummary = () => {
-    const summary = getSummary();
-
-    if (totalEl) totalEl.textContent = summary.totalQty;
-
-    if (targetEl) {
-      targetEl.textContent =
-        activeState?.target > 0
-          ? activeState.target
-          : '—';
-    }
-
-    if (discountLabel) {
-      discountLabel.textContent = summary.discountLabel;
-    }
-
-    if (subtotalEl) {
-      subtotalEl.textContent =
-        summary.subtotal != null
-          ? formatMoney(summary.subtotal)
-          : '—';
-    }
-
-    if (savingsEl) {
-      savingsEl.textContent =
-        summary.savings != null
-          ? `-${formatMoney(summary.savings)}`
-          : '—';
-    }
-
-    if (priceEl) {
-      priceEl.textContent =
-        summary.total != null
-          ? formatMoney(summary.total)
-          : 'Calculated by MBC';
-    }
-
-    const atc = activeState?.atc || null;
-
-    if (addButton) {
-      addButton.textContent = 'Add to cart';
-
-      addButton.disabled =
-        !activeState?.ready ||
-        !atc ||
-        atc.disabled ||
-        (
-          activeState.target > 0 &&
-          summary.totalQty !== activeState.target
-        );
-    }
-
-    if (statusEl) {
-      if (!activeState?.ready) {
-        statusEl.textContent = 'Loading bundle rules…';
-        return;
-      }
-
-      if (activeState.target <= 0) {
-        statusEl.textContent =
-          'Bundle rules loaded. Choose your products.';
-        return;
-      }
-
-      const remaining =
-        activeState.target - summary.totalQty;
-
-      if (remaining > 0) {
-        statusEl.textContent =
-          `Choose ${remaining} more ${remaining === 1 ? 'cowl' : 'cowls'}.`;
-      } else if (remaining < 0) {
-        statusEl.textContent =
-          `Remove ${Math.abs(remaining)} ${Math.abs(remaining) === 1 ? 'cowl' : 'cowls'}.`;
-      } else {
-        statusEl.textContent =
-          `${activeState.title} is ready to add.`;
-      }
-    }
-  };
-
-  const syncActiveState = () => {
-    if (!activeState?.ready) return;
-
-    activeState.products = buildProducts(activeState);
-
-    const config = readBundleConfig(activeState);
-
-    if (config.title) activeState.title = config.title;
-    if (config.target > 0) activeState.target = config.target;
-
-    if (config.discountType) {
-      activeState.discountType = config.discountType;
-      activeState.discountValue = config.discountValue;
-    }
-
-    activeState.atc =
-      getRoot(activeState.widget)
-        ?.querySelector('.mbc-bundle__button.mbc-bundle__atc') ||
-      getRoot(activeState.widget)
-        ?.querySelector('.mbc-bundle__atc') ||
-      null;
-
-    renderPicker();
-    renderSelected();
-    updateSummary();
-  };
-
-  const scheduleSync = () => {
-    window.clearTimeout(syncTimer);
-
-    syncTimer = window.setTimeout(() => {
-      syncActiveState();
-    }, 120);
-  };
-
-  const observeWidget = (state) => {
-    const widgetRoot = getRoot(state.widget);
-    if (!widgetRoot) return;
-
-    const observer = new MutationObserver(scheduleSync);
-
-    observer.observe(widgetRoot, {
-      subtree: true,
-      childList: true,
-      characterData: true,
-      attributes: true,
-      attributeFilter: [
-        'disabled',
-        'value',
-        'checked',
-        'class'
-      ]
     });
 
-    state.observer = observer;
+    syncPickerSelectionState();
   };
 
-  const hydrateState = async (plan) => {
-    const id = String(plan.dataset.bundleId || '');
-    const widget = getWidgetForId(id);
+  pickerProducts.forEach((button) => {
+    button.addEventListener('click', () => {
+      const id = Number(button.dataset.variantId);
 
-    if (!id || !widget) {
-      throw new Error(`MBC bundle ${id || 'ID'} could not be loaded.`);
-    }
+      if (!id || selected.has(id)) return;
 
-    if (stateById.has(id)) {
-      return stateById.get(id);
-    }
+      selected.set(id, {
+        id,
+        title: button.dataset.title || 'Product',
+        price: Number(button.dataset.price || 0),
+        max: Number(button.dataset.max || target || 50),
+        image: button.dataset.image || '',
+        quantity: 1
+      });
 
-    const state = {
-      id,
-      widget,
-      ready: false,
-      title: `Bundle ${id}`,
-      target: 0,
-      discountType: '',
-      discountValue: null,
-      products: [],
-      atc: null,
-      observer: null
-    };
-
-    stateById.set(id, state);
-
-    const ready = await waitForWidgetReady(widget);
-
-    if (!ready) {
-      throw new Error(
-        `MBC bundle ${id} did not finish loading. Check that the bundle is Active and the MBC app embed is enabled.`
-      );
-    }
-
-    const config = readBundleConfig(state);
-
-    state.title = config.title || state.title;
-    state.target = Number(config.target || 0);
-    state.discountType = config.discountType || '';
-    state.discountValue = config.discountValue;
-    state.products = buildProducts(state);
-    state.atc =
-      getRoot(widget)
-        ?.querySelector('.mbc-bundle__button.mbc-bundle__atc') ||
-      getRoot(widget)
-        ?.querySelector('.mbc-bundle__atc') ||
-      null;
-    state.ready = true;
-
-    observeWidget(state);
-
-    return state;
-  };
-
-  const revealPlan = (plan, state) => {
-    const label = plan.querySelector('[data-plan-label]');
-
-    if (label) {
-      label.textContent = state.title;
-    }
-
-    plan.classList.remove('is-loading');
-  };
+      renderSelected();
+      update();
+      closePicker();
+    });
+  });
 
   const activatePlan = async (plan) => {
     if (!plan) return;
 
+    const id = String(plan.dataset.bundleId || '');
+
     plans.forEach((item) => {
       const active = item === plan;
+
       item.classList.toggle('is-active', active);
-      item.setAttribute('aria-pressed', active ? 'true' : 'false');
+      item.setAttribute(
+        'aria-pressed',
+        active ? 'true' : 'false'
+      );
     });
 
     activePlan = plan;
+    bundleId = id;
+    target = 0;
+    discount = null;
 
     openPickerButtons.forEach((button) => {
       button.disabled = true;
     });
+
+    if (addButton) addButton.disabled = true;
 
     if (statusEl) {
       statusEl.textContent = 'Loading bundle rules…';
@@ -1330,34 +889,56 @@
     }
 
     try {
-      const state = await hydrateState(plan);
+      const rules = await loadRules(id);
 
-      activeState = state;
+      bundleLabel = rules.title || `Bundle ${id}`;
+      target = Number(rules.quantity || 0);
+      discount =
+        Number.isFinite(Number(rules.percent))
+          ? Number(rules.percent)
+          : null;
 
-      revealPlan(plan, state);
+      const label = plan.querySelector('[data-plan-label]');
+
+      if (label) {
+        label.textContent = bundleLabel;
+      }
+
+      plan.classList.remove('is-loading');
 
       openPickerButtons.forEach((button) => {
         button.disabled = false;
       });
 
-      syncActiveState();
-    } catch (error) {
-      if (errorEl) {
-        errorEl.textContent =
-          error.message ||
-          'The MBC bundle could not be loaded.';
-        errorEl.hidden = false;
-      }
+      /*
+       * If the shopper changes Gift 10 -> Gift 20, keep their choices,
+       * but trim any single quantity only if it is above the new live target.
+       */
+      selected.forEach((item) => {
+        if (target > 0 && item.quantity > target) {
+          item.quantity = target;
+        }
+      });
 
+      renderSelected();
+      update();
+    } catch (error) {
       plan.classList.remove('is-loading');
 
       const label = plan.querySelector('[data-plan-label]');
+
       if (label) {
-        label.textContent =
-          `Bundle ${plan.dataset.bundleId || ''}`;
+        label.textContent = `Bundle ${id}`;
       }
 
-      if (addButton) addButton.disabled = true;
+      if (errorEl) {
+        errorEl.textContent =
+          error.message ||
+          'Could not load the MBC bundle rules.';
+        errorEl.hidden = false;
+      }
+
+      update();
     }
   };
 
@@ -1367,10 +948,62 @@
     });
   });
 
+  const preloadPlanLabels = async () => {
+    for (const plan of plans) {
+      const id = String(plan.dataset.bundleId || '');
+
+      try {
+        const rules = await loadRules(id);
+        const label = plan.querySelector('[data-plan-label]');
+
+        if (label) {
+          label.textContent =
+            rules.title ||
+            `Bundle ${id}`;
+        }
+
+        plan.classList.remove('is-loading');
+      } catch (error) {
+        /*
+         * Keep failed plan hidden during preload.
+         * If it is the only plan, activatePlan will show the actual error.
+         */
+      }
+    }
+
+    const firstPlan =
+      plans.find(
+        (plan) => !plan.classList.contains('is-loading')
+      ) ||
+      plans[0];
+
+    if (firstPlan) {
+      activatePlan(firstPlan);
+    }
+  };
+
   if (addButton) {
     addButton.addEventListener('click', async () => {
-      if (!activeState?.ready || !activeState.atc) return;
-      if (activeState.atc.disabled) return;
+      const items = getItems();
+      const total = items.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+
+      if (!target || total !== target) {
+        update();
+        return;
+      }
+
+      if (!bundleId) {
+        if (errorEl) {
+          errorEl.textContent =
+            'The selected MBC bundle is missing its bundle ID.';
+          errorEl.hidden = false;
+        }
+
+        return;
+      }
 
       addButton.disabled = true;
       addButton.textContent = 'Adding…';
@@ -1380,42 +1013,40 @@
         errorEl.textContent = '';
       }
 
-      const previousCartCount = async () => {
-        try {
-          const response = await fetch(
-            `${window.Shopify?.routes?.root || '/'}cart.js`,
-            { headers: { Accept: 'application/json' } }
-          );
-
-          const cart = await response.json();
-          return Number(cart.item_count || 0);
-        } catch (error) {
-          return null;
-        }
-      };
-
-      const before = await previousCartCount();
+      const bundleKey =
+        `ccg-${bundleId}-${Date.now()}`;
 
       try {
-        activeState.atc.click();
-
-        let added = false;
-
-        for (let attempt = 0; attempt < 30; attempt += 1) {
-          await wait(150);
-
-          const after = await previousCartCount();
-
-          if (
-            before == null ||
-            (
-              after != null &&
-              after > before
-            )
-          ) {
-            added = true;
-            break;
+        const response = await fetch(
+          `${window.Shopify?.routes?.root || '/'}cart/add.js?mbcb-request`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json'
+            },
+            body: JSON.stringify({
+              items: items.map((item) => ({
+                id: item.id,
+                quantity: item.quantity,
+                properties: {
+                  '_mbc_part': String(bundleId),
+                  '_CCG Bundle Key': bundleKey,
+                  'Bundle': bundleLabel
+                }
+              }))
+            })
           }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.description ||
+            result.message ||
+            'The bundle could not be added.'
+          );
         }
 
         if (
@@ -1427,10 +1058,29 @@
           } catch (error) {}
         }
 
-        if (!added && before != null) {
-          throw new Error(
-            'The bundle was not added to the cart. Please check the selected quantities.'
+        let cart = null;
+
+        try {
+          const cartResponse = await fetch(
+            `${window.Shopify?.routes?.root || '/'}cart.js`,
+            {
+              headers: {
+                Accept: 'application/json'
+              }
+            }
           );
+
+          cart = await cartResponse.json();
+        } catch (error) {}
+
+        if (
+          cart &&
+          window.MAKEBECOOL_BUNDLES &&
+          typeof window.MAKEBECOOL_BUNDLES.cartDataFix === 'function'
+        ) {
+          try {
+            await window.MAKEBECOOL_BUNDLES.cartDataFix(cart);
+          } catch (error) {}
         }
 
         window.location.assign('/cart');
@@ -1438,46 +1088,18 @@
         if (errorEl) {
           errorEl.textContent =
             error.message ||
-            'The bundle could not be added.';
+            'The bundle could not be added. Please check the selected quantities.';
           errorEl.hidden = false;
         }
 
         addButton.textContent = 'Add to cart';
-        scheduleSync();
+        update();
       }
     });
   }
 
-  const hydratePlanLabels = async () => {
-    for (const plan of plans) {
-      try {
-        const state = await hydrateState(plan);
-        revealPlan(plan, state);
-      } catch (error) {
-        plan.classList.remove('is-loading');
-
-        const label = plan.querySelector('[data-plan-label]');
-        if (label) {
-          label.textContent =
-            `Bundle ${plan.dataset.bundleId || ''}`;
-        }
-      }
-    }
-
-    const firstReady =
-      plans.find((plan) => {
-        const state =
-          stateById.get(String(plan.dataset.bundleId || ''));
-
-        return state?.ready;
-      }) || plans[0];
-
-    if (firstReady) {
-      activatePlan(firstReady);
-    }
-  };
-
-  hydratePlanLabels();
+  update();
+  preloadPlanLabels();
 })();
 </script>
 
@@ -1533,7 +1155,6 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    min-height: 34px;
     margin: 24px 0;
   }
 
@@ -1601,11 +1222,6 @@
     cursor: pointer;
   }
 
-  .ccg-gift-builder__add-card:disabled {
-    opacity: .4;
-    cursor: wait;
-  }
-
   .ccg-gift-builder__plus {
     font-size: 22px;
     line-height: 1;
@@ -1659,13 +1275,6 @@
     font-size: 13px;
   }
 
-  .ccg-gift-builder__quantity-label {
-    margin: 8px 0 6px;
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
   .ccg-gift-builder__quantity {
     display: grid;
     grid-template-columns: 34px 1fr 34px;
@@ -1682,23 +1291,10 @@
     font: inherit;
   }
 
-  .ccg-gift-builder__quantity button {
-    cursor: pointer;
-  }
-
-  .ccg-gift-builder__quantity button:disabled {
-    opacity: .35;
-    cursor: not-allowed;
-  }
-
   .ccg-gift-builder__quantity input {
     width: 100%;
     border-inline: 1px solid rgba(33,28,23,.18);
     appearance: textfield;
-  }
-
-  .ccg-gift-builder__quantity input::-webkit-inner-spin-button {
-    appearance: none;
   }
 
   .ccg-gift-builder__choose {
@@ -1711,11 +1307,6 @@
     letter-spacing: .12em;
     text-transform: uppercase;
     cursor: pointer;
-  }
-
-  .ccg-gift-builder__choose:disabled {
-    opacity: .45;
-    cursor: wait;
   }
 
   .ccg-gift-builder__summary {
@@ -1826,7 +1417,6 @@
   }
 
   .ccg-gift-builder__picker-product {
-    position: relative;
     padding: 0;
     border: 1px solid rgba(33,28,23,.16);
     background: #fbf9f4;
@@ -1836,11 +1426,13 @@
   }
 
   .ccg-gift-builder__picker-product.is-selected {
+    position: relative;
     opacity: .45;
     cursor: not-allowed;
   }
 
-  .ccg-gift-builder__selected-badge {
+  .ccg-gift-builder__picker-product.is-selected::after {
+    content: 'Selected';
     position: absolute;
     inset: 0;
     display: grid;
@@ -1850,7 +1442,11 @@
     font: 700 13px/1 'Barlow Condensed', sans-serif;
     letter-spacing: .12em;
     text-transform: uppercase;
-    pointer-events: none;
+  }
+
+  .ccg-gift-builder__quantity button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
   }
 
   .ccg-gift-builder__picker-product.is-unavailable {
@@ -1886,33 +1482,6 @@
 
   .ccg-gift-builder__picker-copy span {
     font-size: 13px;
-  }
-
-  /*
-   * Important: do not use display:none here.
-   * MBC's official custom element stays connected/rendered so it remains
-   * the live pricing + cart engine, but it is completely off-screen.
-   */
-  .ccg-gift-builder__mbc-bridge {
-    position: fixed;
-    top: 0;
-    left: -20000px;
-    width: 1200px;
-    max-width: 1200px;
-    height: 1px;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-    z-index: -1;
-  }
-
-  .ccg-gift-builder__mbc-bridge mbc-bundles-widget {
-    display: block;
-    width: 1200px;
-  }
-
-  .ccg-gift-builder__empty {
-    text-align: center;
   }
 
   @media screen and (max-width: 989px) {
@@ -1951,6 +1520,22 @@
       gap: 12px;
     }
   }
+
+  .ccg-gift-builder__mbc-bridge {
+    position: absolute;
+    left: -20000px;
+    top: 0;
+    width: 1200px;
+    height: auto;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ccg-gift-builder__mbc-bridge mbc-bundles-widget {
+    display: block;
+    width: 1200px;
+  }
+
 {% endstylesheet %}
 
 {% schema %}
@@ -1958,6 +1543,21 @@
   "name": "Gift bundle builder",
   "max_blocks": 8,
   "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Cowl collection",
+      "info": "The picker updates automatically from this Shopify collection."
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "min": 4,
+      "max": 40,
+      "step": 1,
+      "label": "Products available in picker",
+      "default": 24
+    },
     {
       "type": "header",
       "content": "Content"
@@ -2012,7 +1612,7 @@
           "type": "text",
           "id": "bundle_id",
           "label": "MBC bundle ID",
-          "info": "Only the MBC bundle ID is manual. Name, products, quantities, discount, price and cart behavior come from MBC."
+          "info": "Only the MBC bundle ID is manual. Bundle name, required quantity and percentage discount are read from MBC."
         }
       ]
     }
