@@ -73,6 +73,7 @@
         },
         "item_jjNNqT": {
           "type": "item",
+          "disabled": true,
           "settings": {
             "text": "Melissa answers her own email"
           }
@@ -86,7 +87,7 @@
         "item_jjNNqT"
       ],
       "custom_css": [
-        "[class*=\"dot\"],[class*=\"separator\"],[class*=\"divider\"] {width: 13px !important; height: 13px !important; border-radius: 50% !important; background: #B98A52 !important; box-shadow: inset 0 0 0 1px #B98A52, inset 0 0 0 2.5px #F8F5EE, inset 0 0 0 4px #8A5A32, inset 0 0 0 5px #F8F5EE !important; flex-shrink: 0;}"
+        "[class*=\"dot\"],[class*=\"separator\"],[class*=\"divider\"] {width: 13px !important; height: 13px !important; border-radius: 50% !important; background: #b98a52 !important; box-shadow: inset 0 0 0 1px #b98a52, inset 0 0 0 2.5px #f8f5ee, inset 0 0 0 4px #8a5a32, inset 0 0 0 5px #f8f5ee !important; flex-shrink: 0;}"
       ],
       "name": "CCG Announcement Marquee",
       "settings": {
