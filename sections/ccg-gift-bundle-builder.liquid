@@ -1,10 +1,15 @@
 {%- liquid
+
   assign bundle_collection = section.settings.collection
 
   assign products_limit = section.settings.products_limit
+
 -%}
 
+
+
 <section
+
   id="CCGGiftBuilder-{{ section.id }}"
 
   class="ccg-gift-builder"
@@ -12,121 +17,262 @@
   data-gift-builder
 
   data-money-format="{{ shop.money_format | escape }}"
-
   data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}"
 
   style="
+
     --builder-bg: {{ section.settings.background_color }};
-
-
 
     --builder-ink: {{ section.settings.text_color }};
 
-
-
     --builder-accent: {{ section.settings.accent_color }};
+
   "
+
 >
+
   <div class="ccg-gift-builder__inner">
+
     <div class="ccg-gift-builder__intro">
+
       {%- if section.settings.eyebrow != blank -%}
+
         <p class="ccg-gift-builder__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+
       {%- endif -%}
+
+
 
       {%- if section.settings.heading != blank -%}
+
         <h2 class="ccg-gift-builder__heading">{{ section.settings.heading | escape }}</h2>
+
       {%- endif -%}
+
+
 
       {%- if section.settings.description != blank -%}
+
         <div class="ccg-gift-builder__description rte">{{ section.settings.description }}</div>
+
       {%- endif -%}
+
     </div>
 
-    <div class="ccg-gift-builder__plans" role="group" aria-label="Choose bundle" data-plans>
-      <span class="ccg-gift-builder__plans-loading" data-plans-loading>Loading bundles…</span>
+
+
+    <div class="ccg-gift-builder__plans" role="group" aria-label="Choose bundle size">
+
+      <button
+
+        class="ccg-gift-builder__plan is-active"
+
+        type="button"
+
+        data-plan
+
+        data-label="{{ section.settings.gift_10_label | escape }}"
+
+        data-target="{{ section.settings.gift_10_quantity }}"
+
+        data-fallback-discount="{{ section.settings.gift_10_discount }}"
+
+        data-bundle-id="{{ section.settings.gift_10_bundle_id | escape }}"
+
+        aria-pressed="true"
+
+      >
+
+        {{ section.settings.gift_10_label | escape }}
+
+      </button>
+
+
+
+      <button
+
+        class="ccg-gift-builder__plan"
+
+        type="button"
+
+        data-plan
+
+        data-label="{{ section.settings.gift_20_label | escape }}"
+
+        data-target="{{ section.settings.gift_20_quantity }}"
+
+        data-fallback-discount="{{ section.settings.gift_20_discount }}"
+
+        data-bundle-id="{{ section.settings.gift_20_bundle_id | escape }}"
+
+        aria-pressed="false"
+
+      >
+
+        {{ section.settings.gift_20_label | escape }}
+
+      </button>
+
     </div>
+
+
 
     {%- if bundle_collection != blank and bundle_collection.products_count > 0 -%}
+
       <div class="ccg-gift-builder__status">
+
         <span>
+
           Selected:
 
           <strong data-total>0</strong>
 
           of
 
-          <strong data-target-count>0</strong>
+          <strong data-target-count>{{ section.settings.gift_10_quantity }}</strong>
+
         </span>
 
-        <span data-status>Loading bundle rules…</span>
+        <span data-status>
+
+          Choose {{ section.settings.gift_10_quantity }} more cowls.
+
+        </span>
+
       </div>
 
+
+
       <div class="ccg-gift-builder__selected-grid" data-selected-grid>
+
         <button class="ccg-gift-builder__add-card" type="button" data-open-picker>
+
           <span class="ccg-gift-builder__plus">+</span>
 
           <span>Add product</span>
+
         </button>
+
       </div>
 
-      <button class="ccg-gift-builder__choose" type="button" data-open-picker>Choose a product</button>
+
+
+      <button class="ccg-gift-builder__choose" type="button" data-open-picker>
+
+        Choose a product
+
+      </button>
+
+
 
       <div class="ccg-gift-builder__summary">
+
         <div>
+
           <span>Bundle subtotal</span>
 
           <strong data-subtotal>{{ 0 | money }}</strong>
+
         </div>
 
+
+
         <div>
+
           <span>
+
             Bundle discount
 
             (<span data-discount-label>syncing</span>)
+
           </span>
 
           <strong data-savings>-{{ 0 | money }}</strong>
+
         </div>
 
+
+
         <div class="ccg-gift-builder__total-row">
+
           <span>Bundle total</span>
 
           <strong data-price>{{ 0 | money }}</strong>
+
         </div>
 
-        <button class="ccg-gift-builder__add" type="button" data-add disabled>Add to cart</button>
+
+
+        <button class="ccg-gift-builder__add" type="button" data-add disabled>
+
+          Add to cart
+
+        </button>
+
+
 
         <p class="ccg-gift-builder__error" data-error hidden></p>
+
       </div>
 
+
+
       <div class="ccg-gift-builder__picker" data-picker hidden>
+
         <div class="ccg-gift-builder__picker-backdrop" data-close-picker></div>
 
+
+
         <div class="ccg-gift-builder__picker-panel" role="dialog" aria-modal="true" aria-label="Choose products">
+
           <div class="ccg-gift-builder__picker-head">
+
             <div>
+
               <p class="ccg-gift-builder__picker-eyebrow">Choose products</p>
 
               <h3>Add cowls to your bundle</h3>
+
             </div>
 
-            <button type="button" class="ccg-gift-builder__picker-close" data-close-picker aria-label="Close">×</button>
+
+
+            <button type="button" class="ccg-gift-builder__picker-close" data-close-picker aria-label="Close">
+
+              ×
+
+            </button>
+
           </div>
 
+
+
           <div class="ccg-gift-builder__picker-grid">
+
             {%- for product in bundle_collection.products limit: products_limit -%}
+
               {%- assign variant = product.selected_or_first_available_variant -%}
 
               {%- if variant != blank -%}
+
                 {%- liquid
+
                   assign max_quantity = 50
 
+
+
                   if variant.inventory_management != blank and variant.inventory_policy == 'deny'
+
                     assign max_quantity = variant.inventory_quantity | at_least: 0 | at_most: 50
+
                   endif
+
                 -%}
 
+
+
                 <button
+
                   type="button"
 
                   class="ccg-gift-builder__picker-product{% unless variant.available and max_quantity > 0 %} is-unavailable{% endunless %}"
@@ -143,2461 +289,1756 @@
 
                   data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 600 }}{% endif %}"
 
-                  {% unless variant.available and max_quantity > 0 %}
-                    disabled
-                  {% endunless %}
+                  {% unless variant.available and max_quantity > 0 %}disabled{% endunless %}
+
                 >
+
                   <span class="ccg-gift-builder__picker-media">
+
                     {%- if product.featured_image != blank -%}
+
                       {{
+
                         product.featured_image
+
                         | image_url: width: 500
-                        | image_tag: loading: 'lazy', widths: '200,300,400,500', alt: product.title
+
+                        | image_tag:
+
+                          loading: 'lazy',
+
+                          widths: '200,300,400,500',
+
+                          alt: product.title
+
                       }}
+
                     {%- endif -%}
+
                   </span>
 
+
+
                   <span class="ccg-gift-builder__picker-copy">
+
                     <strong>{{ product.title | escape }}</strong>
 
                     <span>{{ variant.price | money }}</span>
+
                   </span>
+
                 </button>
+
               {%- endif -%}
+
             {%- endfor -%}
+
           </div>
+
         </div>
+
       </div>
 
     {%- else -%}
-      <p class="ccg-gift-builder__empty">Select a collection in this section's theme settings.</p>
+
+      <p class="ccg-gift-builder__empty">
+
+        Select a collection in this section's theme settings.
+
+      </p>
+
     {%- endif -%}
+
   </div>
+
 </section>
 
+
+
 <script>
-  (() => {
-    const root = document.getElementById('CCGGiftBuilder-{{ section.id }}');
 
-    if (!root || root.dataset.ready === 'true') return;
+(() => {
 
-    root.dataset.ready = 'true';
+  const root = document.getElementById('CCGGiftBuilder-{{ section.id }}');
 
-    const moneyFormat = root.dataset.moneyFormat || '${{amount}}';
+  if (!root || root.dataset.ready === 'true') return;
 
-    const currencyCode = root.dataset.currency || 'USD';
 
-    let plans = [];
-    const plansEl = root.querySelector('[data-plans]');
-    const plansLoadingEl = root.querySelector('[data-plans-loading]');
 
-    const selectedGrid = root.querySelector('[data-selected-grid]');
+  root.dataset.ready = 'true';
 
-    const picker = root.querySelector('[data-picker]');
 
-    const pickerProducts = [...root.querySelectorAll('[data-picker-product]')];
 
-    const totalEl = root.querySelector('[data-total]');
+  const moneyFormat = root.dataset.moneyFormat || '${{amount}}';
+  const currencyCode = root.dataset.currency || 'USD';
 
-    const targetEl = root.querySelector('[data-target-count]');
+  const plans = [...root.querySelectorAll('[data-plan]')];
 
-    const statusEl = root.querySelector('[data-status]');
+  const selectedGrid = root.querySelector('[data-selected-grid]');
 
-    const subtotalEl = root.querySelector('[data-subtotal]');
+  const picker = root.querySelector('[data-picker]');
 
-    const savingsEl = root.querySelector('[data-savings]');
+  const pickerProducts = [...root.querySelectorAll('[data-picker-product]')];
 
-    const priceEl = root.querySelector('[data-price]');
 
-    const discountLabel = root.querySelector('[data-discount-label]');
 
-    const addButton = root.querySelector('[data-add]');
+  const totalEl = root.querySelector('[data-total]');
 
-    const errorEl = root.querySelector('[data-error]');
+  const targetEl = root.querySelector('[data-target-count]');
 
-    const selected = new Map();
+  const statusEl = root.querySelector('[data-status]');
 
-    let activePlan = null;
+  const subtotalEl = root.querySelector('[data-subtotal]');
 
-    let bundleLabel = 'Bundle';
+  const savingsEl = root.querySelector('[data-savings]');
 
-    let target = 0;
+  const priceEl = root.querySelector('[data-price]');
 
-    let discount = null;
+  const discountLabel = root.querySelector('[data-discount-label]');
 
-    let discountSource = 'mbc';
+  const addButton = root.querySelector('[data-add]');
 
-    let bundleId = '';
+  const errorEl = root.querySelector('[data-error]');
 
-    const formatMoney = (cents) => {
-      const value = Number(cents || 0) / 100;
 
-      try {
-        return new Intl.NumberFormat(undefined, {
-          style: 'currency',
 
-          currency: currencyCode,
-        }).format(value);
-      } catch (error) {
-        return `$${value.toFixed(2)}`;
+  const selected = new Map();
+
+
+
+  let activePlan = plans[0];
+
+  let bundleLabel = activePlan?.dataset.label || 'Bundle';
+
+  let target = Number(activePlan?.dataset.target || 0);
+
+  let discount = null;
+
+  let discountSource = 'mbc';
+
+  let bundleId = activePlan?.dataset.bundleId || '';
+
+
+
+  const formatMoney = (cents) => {
+    const value = Number(cents || 0) / 100;
+
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currencyCode
+      }).format(value);
+    } catch (error) {
+      return `$${value.toFixed(2)}`;
+    }
+  };
+
+  const openPicker = () => {
+
+    if (!picker) return;
+
+    picker.hidden = false;
+
+    document.documentElement.classList.add('ccg-picker-open');
+
+  };
+
+
+
+  const closePicker = () => {
+
+    if (!picker) return;
+
+    picker.hidden = true;
+
+    document.documentElement.classList.remove('ccg-picker-open');
+
+  };
+
+
+
+  root.querySelectorAll('[data-open-picker]').forEach((button) => {
+
+    button.addEventListener('click', openPicker);
+
+  });
+
+
+
+  root.querySelectorAll('[data-close-picker]').forEach((button) => {
+
+    button.addEventListener('click', closePicker);
+
+  });
+
+
+
+  const getItems = () => [...selected.values()];
+
+
+
+  const renderSelected = () => {
+
+    if (!selectedGrid) return;
+
+
+
+    selectedGrid.querySelectorAll('[data-selected-product]').forEach((card) => card.remove());
+
+
+
+    selected.forEach((item) => {
+
+      const article = document.createElement('article');
+
+      article.className = 'ccg-gift-builder__product-card';
+
+      article.dataset.selectedProduct = '';
+
+      article.dataset.variantId = item.id;
+
+
+
+      const media = document.createElement('div');
+
+      media.className = 'ccg-gift-builder__product-media';
+
+
+
+      if (item.image) {
+
+        const image = document.createElement('img');
+
+        image.src = item.image;
+
+        image.alt = item.title;
+
+        image.loading = 'lazy';
+
+        media.appendChild(image);
+
       }
-    };
 
-    const openPicker = () => {
-      if (!picker) return;
 
-      picker.hidden = false;
 
-      document.documentElement.classList.add('ccg-picker-open');
-    };
+      const remove = document.createElement('button');
 
-    const closePicker = () => {
-      if (!picker) return;
+      remove.type = 'button';
 
-      picker.hidden = true;
+      remove.className = 'ccg-gift-builder__remove';
 
-      document.documentElement.classList.remove('ccg-picker-open');
-    };
+      remove.textContent = 'Remove product';
 
-    root.querySelectorAll('[data-open-picker]').forEach((button) => {
-      button.addEventListener('click', openPicker);
-    });
+      remove.addEventListener('click', () => {
 
-    root.querySelectorAll('[data-close-picker]').forEach((button) => {
-      button.addEventListener('click', closePicker);
-    });
+        selected.delete(item.id);
 
-    const getItems = () => [...selected.values()];
+        renderSelected();
 
-    const renderSelected = () => {
-      if (!selectedGrid) return;
+        update();
 
-      selectedGrid.querySelectorAll('[data-selected-product]').forEach((card) => card.remove());
+      });
 
-      selected.forEach((item) => {
-        const article = document.createElement('article');
 
-        article.className = 'ccg-gift-builder__product-card';
 
-        article.dataset.selectedProduct = '';
+      const copy = document.createElement('div');
 
-        article.dataset.variantId = item.id;
+      copy.className = 'ccg-gift-builder__product-copy';
 
-        const media = document.createElement('div');
 
-        media.className = 'ccg-gift-builder__product-media';
 
-        if (item.image) {
-          const image = document.createElement('img');
+      const title = document.createElement('h3');
 
-          image.src = item.image;
+      title.textContent = item.title;
 
-          image.alt = item.title;
 
-          image.loading = 'lazy';
 
-          media.appendChild(image);
-        }
+      const price = document.createElement('p');
 
-        const remove = document.createElement('button');
+      price.textContent = formatMoney(item.price);
 
-        remove.type = 'button';
 
-        remove.className = 'ccg-gift-builder__remove';
 
-        remove.textContent = 'Remove product';
+      const quantity = document.createElement('div');
 
-        remove.addEventListener('click', () => {
+      quantity.className = 'ccg-gift-builder__quantity';
+
+
+
+      const minus = document.createElement('button');
+
+      minus.type = 'button';
+
+      minus.textContent = '−';
+
+
+
+      const input = document.createElement('input');
+
+      input.type = 'number';
+
+      input.min = '0';
+
+      input.max = String(Math.min(item.max, target));
+
+      input.value = String(item.quantity);
+
+      input.inputMode = 'numeric';
+
+
+
+      const plus = document.createElement('button');
+
+      plus.type = 'button';
+
+      plus.textContent = '+';
+
+
+
+      const setQuantity = (next) => {
+
+        const max = Math.min(item.max, target);
+
+        const value = Math.max(0, Math.min(max, Number(next) || 0));
+
+
+
+        if (value === 0) {
+
           selected.delete(item.id);
 
           renderSelected();
 
           update();
-        });
 
-        const copy = document.createElement('div');
-
-        copy.className = 'ccg-gift-builder__product-copy';
-
-        const title = document.createElement('h3');
-
-        title.textContent = item.title;
-
-        const price = document.createElement('p');
-
-        price.textContent = formatMoney(item.price);
-
-        const quantity = document.createElement('div');
-
-        quantity.className = 'ccg-gift-builder__quantity';
-
-        const minus = document.createElement('button');
-
-        minus.type = 'button';
-
-        minus.textContent = '−';
-
-        const input = document.createElement('input');
-
-        input.type = 'number';
-
-        input.min = '0';
-
-        input.max = String(Math.min(item.max, target));
-
-        input.value = String(item.quantity);
-
-        input.inputMode = 'numeric';
-
-        const plus = document.createElement('button');
-
-        plus.type = 'button';
-
-        plus.textContent = '+';
-
-        const setQuantity = (next) => {
-          const max = Math.min(item.max, target);
-
-          const value = Math.max(0, Math.min(max, Number(next) || 0));
-
-          if (value === 0) {
-            selected.delete(item.id);
-
-            renderSelected();
-
-            update();
-
-            return;
-          }
-
-          item.quantity = value;
-
-          input.value = String(value);
-
-          update();
-        };
-
-        minus.addEventListener('click', () => setQuantity(item.quantity - 1));
-
-        plus.addEventListener('click', () => setQuantity(item.quantity + 1));
-
-        input.addEventListener('input', () => setQuantity(input.value));
-
-        quantity.append(minus, input, plus);
-
-        copy.append(title, price, quantity);
-
-        article.append(remove, media, copy);
-
-        selectedGrid.insertBefore(article, selectedGrid.querySelector('[data-open-picker]'));
-      });
-    };
-
-    const waitForMBC = async (timeout = 8000) => {
-      const started = Date.now();
-
-      while (Date.now() - started < timeout) {
-        if (window.MAKEBECOOL_BUNDLES) return window.MAKEBECOOL_BUNDLES;
-
-        await new Promise((resolve) => window.setTimeout(resolve, 150));
-      }
-
-      return null;
-    };
-
-    const findBundleObject = (source, wantedId) => {
-      if (!source || !wantedId) return null;
-
-      const wanted = String(wantedId);
-
-      const seen = new WeakSet();
-
-      const queue = [{ value: source, depth: 0 }];
-
-      let visited = 0;
-
-      while (queue.length && visited < 5000) {
-        const { value, depth } = queue.shift();
-
-        visited += 1;
-
-        if (!value || typeof value !== 'object') continue;
-
-        if (seen.has(value)) continue;
-
-        seen.add(value);
-
-        for (const key of ['id', 'bundleId', 'bundle_id', 'bundleID']) {
-          try {
-            if (value[key] != null && String(value[key]) === wanted) return value;
-          } catch (e) {}
-        }
-
-        if (depth >= 6) continue;
-
-        let entries = [];
-
-        try {
-          entries = Array.isArray(value) ? value.map((item, index) => [String(index), item]) : Object.entries(value);
-        } catch (e) {}
-
-        for (const [, child] of entries) {
-          if (child && typeof child === 'object') {
-            queue.push({ value: child, depth: depth + 1 });
-          }
-        }
-      }
-
-      return null;
-    };
-
-    const getNumber = (object, keys) => {
-      if (!object || typeof object !== 'object') return null;
-
-      for (const key of keys) {
-        if (!(key in object)) continue;
-
-        const number = Number(object[key]);
-
-        if (Number.isFinite(number)) return number;
-      }
-
-      return null;
-    };
-
-    const getText = (object, keys) => {
-      if (!object || typeof object !== 'object') return '';
-
-      for (const key of keys) {
-        const value = object[key];
-
-        if (typeof value === 'string' && value.trim()) return value.trim();
-      }
-
-      return '';
-    };
-
-    const extractBundleConfig = (bundle) => {
-      if (!bundle || typeof bundle !== 'object') return {};
-
-      const candidates = [bundle];
-
-      ['settings', 'offer', 'discount', 'discountSettings', 'productSettings', 'bundle'].forEach((key) => {
-        if (bundle[key] && typeof bundle[key] === 'object') candidates.push(bundle[key]);
-      });
-
-      let percent = null;
-
-      let minimum = null;
-
-      let maximum = null;
-
-      let title = '';
-
-      for (const candidate of candidates) {
-        if (!title) {
-          title = getText(candidate, ['bundleTitle', 'bundle_title', 'title', 'name']);
-        }
-
-        if (minimum == null) {
-          minimum = getNumber(candidate, [
-            'minimumItemsRequired',
-
-            'minimum_items_required',
-
-            'minItems',
-
-            'min_items',
-
-            'minimumQuantity',
-
-            'minimum_quantity',
-
-            'requiredItems',
-
-            'required_items',
-          ]);
-        }
-
-        if (maximum == null) {
-          maximum = getNumber(candidate, [
-            'maximumItemsAllowed',
-
-            'maximum_items_allowed',
-
-            'maxItems',
-
-            'max_items',
-
-            'maximumQuantity',
-
-            'maximum_quantity',
-          ]);
-        }
-
-        const type = getText(candidate, ['discountType', 'discount_type', 'type']).toLowerCase();
-
-        const value = getNumber(candidate, [
-          'discountPercentage',
-
-          'discount_percentage',
-
-          'discountPercent',
-
-          'discount_percent',
-
-          'percentage',
-
-          'percent',
-
-          'discountValue',
-
-          'discount_value',
-        ]);
-
-        if (percent == null && value != null && value >= 0 && value <= 100 && (!type || type.includes('percent'))) {
-          percent = value;
-        }
-      }
-
-      return { percent, minimum, maximum, title };
-    };
-
-    const collectBundleObjects = (source) => {
-      if (!source || typeof source !== 'object') return [];
-
-      const seen = new WeakSet();
-      const queue = [{ value: source, depth: 0 }];
-      const found = [];
-      const ids = new Set();
-      let visited = 0;
-
-      while (queue.length && visited < 8000) {
-        const { value, depth } = queue.shift();
-        visited += 1;
-
-        if (!value || typeof value !== 'object') continue;
-        if (seen.has(value)) continue;
-        seen.add(value);
-
-        const id = value.bundleId ?? value.bundle_id ?? value.id ?? value.bundleID ?? null;
-
-        const title = value.bundleTitle ?? value.bundle_title ?? value.title ?? value.name ?? '';
-
-        const looksLikeBundle =
-          id != null &&
-          (typeof title === 'string' ||
-            'discount' in value ||
-            'discountSettings' in value ||
-            'minimumItemsRequired' in value ||
-            'minimum_items_required' in value ||
-            'productSettings' in value ||
-            'products' in value ||
-            'items' in value);
-
-        if (looksLikeBundle) {
-          const normalizedId = String(id);
-
-          if (!ids.has(normalizedId)) {
-            ids.add(normalizedId);
-            found.push(value);
-          }
-        }
-
-        if (depth >= 7) continue;
-
-        let entries = [];
-
-        try {
-          entries = Array.isArray(value) ? value.map((item, index) => [String(index), item]) : Object.entries(value);
-        } catch (e) {
-          entries = [];
-        }
-
-        for (const [, child] of entries) {
-          if (child && typeof child === 'object') {
-            queue.push({ value: child, depth: depth + 1 });
-          }
-        }
-      }
-
-      return found;
-    };
-
-    const getBundleId = (bundle) => {
-      if (!bundle || typeof bundle !== 'object') return '';
-
-      const value = bundle.bundleId ?? bundle.bundle_id ?? bundle.id ?? bundle.bundleID ?? '';
-
-      return value == null ? '' : String(value);
-    };
-
-    const discoverBundlesFromMBC = async () => {
-      const mbc = await waitForMBC();
-
-      if (!mbc) {
-        throw new Error('MBC bundle data is not available.');
-      }
-
-      return collectBundleObjects(mbc)
-        .map((bundle) => {
-          const id = getBundleId(bundle);
-          const config = extractBundleConfig(bundle);
-
-          return {
-            id,
-            bundle,
-            label: config.title || getText(bundle, ['bundleTitle', 'bundle_title', 'title', 'name']) || `Bundle ${id}`,
-            target:
-              config.minimum != null && Number(config.minimum) > 0
-                ? Number(config.minimum)
-                : config.maximum != null && Number(config.maximum) > 0
-                ? Number(config.maximum)
-                : 0,
-            discount: config.percent != null ? Number(config.percent) : null,
-          };
-        })
-        .filter((bundle) => bundle.id && bundle.target > 0);
-    };
-
-    const applyDiscoveredBundle = (bundle, button) => {
-      if (!bundle) return;
-
-      activePlan = button || null;
-      bundleLabel = bundle.label || 'Bundle';
-      target = Number(bundle.target || 0);
-      discount = Number.isFinite(bundle.discount) ? Number(bundle.discount) : null;
-      discountSource = 'mbc';
-      bundleId = bundle.id || '';
-
-      plans.forEach((item) => {
-        const active = item === button;
-        item.classList.toggle('is-active', active);
-        item.setAttribute('aria-pressed', active ? 'true' : 'false');
-      });
-
-      renderSelected();
-      update();
-    };
-
-    const renderDynamicPlans = async () => {
-      if (!plansEl) return;
-
-      try {
-        const discovered = await discoverBundlesFromMBC();
-        const unique = [];
-        const ids = new Set();
-
-        discovered.forEach((bundle) => {
-          if (ids.has(bundle.id)) return;
-          ids.add(bundle.id);
-          unique.push(bundle);
-        });
-
-        plansEl.innerHTML = '';
-        plans = [];
-
-        if (!unique.length) {
-          plansEl.innerHTML = '<span class="ccg-gift-builder__plans-loading">No active MBC bundles found.</span>';
           return;
+
         }
 
-        unique.forEach((bundle, index) => {
-          const button = document.createElement('button');
 
-          button.type = 'button';
-          button.className = `ccg-gift-builder__plan${index === 0 ? ' is-active' : ''}`;
-          button.dataset.plan = '';
-          button.dataset.bundleId = bundle.id;
-          button.dataset.label = bundle.label;
-          button.dataset.target = String(bundle.target);
-          button.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
-          button.textContent = bundle.label;
 
-          button.addEventListener('click', () => {
-            applyDiscoveredBundle(bundle, button);
-          });
+        item.quantity = value;
 
-          plansEl.appendChild(button);
-          plans.push(button);
+        input.value = String(value);
 
-          if (index === 0) {
-            applyDiscoveredBundle(bundle, button);
-          }
-        });
-      } catch (error) {
-        plansEl.innerHTML = '<span class="ccg-gift-builder__plans-loading">Unable to load MBC bundles.</span>';
+        update();
 
-        if (errorEl) {
-          errorEl.textContent = error.message || 'Unable to load MBC bundles.';
-          errorEl.hidden = false;
+      };
+
+
+
+      minus.addEventListener('click', () => setQuantity(item.quantity - 1));
+
+      plus.addEventListener('click', () => setQuantity(item.quantity + 1));
+
+      input.addEventListener('input', () => setQuantity(input.value));
+
+
+
+      quantity.append(minus, input, plus);
+
+      copy.append(title, price, quantity);
+
+      article.append(remove, media, copy);
+
+
+
+      selectedGrid.insertBefore(article, selectedGrid.querySelector('[data-open-picker]'));
+
+    });
+
+  };
+
+
+
+
+  const waitForMBC = async (timeout = 8000) => {
+    const started = Date.now();
+
+    while (Date.now() - started < timeout) {
+      if (window.MAKEBECOOL_BUNDLES) return window.MAKEBECOOL_BUNDLES;
+      await new Promise((resolve) => window.setTimeout(resolve, 150));
+    }
+
+    return null;
+  };
+
+  const findBundleObject = (source, wantedId) => {
+    if (!source || !wantedId) return null;
+
+    const wanted = String(wantedId);
+    const seen = new WeakSet();
+    const queue = [{ value: source, depth: 0 }];
+    let visited = 0;
+
+    while (queue.length && visited < 5000) {
+      const { value, depth } = queue.shift();
+      visited += 1;
+
+      if (!value || typeof value !== 'object') continue;
+      if (seen.has(value)) continue;
+      seen.add(value);
+
+      for (const key of ['id', 'bundleId', 'bundle_id', 'bundleID']) {
+        try {
+          if (value[key] != null && String(value[key]) === wanted) return value;
+        } catch (e) {}
+      }
+
+      if (depth >= 6) continue;
+
+      let entries = [];
+      try {
+        entries = Array.isArray(value)
+          ? value.map((item, index) => [String(index), item])
+          : Object.entries(value);
+      } catch (e) {}
+
+      for (const [, child] of entries) {
+        if (child && typeof child === 'object') {
+          queue.push({ value: child, depth: depth + 1 });
         }
       }
-    };
+    }
 
-    const syncPlanFromMBC = async (plan) => {
-      if (!plan) return false;
+    return null;
+  };
 
-      const mbc = await waitForMBC();
+  const getNumber = (object, keys) => {
+    if (!object || typeof object !== 'object') return null;
 
-      if (!mbc) return false;
+    for (const key of keys) {
+      if (!(key in object)) continue;
+      const number = Number(object[key]);
+      if (Number.isFinite(number)) return number;
+    }
 
-      const id = plan.dataset.bundleId || '';
+    return null;
+  };
 
-      if (!id) return false;
+  const getText = (object, keys) => {
+    if (!object || typeof object !== 'object') return '';
 
-      const bundle = findBundleObject(mbc, id);
+    for (const key of keys) {
+      const value = object[key];
+      if (typeof value === 'string' && value.trim()) return value.trim();
+    }
 
-      if (!bundle) return false;
+    return '';
+  };
 
-      const config = extractBundleConfig(bundle);
+  const extractBundleConfig = (bundle) => {
+    if (!bundle || typeof bundle !== 'object') return {};
 
-      if (config.title) bundleLabel = config.title;
+    const candidates = [bundle];
 
-      if (config.minimum != null && config.minimum > 0) {
-        target = Number(config.minimum);
+    [
+      'settings',
+      'offer',
+      'discount',
+      'discountSettings',
+      'productSettings',
+      'bundle'
+    ].forEach((key) => {
+      if (bundle[key] && typeof bundle[key] === 'object') candidates.push(bundle[key]);
+    });
+
+    let percent = null;
+    let minimum = null;
+    let maximum = null;
+    let title = '';
+
+    for (const candidate of candidates) {
+      if (!title) {
+        title = getText(candidate, ['bundleTitle', 'bundle_title', 'title', 'name']);
       }
+
+      if (minimum == null) {
+        minimum = getNumber(candidate, [
+          'minimumItemsRequired',
+          'minimum_items_required',
+          'minItems',
+          'min_items',
+          'minimumQuantity',
+          'minimum_quantity',
+          'requiredItems',
+          'required_items'
+        ]);
+      }
+
+      if (maximum == null) {
+        maximum = getNumber(candidate, [
+          'maximumItemsAllowed',
+          'maximum_items_allowed',
+          'maxItems',
+          'max_items',
+          'maximumQuantity',
+          'maximum_quantity'
+        ]);
+      }
+
+      const type = getText(candidate, ['discountType', 'discount_type', 'type']).toLowerCase();
+
+      const value = getNumber(candidate, [
+        'discountPercentage',
+        'discount_percentage',
+        'discountPercent',
+        'discount_percent',
+        'percentage',
+        'percent',
+        'discountValue',
+        'discount_value'
+      ]);
 
       if (
-        config.maximum != null &&
-        config.maximum > 0 &&
-        config.minimum != null &&
-        Number(config.maximum) === Number(config.minimum)
+        percent == null &&
+        value != null &&
+        value >= 0 &&
+        value <= 100 &&
+        (!type || type.includes('percent'))
       ) {
-        target = Number(config.maximum);
+        percent = value;
       }
+    }
 
-      if (config.percent != null) {
-        discount = Number(config.percent);
+    return { percent, minimum, maximum, title };
+  };
 
-        discountSource = 'mbc';
-      }
+  const syncPlanFromMBC = async (plan) => {
+    if (!plan) return false;
 
-      return true;
+    const mbc = await waitForMBC();
+    if (!mbc) return false;
+
+    const id = plan.dataset.bundleId || '';
+    if (!id) return false;
+
+    const bundle = findBundleObject(mbc, id);
+    if (!bundle) return false;
+
+    const config = extractBundleConfig(bundle);
+
+    if (config.title) bundleLabel = config.title;
+
+    if (config.minimum != null && config.minimum > 0) {
+      target = Number(config.minimum);
+    }
+
+    if (
+      config.maximum != null &&
+      config.maximum > 0 &&
+      config.minimum != null &&
+      Number(config.maximum) === Number(config.minimum)
+    ) {
+      target = Number(config.maximum);
+    }
+
+    if (config.percent != null) {
+      discount = Number(config.percent);
+      discountSource = 'mbc';
+    }
+
+    return true;
+  };
+
+  const waitForPricingCalculated = () => new Promise((resolve) => {
+    let resolved = false;
+
+    const done = () => {
+      if (resolved) return;
+      resolved = true;
+      document.removeEventListener('MAKEBECOOL_BUNDLES.pricingCalculated', done);
+      resolve();
     };
 
-    const waitForPricingCalculated = () =>
-      new Promise((resolve) => {
-        let resolved = false;
+    document.addEventListener(
+      'MAKEBECOOL_BUNDLES.pricingCalculated',
+      done,
+      { once: true }
+    );
 
-        const done = () => {
-          if (resolved) return;
+    window.setTimeout(done, 1800);
+  });
 
-          resolved = true;
+  const getFixedCart = async () => {
+    const response = await fetch(`${window.Shopify?.routes?.root || '/'}cart.js`, {
+      headers: { Accept: 'application/json' }
+    });
 
-          document.removeEventListener('MAKEBECOOL_BUNDLES.pricingCalculated', done);
+    if (!response.ok) throw new Error('Unable to read cart.');
 
-          resolve();
-        };
+    let cart = await response.json();
 
-        document.addEventListener(
-          'MAKEBECOOL_BUNDLES.pricingCalculated',
+    if (
+      window.MAKEBECOOL_BUNDLES &&
+      typeof window.MAKEBECOOL_BUNDLES.cartDataFix === 'function'
+    ) {
+      try {
+        cart = await window.MAKEBECOOL_BUNDLES.cartDataFix(cart);
+      } catch (e) {}
+    }
 
-          done,
+    return cart;
+  };
 
-          { once: true }
-        );
 
-        window.setTimeout(done, 1800);
-      });
+  const update = () => {
 
-    const getFixedCart = async () => {
-      const response = await fetch(`${window.Shopify?.routes?.root || '/'}cart.js`, {
-        headers: { Accept: 'application/json' },
-      });
+    const items = getItems();
 
-      if (!response.ok) throw new Error('Unable to read cart.');
+    const total = items.reduce((sum, item) => sum + item.quantity, 0);
 
-      let cart = await response.json();
+    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-      if (window.MAKEBECOOL_BUNDLES && typeof window.MAKEBECOOL_BUNDLES.cartDataFix === 'function') {
-        try {
-          cart = await window.MAKEBECOOL_BUNDLES.cartDataFix(cart);
-        } catch (e) {}
+    const hasDynamicDiscount = Number.isFinite(discount);
+
+    const savings = hasDynamicDiscount
+      ? Math.round(subtotal * discount / 100)
+      : null;
+
+    const bundleTotal = savings == null
+      ? null
+      : subtotal - savings;
+
+    const remaining = target - total;
+
+    if (totalEl) totalEl.textContent = total;
+    if (targetEl) targetEl.textContent = target;
+
+    if (discountLabel) {
+      discountLabel.textContent = hasDynamicDiscount ? `${discount}%` : 'MBC';
+    }
+
+    if (subtotalEl) subtotalEl.textContent = formatMoney(subtotal);
+
+    if (savingsEl) {
+      savingsEl.textContent = savings == null
+        ? 'Calculated in cart'
+        : `-${formatMoney(savings)}`;
+    }
+
+    if (priceEl) {
+      priceEl.textContent = bundleTotal == null
+        ? 'Calculated in cart'
+        : formatMoney(bundleTotal);
+    }
+
+    if (addButton) {
+
+      addButton.disabled = total !== target;
+
+      addButton.textContent = 'Add to cart';
+
+    }
+
+
+
+    if (statusEl) {
+
+      if (remaining > 0) {
+
+        statusEl.textContent = `Choose ${remaining} more ${remaining === 1 ? 'cowl' : 'cowls'}.`;
+
+      } else if (remaining < 0) {
+
+        statusEl.textContent = `Remove ${Math.abs(remaining)} ${Math.abs(remaining) === 1 ? 'cowl' : 'cowls'}.`;
+
+      } else {
+
+        statusEl.textContent = `${bundleLabel} is ready to add.`;
+
       }
 
-      return cart;
-    };
+    }
 
-    const update = () => {
+
+
+    selected.forEach((item) => {
+
+      item.max = Math.max(0, item.max);
+
+      if (item.quantity > target) item.quantity = target;
+
+    });
+
+  };
+
+
+
+  pickerProducts.forEach((button) => {
+
+    button.addEventListener('click', () => {
+
+      const id = Number(button.dataset.variantId);
+
+      if (!id) return;
+
+
+
+      if (!selected.has(id)) {
+
+        selected.set(id, {
+
+          id,
+
+          title: button.dataset.title || 'Product',
+
+          price: Number(button.dataset.price || 0),
+
+          max: Number(button.dataset.max || target),
+
+          image: button.dataset.image || '',
+
+          quantity: 1
+
+        });
+
+      }
+
+
+
+      renderSelected();
+
+      update();
+
+      closePicker();
+
+    });
+
+  });
+
+
+
+  plans.forEach((plan) => {
+
+    plan.addEventListener('click', () => {
+
+      activePlan = plan;
+
+      bundleLabel = plan.dataset.label || 'Bundle';
+
+      target = Number(plan.dataset.target || 0);
+
+      discount = null;
+
+      discountSource = 'mbc';
+
+      bundleId = plan.dataset.bundleId || '';
+
+
+
+      plans.forEach((item) => {
+
+        const active = item === plan;
+
+        item.classList.toggle('is-active', active);
+
+        item.setAttribute('aria-pressed', active ? 'true' : 'false');
+
+      });
+
+
+
+      renderSelected();
+
+      update();
+
+      syncPlanFromMBC(plan).then(() => {
+        renderSelected();
+        update();
+      });
+
+    });
+
+  });
+
+
+
+  if (addButton) {
+
+    addButton.addEventListener('click', async () => {
+
       const items = getItems();
 
       const total = items.reduce((sum, item) => sum + item.quantity, 0);
 
-      const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-      const hasDynamicDiscount = Number.isFinite(discount);
 
-      const savings = hasDynamicDiscount ? Math.round((subtotal * discount) / 100) : null;
-
-      const bundleTotal = savings == null ? null : subtotal - savings;
-
-      const remaining = target - total;
-
-      if (totalEl) totalEl.textContent = total;
-
-      if (targetEl) targetEl.textContent = target;
-
-      if (discountLabel) {
-        discountLabel.textContent = hasDynamicDiscount ? `${discount}%` : 'MBC';
-      }
-
-      if (subtotalEl) subtotalEl.textContent = formatMoney(subtotal);
-
-      if (savingsEl) {
-        savingsEl.textContent = savings == null ? 'Calculated in cart' : `-${formatMoney(savings)}`;
-      }
-
-      if (priceEl) {
-        priceEl.textContent = bundleTotal == null ? 'Calculated in cart' : formatMoney(bundleTotal);
-      }
-
-      if (addButton) {
-        addButton.disabled = total !== target;
-
-        addButton.textContent = 'Add to cart';
-      }
-
-      if (statusEl) {
-        if (remaining > 0) {
-          statusEl.textContent = `Choose ${remaining} more ${remaining === 1 ? 'cowl' : 'cowls'}.`;
-        } else if (remaining < 0) {
-          statusEl.textContent = `Remove ${Math.abs(remaining)} ${Math.abs(remaining) === 1 ? 'cowl' : 'cowls'}.`;
-        } else {
-          statusEl.textContent = `${bundleLabel} is ready to add.`;
-        }
-      }
-
-      selected.forEach((item) => {
-        item.max = Math.max(0, item.max);
-
-        if (item.quantity > target) item.quantity = target;
-      });
-    };
-
-    pickerProducts.forEach((button) => {
-      button.addEventListener('click', () => {
-        const id = Number(button.dataset.variantId);
-
-        if (!id) return;
-
-        if (!selected.has(id)) {
-          selected.set(id, {
-            id,
-
-            title: button.dataset.title || 'Product',
-
-            price: Number(button.dataset.price || 0),
-
-            max: Number(button.dataset.max || target),
-
-            image: button.dataset.image || '',
-
-            quantity: 1,
-          });
-        }
-
-        renderSelected();
+      if (total !== target) {
 
         update();
 
-        closePicker();
-      });
-    });
+        return;
 
-    if (addButton) {
-      addButton.addEventListener('click', async () => {
-        const items = getItems();
+      }
 
-        const total = items.reduce((sum, item) => sum + item.quantity, 0);
 
-        if (total !== target) {
-          update();
 
-          return;
+      if (!bundleId) {
+
+        errorEl.textContent = `${bundleLabel} is missing its MBC bundle ID.`;
+
+        errorEl.hidden = false;
+
+        return;
+
+      }
+
+
+
+      addButton.disabled = true;
+
+      addButton.textContent = 'Adding…';
+
+
+
+      if (errorEl) {
+
+        errorEl.hidden = true;
+
+        errorEl.textContent = '';
+
+      }
+
+
+
+      const bundleKey = `ccg-${bundleId}-${Date.now()}`;
+
+
+
+      try {
+
+        const response = await fetch(
+
+          `${window.Shopify?.routes?.root || '/'}cart/add.js?mbcb-request`,
+
+          {
+
+            method: 'POST',
+
+            headers: {
+
+              'Content-Type': 'application/json',
+
+              Accept: 'application/json'
+
+            },
+
+            body: JSON.stringify({
+
+              items: items.map((item) => ({
+
+                id: item.id,
+
+                quantity: item.quantity,
+
+                properties: {
+
+                  '_mbc_part': String(bundleId),
+
+                  '_CCG Bundle Key': bundleKey,
+
+                  'Bundle': bundleLabel
+
+                }
+
+              }))
+
+            })
+
+          }
+
+        );
+
+
+
+        const result = await response.json();
+
+
+
+        if (!response.ok) {
+
+          throw new Error(
+
+            result.description ||
+
+            result.message ||
+
+            'The bundle could not be added.'
+
+          );
+
         }
 
-        if (!bundleId) {
-          errorEl.textContent = `${bundleLabel} is missing its MBC bundle ID.`;
+
+
+        if (
+          window.MAKEBECOOL_BUNDLES &&
+          typeof window.MAKEBECOOL_BUNDLES.updateCart === 'function'
+        ) {
+          try {
+            const pricingDone = waitForPricingCalculated();
+            await window.MAKEBECOOL_BUNDLES.updateCart();
+            await pricingDone;
+          } catch (e) {}
+        }
+
+        /*
+         * MBC + Shopify are the pricing source of truth.
+         * cartDataFix() normalizes Ajax cart data before redirect.
+         */
+        try {
+          await getFixedCart();
+        } catch (e) {}
+
+        window.location.assign('/cart');
+
+      } catch (error) {
+
+        if (errorEl) {
+
+          errorEl.textContent =
+
+            error.message ||
+
+            'The bundle could not be added. Please check the selected quantities.';
 
           errorEl.hidden = false;
 
-          return;
         }
 
-        addButton.disabled = true;
-
-        addButton.textContent = 'Adding…';
-
-        if (errorEl) {
-          errorEl.hidden = true;
-
-          errorEl.textContent = '';
-        }
-
-        const bundleKey = `ccg-${bundleId}-${Date.now()}`;
-
-        try {
-          const response = await fetch(
-            `${window.Shopify?.routes?.root || '/'}cart/add.js?mbcb-request`,
-
-            {
-              method: 'POST',
-
-              headers: {
-                'Content-Type': 'application/json',
-
-                Accept: 'application/json',
-              },
-
-              body: JSON.stringify({
-                items: items.map((item) => ({
-                  id: item.id,
-
-                  quantity: item.quantity,
-
-                  properties: {
-                    _mbc_part: String(bundleId),
-
-                    '_CCG Bundle Key': bundleKey,
-
-                    Bundle: bundleLabel,
-                  },
-                })),
-              }),
-            }
-          );
-
-          const result = await response.json();
-
-          if (!response.ok) {
-            throw new Error(result.description || result.message || 'The bundle could not be added.');
-          }
-
-          if (window.MAKEBECOOL_BUNDLES && typeof window.MAKEBECOOL_BUNDLES.updateCart === 'function') {
-            try {
-              const pricingDone = waitForPricingCalculated();
-
-              await window.MAKEBECOOL_BUNDLES.updateCart();
-
-              await pricingDone;
-            } catch (e) {}
-          }
-
-          /*
-
-         * MBC + Shopify are the pricing source of truth.
-
-         * cartDataFix() normalizes Ajax cart data before redirect.
-
-         */
-
-          try {
-            await getFixedCart();
-          } catch (e) {}
-
-          window.location.assign('/cart');
-        } catch (error) {
-          if (errorEl) {
-            errorEl.textContent =
-              error.message || 'The bundle could not be added. Please check the selected quantities.';
-
-            errorEl.hidden = false;
-          }
-
-          addButton.disabled = false;
-
-          addButton.textContent = 'Add to cart';
-        }
-      });
-    }
-
-    update();
-
-    if (activePlan) {
-      syncPlanFromMBC(activePlan).then(() => {
-        renderSelected();
-
-        update();
-      });
-    }
-  })();
-</script>
-
-{% stylesheet %}
-  html.ccg-picker-open {
 
 
+        addButton.disabled = false;
 
-    overflow: hidden;
+        addButton.textContent = 'Add to cart';
 
+      }
 
+    });
 
   }
 
 
 
+  update();
 
+  if (activePlan) {
+    syncPlanFromMBC(activePlan).then(() => {
+      renderSelected();
+      update();
+    });
+  }
+
+
+})();
+
+</script>
+
+
+
+{% stylesheet %}
+
+  html.ccg-picker-open {
+
+    overflow: hidden;
+
+  }
 
 
 
   .ccg-gift-builder {
 
-
-
     background: var(--builder-bg);
-
-
 
     color: var(--builder-ink);
 
-
-
     padding: 54px 32px 90px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__inner {
 
-
-
     width: 100%;
-
-
 
     max-width: 1360px;
 
-
-
     margin: 0 auto;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__intro {
 
-
-
     max-width: 850px;
-
-
 
     margin: 0 auto 16px;
 
-
-
     text-align: center;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__eyebrow {
 
-
-
     margin: 0 0 12px;
-
-
 
     color: var(--builder-accent);
 
-
-
     font: 400 14px/1.2 'Barlow Condensed', sans-serif;
-
-
 
     letter-spacing: .22em;
 
-
-
     text-transform: uppercase;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__heading {
 
-
-
     margin: 0 0 16px;
-
-
 
     font-family: 'Rye', serif;
 
-
-
     font-size: clamp(34px, 5vw, 58px);
-
-
 
     font-weight: 400;
 
-
-
     line-height: 1.08;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__description {
 
-
-
     font-size: 15px;
-
-
 
     line-height: 1.6;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__description p {
 
-
-
     margin: 0;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__plans {
 
-
-
     display: flex;
-
-
 
     justify-content: center;
 
-
-
     gap: 8px;
-
-
 
     margin: 24px 0;
 
-
-
   }
 
 
-
-
-
-
-
-  .ccg-gift-builder__plans-loading {
-    display: inline-flex;
-    align-items: center;
-    min-height: 34px;
-    color: rgba(33,28,23,.65);
-    font-size: 13px;
-  }
 
   .ccg-gift-builder__plan {
 
-
-
     min-width: 106px;
-
-
 
     min-height: 34px;
 
-
-
     padding: 8px 22px;
-
-
 
     border: 1px solid rgba(33, 28, 23, .3);
 
-
-
     background: transparent;
-
-
 
     color: var(--builder-ink);
 
-
-
     font: 600 12px/1 'Barlow Condensed', sans-serif;
-
-
 
     letter-spacing: .08em;
 
-
-
     text-transform: uppercase;
-
-
 
     cursor: pointer;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__plan.is-active {
 
-
-
     border-color: var(--builder-accent);
-
-
 
     box-shadow: inset 0 0 0 1px var(--builder-accent);
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__status {
 
-
-
     display: flex;
-
-
 
     align-items: center;
 
-
-
     justify-content: space-between;
-
-
 
     gap: 20px;
 
-
-
     padding: 15px 18px;
-
-
 
     margin: 0 0 18px;
 
-
-
     border: 1px solid rgba(33, 28, 23, .18);
-
-
 
     background: rgba(255,255,255,.18);
 
-
-
     font-size: 14px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__selected-grid {
 
-
-
     display: flex;
-
-
 
     flex-wrap: wrap;
 
-
-
     gap: 18px;
-
-
 
     align-items: stretch;
 
-
-
     min-height: 260px;
-
-
 
     margin-bottom: 20px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__add-card,
 
-
-
   .ccg-gift-builder__product-card {
-
-
 
     width: 210px;
 
-
-
     min-height: 260px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__add-card {
 
-
-
     display: flex;
-
-
 
     align-items: center;
 
-
-
     justify-content: center;
-
-
 
     flex-direction: column;
 
-
-
     gap: 12px;
-
-
 
     border: 1px dashed rgba(33,28,23,.35);
 
-
-
     background: transparent;
-
-
 
     color: var(--builder-ink);
 
-
-
     font: 600 12px/1 'Barlow Condensed', sans-serif;
-
-
 
     letter-spacing: .04em;
 
-
-
     text-transform: uppercase;
-
-
 
     cursor: pointer;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__plus {
 
-
-
     font-size: 22px;
-
-
 
     line-height: 1;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__product-card {
 
-
-
     position: relative;
-
-
 
     border: 1px solid rgba(33,28,23,.16);
 
-
-
     background: #fbf9f4;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__remove {
 
-
-
     width: 100%;
-
-
 
     min-height: 34px;
 
-
-
     border: 0;
-
-
 
     border-bottom: 1px solid rgba(33,28,23,.12);
 
-
-
     background: transparent;
-
-
 
     color: var(--builder-ink);
 
-
-
     font: 600 11px/1.2 'Barlow Condensed', sans-serif;
-
-
 
     text-transform: uppercase;
 
-
-
     cursor: pointer;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__product-media {
 
-
-
     aspect-ratio: 4 / 3;
-
-
 
     overflow: hidden;
 
-
-
     background: #ede7dc;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__product-media img {
 
-
-
     width: 100%;
-
-
 
     height: 100%;
 
-
-
     display: block;
-
-
 
     object-fit: cover;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__product-copy {
 
-
-
     padding: 12px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__product-copy h3 {
 
-
-
     min-height: 38px;
-
-
 
     margin: 0 0 6px;
 
-
-
     font-size: 13px;
-
-
 
     line-height: 1.35;
 
-
-
     text-transform: uppercase;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__product-copy p {
 
-
-
     margin: 0 0 10px;
-
-
 
     font-size: 13px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__quantity {
 
-
-
     display: grid;
-
-
 
     grid-template-columns: 34px 1fr 34px;
 
-
-
     border: 1px solid rgba(33,28,23,.18);
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__quantity button,
 
-
-
   .ccg-gift-builder__quantity input {
-
-
 
     min-height: 34px;
 
-
-
     border: 0;
-
-
 
     background: transparent;
 
-
-
     color: var(--builder-ink);
-
-
 
     text-align: center;
 
-
-
     font: inherit;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__quantity input {
 
-
-
     width: 100%;
-
-
 
     border-inline: 1px solid rgba(33,28,23,.18);
 
-
-
     appearance: textfield;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__choose {
 
-
-
     width: 100%;
-
-
 
     min-height: 44px;
 
-
-
     border: 0;
-
-
 
     background: var(--builder-accent);
 
-
-
     color: #fff;
-
-
 
     font: 700 12px/1 'Barlow Condensed', sans-serif;
 
-
-
     letter-spacing: .12em;
-
-
 
     text-transform: uppercase;
 
-
-
     cursor: pointer;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__summary {
 
-
-
     width: min(600px, 100%);
-
-
 
     margin: 34px auto 0;
 
-
-
     padding-top: 18px;
-
-
 
     border-top: 1px solid rgba(33,28,23,.18);
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__summary > div {
 
-
-
     display: flex;
-
-
 
     justify-content: space-between;
 
-
-
     gap: 24px;
-
-
 
     margin-bottom: 10px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__total-row {
 
-
-
     padding-top: 14px;
-
-
 
     margin-top: 14px;
 
-
-
     border-top: 1px solid rgba(33,28,23,.18);
-
-
 
     font-size: 18px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__add {
 
-
-
     width: 100%;
-
-
 
     min-height: 48px;
 
-
-
     margin-top: 14px;
-
-
 
     border: 0;
 
-
-
     background: var(--builder-accent);
-
-
 
     color: #fff;
 
-
-
     font: 700 12px/1 'Barlow Condensed', sans-serif;
-
-
 
     letter-spacing: .12em;
 
-
-
     text-transform: uppercase;
-
-
 
     cursor: pointer;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__add:disabled {
 
-
-
     opacity: .45;
-
-
 
     cursor: not-allowed;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__error {
 
-
-
     margin: 12px 0 0;
-
-
 
     color: #b42318;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker[hidden] {
 
-
-
     display: none;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker {
 
-
-
     position: fixed;
-
-
 
     inset: 0;
 
-
-
     z-index: 999999;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-backdrop {
 
-
-
     position: absolute;
-
-
 
     inset: 0;
 
-
-
     background: rgba(20,17,14,.48);
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-panel {
 
-
-
     position: absolute;
-
-
 
     inset: 5vh 5vw;
 
-
-
     overflow: auto;
-
-
 
     padding: 24px;
 
-
-
     background: var(--builder-bg);
-
-
 
     box-shadow: 0 24px 60px rgba(0,0,0,.22);
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-head {
 
-
-
     display: flex;
-
-
 
     align-items: flex-start;
 
-
-
     justify-content: space-between;
-
-
 
     gap: 24px;
 
-
-
     margin-bottom: 24px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-eyebrow {
 
-
-
     margin: 0 0 6px;
-
-
 
     color: var(--builder-accent);
 
-
-
     font: 600 12px/1 'Barlow Condensed', sans-serif;
-
-
 
     letter-spacing: .16em;
 
-
-
     text-transform: uppercase;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-head h3 {
 
-
-
     margin: 0;
-
-
 
     font-family: 'Rye', serif;
 
-
-
     font-size: 30px;
-
-
 
     font-weight: 400;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-close {
 
-
-
     border: 0;
-
-
 
     background: transparent;
 
-
-
     color: var(--builder-ink);
-
-
 
     font-size: 34px;
 
-
-
     line-height: 1;
-
-
 
     cursor: pointer;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-grid {
 
-
-
     display: grid;
-
-
 
     grid-template-columns: repeat(4, minmax(0, 1fr));
 
-
-
     gap: 18px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-product {
 
-
-
     padding: 0;
-
-
 
     border: 1px solid rgba(33,28,23,.16);
 
-
-
     background: #fbf9f4;
-
-
 
     color: var(--builder-ink);
 
-
-
     text-align: left;
-
-
 
     cursor: pointer;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-product.is-unavailable {
 
-
-
     opacity: .45;
-
-
 
     cursor: not-allowed;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-media {
 
-
-
     display: block;
-
-
 
     aspect-ratio: 4 / 5;
 
-
-
     overflow: hidden;
-
-
 
     background: #ede7dc;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-media img {
 
-
-
     width: 100%;
-
-
 
     height: 100%;
 
-
-
     display: block;
-
-
 
     object-fit: cover;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-copy {
 
-
-
     display: grid;
-
-
 
     gap: 5px;
 
-
-
     padding: 12px;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-copy strong {
 
-
-
     font-size: 13px;
-
-
 
     line-height: 1.3;
 
-
-
     text-transform: uppercase;
 
-
-
   }
-
-
-
-
 
 
 
   .ccg-gift-builder__picker-copy span {
 
-
-
     font-size: 13px;
 
-
-
   }
-
-
-
-
 
 
 
   @media screen and (max-width: 989px) {
 
-
-
     .ccg-gift-builder__picker-grid {
-
-
 
       grid-template-columns: repeat(3, minmax(0, 1fr));
 
-
-
     }
 
-
-
   }
-
-
-
-
 
 
 
   @media screen and (max-width: 749px) {
 
-
-
     .ccg-gift-builder {
-
-
 
       padding: 42px 16px 64px;
 
-
-
     }
-
-
-
-
 
 
 
     .ccg-gift-builder__status {
 
-
-
       align-items: flex-start;
-
-
 
       flex-direction: column;
 
-
-
     }
-
-
-
-
 
 
 
     .ccg-gift-builder__selected-grid {
 
-
-
       gap: 12px;
 
-
-
     }
-
-
-
-
 
 
 
     .ccg-gift-builder__add-card,
 
-
-
     .ccg-gift-builder__product-card {
-
-
 
       width: calc(50% - 6px);
 
-
-
       min-height: 220px;
 
-
-
     }
-
-
-
-
 
 
 
     .ccg-gift-builder__picker-panel {
 
-
-
       inset: 2vh 12px;
-
-
 
       padding: 16px;
 
-
-
     }
-
-
-
-
 
 
 
     .ccg-gift-builder__picker-grid {
 
-
-
       grid-template-columns: repeat(2, minmax(0, 1fr));
-
-
 
       gap: 12px;
 
-
-
     }
 
-
-
   }
+
 {% endstylesheet %}
 
+
+
 {% schema %}
+
 {
+
   "name": "Gift bundle builder",
 
   "settings": [
+
     {
+
       "type": "collection",
 
       "id": "collection",
 
-      "label": "Cowl collection (product picker source)"
+      "label": "Cowl collection"
+
     },
 
     {
+
       "type": "range",
 
       "id": "products_limit",
@@ -2611,14 +2052,165 @@
       "label": "Products available in picker",
 
       "default": 24
+
     },
+
+
+
     {
+
+      "type": "header",
+
+      "content": "Gift 10"
+
+    },
+
+    {
+
+      "type": "text",
+
+      "id": "gift_10_label",
+
+      "label": "Button label",
+
+      "default": "Gift 10"
+
+    },
+
+    {
+
+      "type": "text",
+
+      "id": "gift_10_bundle_id",
+
+      "label": "MBC bundle ID",
+
+      "default": "127991"
+
+    },
+
+    {
+
+      "type": "range",
+
+      "id": "gift_10_quantity",
+
+      "label": "Required quantity",
+
+      "min": 1,
+
+      "max": 50,
+
+      "step": 1,
+
+      "default": 10
+
+    },
+
+    {
+
+      "type": "range",
+
+      "id": "gift_10_discount",
+
+      "label": "Fallback discount (MBC is primary)",
+
+      "min": 0,
+
+      "max": 100,
+
+      "step": 1,
+
+      "unit": "%",
+
+      "default": 10
+
+    },
+
+
+
+    {
+
+      "type": "header",
+
+      "content": "Gift 20"
+
+    },
+
+    {
+
+      "type": "text",
+
+      "id": "gift_20_label",
+
+      "label": "Button label",
+
+      "default": "Gift 20"
+
+    },
+
+    {
+
+      "type": "text",
+
+      "id": "gift_20_bundle_id",
+
+      "label": "MBC bundle ID",
+
+      "default": "128498"
+
+    },
+
+    {
+
+      "type": "range",
+
+      "id": "gift_20_quantity",
+
+      "label": "Required quantity",
+
+      "min": 1,
+
+      "max": 50,
+
+      "step": 1,
+
+      "default": 20
+
+    },
+
+    {
+
+      "type": "range",
+
+      "id": "gift_20_discount",
+
+      "label": "Fallback discount (MBC is primary)",
+
+      "min": 0,
+
+      "max": 100,
+
+      "step": 1,
+
+      "unit": "%",
+
+      "default": 10
+
+    },
+
+
+
+    {
+
       "type": "header",
 
       "content": "Content"
+
     },
 
     {
+
       "type": "text",
 
       "id": "eyebrow",
@@ -2626,9 +2218,11 @@
       "label": "Eyebrow",
 
       "default": "Mix, match & save"
+
     },
 
     {
+
       "type": "text",
 
       "id": "heading",
@@ -2636,9 +2230,11 @@
       "label": "Heading",
 
       "default": "Build your bundle"
+
     },
 
     {
+
       "type": "richtext",
 
       "id": "description",
@@ -2646,15 +2242,21 @@
       "label": "Description",
 
       "default": "<p>Choose different cowl patterns and set the quantity for each.</p>"
+
     },
 
+
+
     {
+
       "type": "header",
 
       "content": "Colors"
+
     },
 
     {
+
       "type": "color",
 
       "id": "background_color",
@@ -2662,9 +2264,11 @@
       "label": "Background",
 
       "default": "#f8f5ee"
+
     },
 
     {
+
       "type": "color",
 
       "id": "text_color",
@@ -2672,9 +2276,11 @@
       "label": "Text",
 
       "default": "#211c17"
+
     },
 
     {
+
       "type": "color",
 
       "id": "accent_color",
@@ -2682,13 +2288,21 @@
       "label": "Accent",
 
       "default": "#b18461"
+
     }
+
   ],
 
   "presets": [
+
     {
+
       "name": "Gift bundle builder"
+
     }
+
   ]
+
 }
+
 {% endschema %}
