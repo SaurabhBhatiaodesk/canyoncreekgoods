@@ -129,6 +129,7 @@
       "block_order": [
         "offer_apQaRL"
       ],
+      "disabled": true,
       "name": "Gift the Crew",
       "settings": {
         "eyebrow": "Handmade. Western. Ready to gift.",
