@@ -38,8 +38,8 @@
         "feature_BVDDAP": {
           "type": "feature",
           "settings": {
-            "title": "Direct to maker",
-            "text": "You buy from the artisan who made it, and she picks up the phone."
+            "title": "Direct from maker",
+            "text": "You buy directly from the woman who made it and she's always a phone call away."
           }
         }
       },
