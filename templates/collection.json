@@ -237,7 +237,7 @@
       "type": "ccg-image-banner-text",
       "name": "CCG Image Banner Text",
       "settings": {
-        "content_layout": "original",
+        "content_layout": "collection",
         "image": "shopify://shop_images/GoldenHourFarm-147_1.jpg",
         "mobile_image": "shopify://shop_images/GoldenHourFarm-147_1.jpg",
         "eyebrow": "Shop · Wool Cowls",
