@@ -237,9 +237,9 @@
       "type": "ccg-image-banner-text",
       "name": "CCG Image Banner Text",
       "settings": {
-        "content_layout": "collection",
-        "image": "shopify://shop_images/MMSAZ26-38.jpg",
-        "mobile_image": "shopify://shop_images/MMSAZ26-38.jpg",
+        "content_layout": "original",
+        "image": "shopify://shop_images/GoldenHourFarm-147_1.jpg",
+        "mobile_image": "shopify://shop_images/GoldenHourFarm-147_1.jpg",
         "eyebrow": "Shop · Wool Cowls",
         "heading": "Wool Cowls",
         "description": "<p>Hand cut one at a time from premium American wool. Each cowl comes from a single blanket run, so when it sells it is gone for good.</p>",
