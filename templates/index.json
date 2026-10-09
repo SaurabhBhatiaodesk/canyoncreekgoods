@@ -204,34 +204,14 @@
     "best_sellers_ccg": {
       "type": "ccg-best-sellers",
       "blocks": {
-        "product_1": {
+        "product_6iRWAL": {
           "type": "product",
           "settings": {
             "product": "",
-            "title": "Wool Cowl Scarf — Nehalem",
-            "price": "$79.00",
+            "title": "",
+            "price": "",
             "link": "",
-            "badge_text": "BEST SELLER"
-          }
-        },
-        "product_2": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "title": "Wool Cowl Scarf — Turquoise Chief",
-            "price": "$79.00",
-            "link": "",
-            "badge_text": "LAST ONE"
-          }
-        },
-        "product_3": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "title": "Western Cowl — Grey Aztec",
-            "price": "$59.00",
-            "link": "",
-            "badge_text": "ONE OF ONE"
+            "badge_text": ""
           }
         },
         "product_4": {
@@ -243,13 +223,33 @@
             "link": "",
             "badge_text": "NEW"
           }
+        },
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "title": "Wool Cowl Scarf — Nehalem",
+            "price": "$79.00",
+            "link": "",
+            "badge_text": "BEST SELLER"
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "title": "Western Cowl — Grey Aztec",
+            "price": "$59.00",
+            "link": "",
+            "badge_text": "ONE OF ONE"
+          }
         }
       },
       "block_order": [
+        "product_6iRWAL",
+        "product_4",
         "product_1",
-        "product_2",
-        "product_3",
-        "product_4"
+        "product_3"
       ],
       "name": "Ready to Ride Out",
       "settings": {
