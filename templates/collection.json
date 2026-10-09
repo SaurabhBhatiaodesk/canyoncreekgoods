@@ -251,7 +251,7 @@
       "name": "CCG Collection Grid",
       "settings": {
         "grid_layout": "original",
-        "columns": "3",
+        "columns": "4",
         "image_ratio": "square",
         "products_per_page": 24,
         "quick_price_filter": 70,
