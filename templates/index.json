@@ -289,9 +289,9 @@
         "show_3": {
           "type": "show",
           "settings": {
-            "date_range": "SEPTEMBER 19–20",
-            "name": "Durango Autumn Arts Festival",
-            "location": "DURANGO, COLORADO",
+            "date_range": "March 6-7",
+            "name": "Litchfield Park Art & Wine Festival ",
+            "location": "Litchfield Park, Arizona",
             "link": ""
           }
         },
@@ -324,7 +324,7 @@
       "name": "Come Find the Booth",
       "settings": {
         "eyebrow": "ON THE ROAD",
-        "heading": "Come find the booth",
+        "heading": "Upcoming Show Schedule (in the works)",
         "description": "<p>Most pieces sell at shows before they ever reach the site. If you are close to one of these, come try things on.</p>",
         "background_color": "#ede7dc",
         "desktop_padding_top": 88,
