@@ -294,32 +294,12 @@
             "location": "Litchfield Park, Arizona",
             "link": ""
           }
-        },
-        "show_4": {
-          "type": "show",
-          "settings": {
-            "date_range": "SEPTEMBER 24–27",
-            "name": "Telluride Autumn Classic",
-            "location": "MOUNTAIN VILLAGE, COLORADO",
-            "link": ""
-          }
-        },
-        "show_5": {
-          "type": "show",
-          "settings": {
-            "date_range": "OCTOBER 10–11",
-            "name": "Sedona Arts Festival",
-            "location": "SEDONA, ARIZONA",
-            "link": ""
-          }
         }
       },
       "block_order": [
         "show_1",
         "show_2",
-        "show_3",
-        "show_4",
-        "show_5"
+        "show_3"
       ],
       "name": "Come Find the Booth",
       "settings": {
