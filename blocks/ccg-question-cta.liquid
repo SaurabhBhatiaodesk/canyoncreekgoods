@@ -3,7 +3,7 @@
   assign current_variant = product_resource.selected_or_first_available_variant
   assign low_stock_threshold = block.settings.low_stock_threshold | default: 5
 
-  assign custom_product_tag_metafield = product_resource.metafields.custom.product_tag
+  assign custom_product_tag_metafield = product_resource.metafields.custom.custom_product_tag
   assign custom_product_tag_value = custom_product_tag_metafield.value
   assign custom_product_tag_text = ''
 
@@ -125,7 +125,10 @@
     font-size: 19px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .ccg-question-cta__button:hover,
@@ -268,10 +271,14 @@
           /* A populated Custom Product Tag always takes priority over low stock. */
           if (this.dataset.hasCustomTag === 'true') return;
 
-          const variant = this.variants.find((item) => String(item.id) === String(variantId));
+          const variant = this.variants.find(
+            (item) => String(item.id) === String(variantId)
+          );
+
           if (!variant) return;
 
           const threshold = Number(this.dataset.lowStockThreshold || 5);
+
           const isLowStock =
             variant.available &&
             variant.tracked &&
@@ -285,10 +292,13 @@
           if (!isLowStock) return;
 
           const showExactQuantity = this.dataset.showExactQuantity === 'true';
-          const quantityText = showExactQuantity ? `Only ${variant.quantity} left · ` : '';
+          const quantityText = showExactQuantity
+            ? `Only ${variant.quantity} left · `
+            : '';
 
           this.querySelector('.ccg-question-cta__badge-label').textContent =
             this.dataset.lowStockLabel || 'Low stock';
+
           this.querySelector('.ccg-question-cta__badge-message').textContent =
             `${quantityText}${this.dataset.lowStockMessage || ''}`;
         }
