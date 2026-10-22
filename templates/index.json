@@ -280,6 +280,15 @@
         "show_2": {
           "type": "show",
           "settings": {
+            "date_range": "February 6-7",
+            "name": "Kierland Fine Art and Wine Festival",
+            "location": "Scottsdale, Arizona",
+            "link": ""
+          }
+        },
+        "show_xfAFcr": {
+          "type": "show",
+          "settings": {
             "date_range": "February 12-14",
             "name": "Gold Rush Days",
             "location": "Wickenburg, Arizona",
@@ -299,6 +308,7 @@
       "block_order": [
         "show_1",
         "show_2",
+        "show_xfAFcr",
         "show_3"
       ],
       "name": "Come Find the Booth",
