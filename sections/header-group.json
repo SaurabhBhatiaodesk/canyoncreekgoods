@@ -92,7 +92,7 @@
       "name": "CCG Announcement Marquee",
       "settings": {
         "background_color": "#f8f5ee",
-        "text_color": "#5c5145",
+        "text_color": "#ff0000",
         "dot_color": "#b98a52",
         "speed": 40
       }
